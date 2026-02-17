@@ -17,8 +17,8 @@
     <div class="container topbar-inner">
       <a class="brand" href="#top">Kimen</a>
       <nav class="nav">
-        <a href="#model">Model</a>
-        <a href="#name">Why The Name</a>
+        <a href="#benefits">Why Kimen</a>
+        <a href="#diff">Difference</a>
         <a href="#scope">Current Scope</a>
         <a href="#start">Start</a>
       </nav>
@@ -28,57 +28,75 @@
   <main id="top">
     <section class="hero container reveal">
       <p class="eyebrow">Local-First Secrets Projection</p>
-      <h1>Latent capabilities, expressed on intent.</h1>
+      <h1>Use secrets at runtime without turning your system into a secret dump.</h1>
       <p class="lead">
-        Kimen stores secrets securely at rest and projects them into runtime form only when explicitly requested,
-        as env vars, rendered files, or scoped execution contexts.
+        Kimen keeps secrets encrypted at rest, then materializes only what a command needs, only when requested,
+        and only for as long as needed.
       </p>
       <p class="sublead">
-        Secrets remain inert by default. Runtime exposure is brief, specific, and intentional.
+        No required hosted backend. No required signup. No need to keep long-lived plaintext env files around.
       </p>
+      <ul class="hero-points">
+        <li>Run tools with scoped env vars for one process.</li>
+        <li>Render config files with strict permissions and bounded lifetime.</li>
+        <li>Sync encrypted team state without making runtime depend on a server.</li>
+      </ul>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#start">Get Started</a>
-        <a class="btn btn-ghost" href="#name">Why “Kimen”</a>
+        <a class="btn btn-ghost" href="#diff">How it differs</a>
       </div>
-      <pre class="command-block"><code>$ kimen sync --json
+      <pre class="command-block"><code>$ kimen vault init
 $ kimen run --env API_KEY=api_key -- ./your-command
-$ kimen sync resolve --take remote --key api_key --json</code></pre>
+$ kimen render --file ./config/api.key=api_key
+$ kimen sync --check --json</code></pre>
     </section>
 
-    <section id="model" class="container reveal">
-      <h2>The Runtime Model</h2>
+    <section id="benefits" class="container reveal">
+      <h2>Why Teams Use Kimen</h2>
       <div class="cards-grid">
         <article class="card">
-          <h3>1. Latent</h3>
-          <p>Secrets are encrypted at rest and not materialized by default.</p>
+          <h3>Safer default workflow</h3>
+          <p>Secrets are not copied everywhere by default. Projection is explicit and scoped.</p>
         </article>
         <article class="card">
-          <h3>2. Projection</h3>
-          <p>Intent requests a specific runtime shape: env, file, or process scope.</p>
+          <h3>Practical developer UX</h3>
+          <p>One CLI for local use, automation, and typed machine-readable output.</p>
         </article>
         <article class="card">
-          <h3>3. Bounded Lifetime</h3>
-          <p>Projected material is scoped and short-lived, then cleaned up.</p>
+          <h3>Local-first by design</h3>
+          <p>Your runtime does not depend on a cloud control plane being available.</p>
         </article>
       </div>
     </section>
 
-    <section id="name" class="container reveal">
-      <h2>Why The Name “Kimen”</h2>
-      <p>
-        In Norwegian, <em>kimen</em> points to an incipient form: the first stage from which something develops.
-        In botany, biology, chemistry, and figurative use, it captures the beginning state where growth becomes possible.
-      </p>
-      <p>
-        That maps directly to Kimen’s model: secrets already contain capability, but in latent form.
-        They only become runtime-real when intent is expressed.
-      </p>
-      <div class="name-list">
-        <div><span>Botany</span> next-generation plant structure within seed form.</div>
-        <div><span>Biology</span> organism at its earliest development stage.</div>
-        <div><span>Chemistry</span> starting substance for a new phase/crystal.</div>
-        <div><span>Figurative</span> first beginning, germ, incipient origin.</div>
+    <section id="diff" class="container reveal">
+      <h2>How Kimen Differs</h2>
+      <div class="split-grid">
+        <article class="panel">
+          <h3>Typical patterns</h3>
+          <ul>
+            <li>Long-lived `.env` files copied across systems.</li>
+            <li>Runtime directly coupled to hosted secret providers.</li>
+            <li>Secret values spread through shell history and logs.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h3>Kimen approach</h3>
+          <ul>
+            <li>Encrypted at rest; projected only when needed.</li>
+            <li>Short-lived runtime shapes: env, files, scoped process.</li>
+            <li>Optional team sync, still ciphertext and local runtime.</li>
+          </ul>
+        </article>
       </div>
+    </section>
+
+    <section id="name" class="container reveal name-compact">
+      <h2>Why The Name</h2>
+      <p>
+        <em>Kimen</em> points to an incipient form, the first stage from which something develops.
+        In this tool, secrets are kept in that latent state and only become runtime-real when intent is explicit.
+      </p>
     </section>
 
     <section id="scope" class="container reveal">

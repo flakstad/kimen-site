@@ -146,6 +146,17 @@ h3 {
   max-width: 64ch;
 }
 
+.hero-points {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  max-width: 66ch;
+}
+
+.hero-points li {
+  margin-bottom: 0.35rem;
+  color: #304340;
+}
+
 .hero-cta {
   margin-top: 1.45rem;
   display: flex;
@@ -219,18 +230,8 @@ h3 {
   color: #394b49;
 }
 
-.name-list {
-  margin-top: 1.2rem;
-  border-left: 3px solid var(--accent);
-  padding-left: 1rem;
-  display: grid;
-  gap: 0.6rem;
-}
-
-.name-list span {
-  font-weight: 600;
-  color: var(--text);
-  margin-right: 0.45rem;
+.name-compact {
+  padding-top: 2.6rem;
 }
 
 .split-grid {
