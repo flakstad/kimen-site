@@ -40,6 +40,7 @@
       <ul class="hero-points">
         <li>Run tools with scoped env vars for one process.</li>
         <li>Render config files with strict permissions and bounded lifetime.</li>
+        <li>Reduce accidental secret exposure to agentic coding assistants.</li>
         <li>Sync encrypted team state without making runtime depend on a server.</li>
       </ul>
       <div class="hero-cta">
@@ -47,6 +48,7 @@
         <a class="btn btn-ghost" href="#diff">How it differs</a>
       </div>
       <pre class="command-block"><code>$ kimen vault init
+$ printf 'sk_live_example' | kimen secret set api_key --stdin
 $ kimen run --env API_KEY=api_key -- ./your-command
 $ kimen render --file ./config/api.key=api_key
 $ kimen sync --check --json</code></pre>
@@ -58,6 +60,7 @@ $ kimen sync --check --json</code></pre>
         <ul>
           <li>You want local-first runtime behavior.</li>
           <li>You want strong CLI automation and typed JSON output.</li>
+          <li>You use coding agents and want tighter secret exposure boundaries.</li>
           <li>You need team sync, but still want local runtime independence.</li>
         </ul>
       </article>
@@ -96,6 +99,7 @@ $ kimen sync --check --json</code></pre>
           <h3>Typical patterns</h3>
           <ul>
             <li>Long-lived `.env` files copied across systems.</li>
+            <li>Global environment exposure to every process and tool.</li>
             <li>Runtime directly coupled to hosted secret providers.</li>
             <li>Secret values spread through shell history and logs.</li>
           </ul>
@@ -105,10 +109,15 @@ $ kimen sync --check --json</code></pre>
           <ul>
             <li>Encrypted at rest; projected only when needed.</li>
             <li>Short-lived runtime shapes: env, files, scoped process.</li>
+            <li>Narrower blast radius for mistakes by tools and coding agents.</li>
             <li>Optional team sync, still ciphertext and local runtime.</li>
           </ul>
         </article>
       </div>
+      <p class="note">
+        Kimen reduces accidental exposure risk, but no tool can guarantee absolute protection if a process is explicitly
+        given access to a secret.
+      </p>
     </section>
 
     <section id="name" class="container reveal name-compact">
