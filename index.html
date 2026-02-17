@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kimen | Local-First Runtime Projections for Secrets</title>
+  <meta name="description" content="Kimen is a local-first tool for projecting secrets into runtime form only on explicit intent.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-glow bg-glow-a" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-b" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#top">Kimen</a>
+      <nav class="nav">
+        <a href="#model">Model</a>
+        <a href="#name">Why The Name</a>
+        <a href="#scope">Current Scope</a>
+        <a href="#start">Start</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container reveal">
+      <p class="eyebrow">Local-First Secrets Projection</p>
+      <h1>Latent capabilities, expressed on intent.</h1>
+      <p class="lead">
+        Kimen stores secrets securely at rest and projects them into runtime form only when explicitly requested,
+        as env vars, rendered files, or scoped execution contexts.
+      </p>
+      <p class="sublead">
+        Secrets remain inert by default. Runtime exposure is brief, specific, and intentional.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#start">Get Started</a>
+        <a class="btn btn-ghost" href="#name">Why “Kimen”</a>
+      </div>
+      <pre class="command-block"><code>$ kimen sync --json
+$ kimen run --env API_KEY=api_key -- ./your-command
+$ kimen sync resolve --take remote --key api_key --json</code></pre>
+    </section>
+
+    <section id="model" class="container reveal">
+      <h2>The Runtime Model</h2>
+      <div class="cards-grid">
+        <article class="card">
+          <h3>1. Latent</h3>
+          <p>Secrets are encrypted at rest and not materialized by default.</p>
+        </article>
+        <article class="card">
+          <h3>2. Projection</h3>
+          <p>Intent requests a specific runtime shape: env, file, or process scope.</p>
+        </article>
+        <article class="card">
+          <h3>3. Bounded Lifetime</h3>
+          <p>Projected material is scoped and short-lived, then cleaned up.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="name" class="container reveal">
+      <h2>Why The Name “Kimen”</h2>
+      <p>
+        In Norwegian, <em>kimen</em> points to an incipient form: the first stage from which something develops.
+        In botany, biology, chemistry, and figurative use, it captures the beginning state where growth becomes possible.
+      </p>
+      <p>
+        That maps directly to Kimen’s model: secrets already contain capability, but in latent form.
+        They only become runtime-real when intent is expressed.
+      </p>
+      <div class="name-list">
+        <div><span>Botany</span> next-generation plant structure within seed form.</div>
+        <div><span>Biology</span> organism at its earliest development stage.</div>
+        <div><span>Chemistry</span> starting substance for a new phase/crystal.</div>
+        <div><span>Figurative</span> first beginning, germ, incipient origin.</div>
+      </div>
+    </section>
+
+    <section id="scope" class="container reveal">
+      <h2>Current Scope</h2>
+      <div class="split-grid">
+        <article class="panel">
+          <h3>What Kimen is now</h3>
+          <ul>
+            <li>Local encrypted vault.</li>
+            <li>Intent-driven runtime projections.</li>
+            <li>Team sync with conflict-aware orchestration.</li>
+            <li>Machine-readable CLI contracts and typed exit codes.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h3>What it is not (yet)</h3>
+          <ul>
+            <li>No mandatory hosted backend for runtime use.</li>
+            <li>No required signup to use the product.</li>
+            <li>No central plaintext secret execution model.</li>
+            <li>Hosted coordination remains optional and undecided.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="start" class="container reveal">
+      <h2>Start With CLI</h2>
+      <p>Install from source and begin local-first.</p>
+      <pre class="command-block"><code>git clone &lt;your-kimen-repo-url&gt;
+cd kimen
+make install
+kimen vault init</code></pre>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn btn-ghost" href="https://github.com" target="_blank" rel="noreferrer">Documentation</a>
+      </div>
+      <p class="note">Replace links with your canonical repo/docs URLs before launch.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>Kimen: local-first runtime projection for latent capabilities.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <script src="./main.js"></script>
+</body>
+</html>
