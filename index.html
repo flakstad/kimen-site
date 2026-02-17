@@ -17,6 +17,7 @@
     <div class="container topbar-inner">
       <a class="brand" href="#top">Kimen</a>
       <nav class="nav">
+        <a href="#fit">Fit</a>
         <a href="#benefits">Why Kimen</a>
         <a href="#diff">Difference</a>
         <a href="#scope">Current Scope</a>
@@ -28,13 +29,13 @@
   <main id="top">
     <section class="hero container reveal">
       <p class="eyebrow">Local-First Secrets Projection</p>
-      <h1>Use secrets at runtime without turning your system into a secret dump.</h1>
+      <h1>Use secrets at runtime without `.env` sprawl or cloud-runtime lock-in.</h1>
       <p class="lead">
-        Kimen keeps secrets encrypted at rest, then materializes only what a command needs, only when requested,
-        and only for as long as needed.
+        Kimen gives you a local encrypted vault plus a runtime projection layer. Commands get only the secret shapes
+        they need, for the lifetime they need.
       </p>
       <p class="sublead">
-        No required hosted backend. No required signup. No need to keep long-lived plaintext env files around.
+        Safer defaults for dev and ops: fewer plaintext leftovers, less accidental spread, and clearer automation contracts.
       </p>
       <ul class="hero-points">
         <li>Run tools with scoped env vars for one process.</li>
@@ -49,6 +50,25 @@
 $ kimen run --env API_KEY=api_key -- ./your-command
 $ kimen render --file ./config/api.key=api_key
 $ kimen sync --check --json</code></pre>
+    </section>
+
+    <section id="fit" class="container reveal fit-grid">
+      <article class="panel">
+        <h3>Best fit</h3>
+        <ul>
+          <li>You want local-first runtime behavior.</li>
+          <li>You want strong CLI automation and typed JSON output.</li>
+          <li>You need team sync, but still want local runtime independence.</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>Not ideal if</h3>
+        <ul>
+          <li>You need mandatory hosted IAM policy enforcement at runtime.</li>
+          <li>You want browser-based secrets management as the primary UX.</li>
+          <li>You expect built-in enterprise SaaS workflows today.</li>
+        </ul>
+      </article>
     </section>
 
     <section id="benefits" class="container reveal">
