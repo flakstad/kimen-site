@@ -6,7 +6,7 @@
     <title>Kimen Variant 01 | Ledger</title>
     <meta
       name="description"
-      content="Ledger concept for Kimen: a forensic, exposure-first landing page."
+      content="Ledger concept for Kimen: a plain-language technical brief."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,12 +16,11 @@
     />
     <style>
       :root {
-        --paper: #f4f1eb;
-        --ink: #111217;
-        --muted: #505664;
-        --line: #c7c0b5;
-        --signal: #b22128;
-        --signal-soft: rgba(178, 33, 40, 0.1);
+        --paper: #f7f4ee;
+        --ink: #101116;
+        --muted: #545b69;
+        --line: #cbc4b8;
+        --stamp: #ab2227;
       }
 
       * {
@@ -33,18 +32,19 @@
         font-family: "Public Sans", sans-serif;
         color: var(--ink);
         background:
-          linear-gradient(180deg, rgba(178, 33, 40, 0.04), transparent 18%),
+          linear-gradient(180deg, rgba(171, 34, 39, 0.035), transparent 14%),
           var(--paper);
       }
 
       main {
-        width: min(1120px, 92vw);
+        width: min(1080px, 92vw);
         margin: 0 auto;
         padding: 2rem 0 4rem;
       }
 
       .topline,
-      .label,
+      .meta-label,
+      .section-mark,
       .mono {
         font-family: "IBM Plex Mono", monospace;
       }
@@ -64,11 +64,18 @@
         color: inherit;
       }
 
-      .hero {
+      .sheet {
+        margin-top: 1.5rem;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.48);
+      }
+
+      .sheet-header {
         display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
-        gap: 2rem;
-        padding: 2.5rem 0 3rem;
+        grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+        gap: 1rem;
+        padding: 1.35rem;
+        border-bottom: 1px solid var(--line);
       }
 
       h1,
@@ -80,60 +87,60 @@
       }
 
       h1 {
-        font-size: clamp(3.2rem, 8vw, 6.6rem);
-        letter-spacing: -0.07em;
-        max-width: 9ch;
+        font-size: clamp(4rem, 11vw, 8.5rem);
+        letter-spacing: -0.08em;
       }
 
-      .intro {
-        max-width: 43rem;
-        margin-top: 1.35rem;
-        font-size: 1.14rem;
+      .definition {
+        align-self: end;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0;
+      }
+
+      .meta-cell {
+        padding: 0.95rem 1.1rem;
+        border-right: 1px solid var(--line);
+      }
+
+      .meta-cell:last-child {
+        border-right: 0;
+      }
+
+      .meta-label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-size: 0.74rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--stamp);
+      }
+
+      .meta-cell p {
+        margin: 0;
         color: var(--muted);
       }
 
-      .mark {
+      .stamp {
         display: inline-block;
-        margin-top: 1.5rem;
-        padding: 0.45rem 0.7rem;
-        border: 2px solid var(--signal);
-        color: var(--signal);
+        margin-top: 1rem;
+        padding: 0.35rem 0.65rem;
+        border: 2px solid var(--stamp);
+        color: var(--stamp);
         font-weight: 700;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        transform: rotate(-4deg);
-      }
-
-      .casefile {
-        align-self: start;
-        padding: 1rem 0 0;
-      }
-
-      .case-row {
-        display: grid;
-        grid-template-columns: 8rem minmax(0, 1fr);
-        gap: 1rem;
-        padding: 0.9rem 0;
-        border-top: 1px solid var(--line);
-      }
-
-      .label {
-        font-size: 0.76rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--signal);
-      }
-
-      .case-row p {
-        margin: 0;
-      }
-
-      .case-row p:last-child {
-        color: var(--muted);
+        transform: rotate(-3deg);
       }
 
       .section {
-        padding: 2.25rem 0 0;
+        margin-top: 2rem;
+        padding-top: 1rem;
         border-top: 1px solid var(--line);
       }
 
@@ -144,14 +151,20 @@
         align-items: start;
       }
 
+      .section-mark {
+        font-size: 0.76rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--stamp);
+      }
+
       .section h2 {
         font-size: clamp(2rem, 4vw, 3.2rem);
         letter-spacing: -0.05em;
-        max-width: 12ch;
       }
 
       .section-copy {
-        max-width: 42rem;
+        max-width: 40rem;
         margin-top: 1rem;
         color: var(--muted);
       }
@@ -162,7 +175,7 @@
 
       .row {
         display: grid;
-        grid-template-columns: 10rem minmax(0, 1fr);
+        grid-template-columns: 12rem minmax(0, 1fr);
         gap: 1rem;
         padding: 1rem 0;
         border-top: 1px solid var(--line);
@@ -189,15 +202,24 @@
       .command {
         padding: 1rem;
         border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.45);
+      }
+
+      .command-title {
+        margin: 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.76rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--stamp);
       }
 
       pre {
         margin: 0.8rem 0 0;
         white-space: pre-wrap;
         font-family: "IBM Plex Mono", monospace;
-        font-size: 0.88rem;
-        line-height: 1.7;
+        font-size: 0.86rem;
+        line-height: 1.72;
       }
 
       .footer {
@@ -210,11 +232,20 @@
       }
 
       @media (max-width: 860px) {
-        .hero,
+        .sheet-header,
+        .meta-grid,
         .section-head,
-        .row,
-        .case-row {
+        .row {
           grid-template-columns: 1fr;
+        }
+
+        .meta-cell {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .meta-cell:last-child {
+          border-bottom: 0;
         }
       }
     </style>
@@ -226,70 +257,73 @@
         <a href="../index.html">Back to variants</a>
       </div>
 
-      <section class="hero">
-        <div>
-          <h1>Most secret tools solve storage. Kimen solves exposure.</h1>
-          <p class="intro">
-            Encryption at rest is not the interesting part anymore. Kimen keeps
-            secrets in a local vault, then projects them into runtime only when
-            you ask and only in the shape the target process requires.
-          </p>
-          <span class="mark mono">Explicit projection</span>
+      <section class="sheet">
+        <div class="sheet-header">
+          <div>
+            <h1>Kimen</h1>
+            <span class="stamp mono">Open source CLI</span>
+          </div>
+          <div class="definition">
+            A local command-line tool for storing secrets in an encrypted vault
+            and projecting them into environment variables or files for the
+            process that needs them.
+          </div>
         </div>
 
-        <aside class="casefile">
-          <div class="case-row">
-            <p class="label">Vault</p>
-            <p>Encrypted local storage</p>
+        <div class="meta-grid">
+          <div class="meta-cell">
+            <span class="meta-label">Type</span>
+            <p>Command-line tool</p>
           </div>
-          <div class="case-row">
-            <p class="label">Trigger</p>
-            <p>Explicit user or automation intent</p>
+          <div class="meta-cell">
+            <span class="meta-label">Storage</span>
+            <p>Encrypted local vault</p>
           </div>
-          <div class="case-row">
-            <p class="label">Shape</p>
-            <p>Env var, file, envfile, child process</p>
+          <div class="meta-cell">
+            <span class="meta-label">Projection</span>
+            <p>Env vars, files, envfiles, child processes</p>
           </div>
-          <div class="case-row">
-            <p class="label">Boundary</p>
-            <p>Only the named process gets the value</p>
+          <div class="meta-cell">
+            <span class="meta-label">Runtime model</span>
+            <p>Local-first</p>
           </div>
-        </aside>
+        </div>
       </section>
 
       <section class="section">
         <div class="section-head">
-          <p class="label">Case notes</p>
+          <p class="section-mark">What it is</p>
           <div>
-            <h2>Kimen is about runtime discipline, not just secret storage.</h2>
+            <h2>Plain language first.</h2>
             <p class="section-copy">
-              The unique move is not "put a secret in a vault." The unique move
-              is "do not let that secret become part of the ambient weather of
-              your shell, machine, or assistant session."
+              Kimen keeps secrets out of ambient shell state. You store a value
+              in the local vault. Later, when a command or tool needs that
+              value, Kimen can inject it as an env var or render it to a file
+              for that one use.
             </p>
           </div>
         </div>
 
         <div class="rows">
           <div class="row">
-            <p class="label">Not ambient</p>
+            <p class="section-mark">Problem</p>
             <p>
-              Avoid long-lived exports and copied `.env` files that outlive the
-              task that needed them.
+              Secret values often spread through global shell exports, copied
+              `.env` files, and tools that never needed them.
             </p>
           </div>
           <div class="row">
-            <p class="label">Not hosted-first</p>
+            <p class="section-mark">Kimen approach</p>
             <p>
-              The hot path stays local. Team sync can exist without making local
-              runtime depend on a control plane.
+              Keep the value encrypted until you explicitly project it into the
+              target process.
             </p>
           </div>
           <div class="row">
-            <p class="label">Not magic</p>
+            <p class="section-mark">Why it exists</p>
             <p>
-              Once you deliberately hand a secret to a process, that process has
-              it. Kimen narrows exposure before that point.
+              Storage alone is not enough. The more important question is how a
+              secret enters runtime and how widely it is exposed on the way in.
             </p>
           </div>
         </div>
@@ -297,15 +331,46 @@
 
       <section class="section">
         <div class="section-head">
-          <p class="label">Evidence</p>
+          <p class="section-mark">How it works</p>
           <div>
-            <h2>Three concrete moments where Kimen is better than habit.</h2>
+            <h2>Vault. Ask. Project. Run.</h2>
+          </div>
+        </div>
+
+        <div class="rows">
+          <div class="row">
+            <p class="section-mark">01</p>
+            <p>The secret is stored in the encrypted local vault.</p>
+          </div>
+          <div class="row">
+            <p class="section-mark">02</p>
+            <p>You ask Kimen to map it to a name and a runtime shape.</p>
+          </div>
+          <div class="row">
+            <p class="section-mark">03</p>
+            <p>The target command starts with that value available.</p>
+          </div>
+          <div class="row">
+            <p class="section-mark">04</p>
+            <p>
+              The secret is not left as general shell state by default after the
+              command finishes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <p class="section-mark">Examples</p>
+          <div>
+            <h2>Actual commands.</h2>
           </div>
         </div>
 
         <div class="commands">
           <div class="command">
-            <p class="label">One process, one env var</p>
+            <p class="command-title">One process, one env var</p>
             <pre>
 $ kimen run \
   --env SERVICE_API_TOKEN=demo_service_api_token \
@@ -313,7 +378,7 @@ $ kimen run \
             >
           </div>
           <div class="command">
-            <p class="label">File only when the tool insists</p>
+            <p class="command-title">Render a file when a tool requires one</p>
             <pre>
 $ OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
 $ kimen render --dir "$OUTDIR" \
@@ -321,7 +386,9 @@ $ kimen render --dir "$OUTDIR" \
             >
           </div>
           <div class="command">
-            <p class="label">Assistant gets one key, not your whole shell</p>
+            <p class="command-title">
+              Give a tool one key, not the whole shell
+            </p>
             <pre>
 $ kimen run \
   --env PROVIDER_API_KEY=assistant_key \
