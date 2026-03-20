@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kimen Variants</title>
+    <meta
+      name="description"
+      content="Three creative landing-page variants for Kimen."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0c1118;
+        --panel: #121925;
+        --line: #293245;
+        --text: #ecf2fb;
+        --muted: #99a8bf;
+        --accent: #8aa4ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Public Sans", sans-serif;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(138, 164, 255, 0.16),
+            transparent 30%
+          ),
+          var(--bg);
+        color: var(--text);
+      }
+
+      main {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+        padding: 4rem 0 5rem;
+      }
+
+      .eyebrow {
+        margin: 0 0 1rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        font-family: "Archivo", sans-serif;
+        line-height: 0.95;
+      }
+
+      h1 {
+        max-width: 11ch;
+        font-size: clamp(3rem, 8vw, 6rem);
+        letter-spacing: -0.06em;
+      }
+
+      .intro {
+        max-width: 42rem;
+        margin-top: 1.25rem;
+        font-size: 1.12rem;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 3rem;
+      }
+
+      .card {
+        display: grid;
+        gap: 1rem;
+        padding: 1.25rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.015)
+        );
+        text-decoration: none;
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+      }
+
+      .card-id {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .card h2 {
+        font-size: 2rem;
+        letter-spacing: -0.05em;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .traits {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 0.35rem;
+      }
+
+      .traits span {
+        padding: 0.3rem 0.55rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 0.84rem;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Kimen exploration set</p>
+      <h1>Three concepts. Three different answers to the same product.</h1>
+      <p class="intro">
+        Each variant starts from the same Kimen idea: keep secrets in a local
+        vault, then project them into the target process only on explicit
+        intent. The structure, tone, and visual system are intentionally
+        different.
+      </p>
+
+      <section class="grid">
+        <a class="card" href="./ledger/index.html">
+          <span class="card-id">Variant 01</span>
+          <h2>Ledger</h2>
+          <p>
+            A forensic dossier layout focused on exposure, accountability, and
+            direct claims.
+          </p>
+          <div class="traits">
+            <span>light</span>
+            <span>document</span>
+            <span>redaction</span>
+          </div>
+        </a>
+
+        <a class="card" href="./signal/index.html">
+          <span class="card-id">Variant 02</span>
+          <h2>Signal</h2>
+          <p>
+            A process-lane interface built around where secrets flow and where
+            they do not.
+          </p>
+          <div class="traits">
+            <span>dark</span>
+            <span>systems</span>
+            <span>runtime lanes</span>
+          </div>
+        </a>
+
+        <a class="card" href="./chamber/index.html">
+          <span class="card-id">Variant 03</span>
+          <h2>Chamber</h2>
+          <p>
+            A poster-like vault-door concept with sparse copy and a more
+            sculptural hero.
+          </p>
+          <div class="traits">
+            <span>poster</span>
+            <span>object-led</span>
+            <span>cobalt</span>
+          </div>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>

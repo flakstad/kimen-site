@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kimen Variant 03 | Chamber</title>
+    <meta
+      name="description"
+      content="Chamber concept for Kimen: a sculptural vault-door landing page."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #08090f;
+        --text: #edf1ff;
+        --muted: #a0a7c1;
+        --line: #2f3550;
+        --accent: #6d78ff;
+        --accent-soft: rgba(109, 120, 255, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Work Sans", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 50% 20%,
+            rgba(109, 120, 255, 0.2),
+            transparent 28%
+          ),
+          linear-gradient(180deg, #07080d 0%, #0a0c13 100%);
+      }
+
+      main {
+        width: min(1180px, 94vw);
+        margin: 0 auto;
+        padding: 2rem 0 4rem;
+      }
+
+      .topline,
+      .eyebrow,
+      .orbit-label,
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .topline {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .topline a {
+        color: inherit;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 1.05fr);
+        gap: 1rem;
+        align-items: center;
+        min-height: 84vh;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        font-family: "Chakra Petch", sans-serif;
+        line-height: 0.92;
+      }
+
+      h1 {
+        max-width: 8ch;
+        font-size: clamp(3.4rem, 9vw, 7.4rem);
+        letter-spacing: -0.05em;
+      }
+
+      h2 {
+        font-size: clamp(2rem, 4vw, 3.6rem);
+        letter-spacing: -0.04em;
+      }
+
+      .eyebrow {
+        margin: 0 0 0.9rem;
+        font-size: 0.76rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #a8b2ff;
+      }
+
+      .intro {
+        max-width: 31rem;
+        margin-top: 1.2rem;
+        color: var(--muted);
+        font-size: 1.08rem;
+      }
+
+      .truths {
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 1.4rem;
+      }
+
+      .truths div {
+        padding-left: 1rem;
+        border-left: 2px solid var(--accent);
+      }
+
+      .vault {
+        position: relative;
+        width: min(42rem, 80vw);
+        aspect-ratio: 1;
+        margin-inline: auto;
+      }
+
+      .ring,
+      .core,
+      .wheel,
+      .wheel::before,
+      .wheel::after {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+      }
+
+      .ring {
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      .ring.r2 {
+        inset: 12%;
+      }
+
+      .ring.r3 {
+        inset: 27%;
+        background: radial-gradient(
+          circle,
+          rgba(109, 120, 255, 0.14),
+          transparent 68%
+        );
+      }
+
+      .core {
+        inset: 37%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: linear-gradient(
+          180deg,
+          rgba(109, 120, 255, 0.12),
+          rgba(255, 255, 255, 0.02)
+        );
+        box-shadow: 0 0 120px rgba(109, 120, 255, 0.16);
+      }
+
+      .wheel {
+        inset: 44%;
+      }
+
+      .wheel::before,
+      .wheel::after {
+        content: "";
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent 48%,
+          rgba(255, 255, 255, 0.7) 48%,
+          rgba(255, 255, 255, 0.7) 52%,
+          transparent 52%
+        );
+      }
+
+      .wheel::after {
+        transform: rotate(90deg);
+      }
+
+      .orbit-label {
+        position: absolute;
+        padding: 0.35rem 0.55rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(10, 12, 19, 0.78);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #d6ddff;
+      }
+
+      .o1 {
+        top: 8%;
+        right: 8%;
+      }
+
+      .o2 {
+        bottom: 16%;
+        right: 4%;
+      }
+
+      .o3 {
+        bottom: 8%;
+        left: 10%;
+      }
+
+      .manifest {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .manifest p {
+        margin: 0;
+        padding-top: 0.8rem;
+        border-top: 2px solid var(--line);
+        color: var(--muted);
+      }
+
+      .manifest strong {
+        display: block;
+        margin-bottom: 0.45rem;
+        color: var(--text);
+      }
+
+      .commands {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin-top: 2rem;
+      }
+
+      pre {
+        margin: 0;
+        padding: 1rem;
+        overflow-x: auto;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin-top: 3rem;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .manifest,
+        .commands {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+          padding: 2rem 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="topline">
+        <span>Variant 03 / Chamber</span>
+        <a href="../index.html">Back to variants</a>
+      </div>
+
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Vault object</p>
+          <h1>Stored closed. Opened on intent.</h1>
+          <p class="intro">
+            Kimen is a local-first vault for secrets and config material. Its
+            differentiator is not storage alone. Its differentiator is how
+            values enter runtime: explicitly, narrowly, and only for the target
+            process.
+          </p>
+          <div class="truths">
+            <div>No required account.</div>
+            <div>No browser-first control surface.</div>
+            <div>No mandatory hosted backend in the hot path.</div>
+          </div>
+        </div>
+
+        <div class="vault">
+          <div class="ring"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+          <div class="core"></div>
+          <div class="wheel"></div>
+          <span class="orbit-label o1">vault / local / encrypted</span>
+          <span class="orbit-label o2">projection / env / file / envfile</span>
+          <span class="orbit-label o3">target / named / process</span>
+        </div>
+      </section>
+
+      <section class="manifest">
+        <p>
+          <strong>Before Kimen</strong>
+          Values drift into shell state, copied files, and tools that did not
+          need them.
+        </p>
+        <p>
+          <strong>With Kimen</strong>
+          The vault is the resting state. Projection is an explicit event.
+        </p>
+        <p>
+          <strong>What stays true</strong>
+          Once a process gets a secret, that process has it. Kimen narrows the
+          path up to that point.
+        </p>
+      </section>
+
+      <section class="commands">
+        <pre>
+$ kimen run \
+  --env SERVICE_API_TOKEN=demo_service_api_token \
+  -- ./your-command</pre
+        >
+        <pre>
+$ kimen render \
+  --dir "$OUTDIR" \
+  --file service-api-token.txt=demo_service_api_token</pre
+        >
+        <pre>
+$ kimen run \
+  --env PROVIDER_API_KEY=assistant_key \
+  -- codex</pre
+        >
+      </section>
+
+      <div class="footer">
+        <p class="mono">Kimen / vault first / runtime by intent</p>
+        <a href="https://github.com/flakstad/kimen">GitHub</a>
+      </div>
+    </main>
+  </body>
+</html>
