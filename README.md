@@ -7,7 +7,7 @@ Standalone static site for Kimen (marketing + docs gateway), intentionally separ
 - Product landing page
 - Brand narrative including "why the name Kimen"
 - Current product scope/positioning (local-first, no required signup)
-- Links to canonical repo/docs (replace placeholders before launch)
+- Links to the canonical repo and docs, with room to customize later if needed
 
 ## Local preview
 
@@ -27,6 +27,6 @@ A workflow is included at `.github/workflows/pages.yml`.
 
 ## Customization checklist
 
-- Replace placeholder GitHub/docs links in `index.html`.
 - Add your canonical social preview image and meta tags.
 - Optional: add custom domain and `CNAME`.
+- Adjust external repo/docs links in `index.html` if the canonical URLs change.
