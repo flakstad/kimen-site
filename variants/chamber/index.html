@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen Variant 03 | Orbit</title>
+    <title>Kimen Variant 03 | Relay</title>
     <meta
       name="description"
-      content="Orbit concept for Kimen: an interactive vault and projection selector."
+      content="Relay concept for Kimen: an interactive trace from vault to config field to env to app."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,12 +16,12 @@
     />
     <style>
       :root {
-        --bg: #0b0f18;
-        --panel: #101728;
-        --line: #253149;
-        --text: #edf1f8;
-        --muted: #9aa5b6;
-        --accent: #e9b14a;
+        --bg: #0a0f18;
+        --line: #243149;
+        --text: #edf2f8;
+        --muted: #98a5b7;
+        --accent: #ebb14c;
+        --accent-soft: rgba(235, 177, 76, 0.18);
       }
 
       * {
@@ -35,22 +35,23 @@
         background:
           radial-gradient(
             circle at center,
-            rgba(233, 177, 74, 0.12),
+            rgba(235, 177, 76, 0.12),
             transparent 24%
           ),
           var(--bg);
       }
 
       main {
-        width: min(980px, 92vw);
+        width: min(1040px, 94vw);
         margin: 0 auto;
         padding: 1.75rem 0 4rem;
       }
 
       .topline,
       .controls button,
-      .definition,
-      pre {
+      .summary,
+      pre,
+      .label {
         font-family: "IBM Plex Mono", monospace;
       }
 
@@ -68,8 +69,8 @@
       }
 
       .stage {
-        width: min(100%, 780px);
-        margin: 1.5rem auto 0;
+        width: min(100%, 920px);
+        margin: 1.4rem auto 0;
       }
 
       svg {
@@ -78,90 +79,88 @@
         height: auto;
       }
 
-      .ring,
-      .vault,
+      .vault-ring,
       .vault-core,
-      .target,
-      .beam {
+      .sheet,
+      .env,
+      .app,
+      .slot,
+      .env-line,
+      .app-line,
+      .path {
         fill: none;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
 
-      .ring,
-      .vault {
+      .vault-ring,
+      .sheet,
+      .env,
+      .app {
         stroke: var(--line);
         stroke-width: 3;
       }
 
       .vault-core,
-      .target {
+      .slot,
+      .env-line,
+      .app-line,
+      .path {
         stroke: var(--accent);
         stroke-width: 3;
       }
 
-      .beam {
-        stroke: var(--accent);
-        stroke-width: 4;
-        opacity: 0.14;
-        transition: opacity 180ms ease;
+      .node {
+        fill: rgba(255, 255, 255, 0.04);
+        stroke: var(--line);
+        stroke-width: 3;
       }
 
-      .target-fill,
-      .secret-dot {
-        fill: rgba(233, 177, 74, 0.15);
+      .node.active {
+        fill: var(--accent-soft);
+        stroke: var(--accent);
+      }
+
+      .path {
+        opacity: 0.12;
+        transition: opacity 160ms ease;
+      }
+
+      .path.active {
+        opacity: 1;
+      }
+
+      .slot-fill {
+        fill: rgba(235, 177, 76, 0.14);
         stroke: var(--accent);
         stroke-width: 3;
       }
 
-      .target-label,
-      .vault-label {
-        font-family: "IBM Plex Mono", monospace;
-        font-size: 18px;
+      .slot-group,
+      .env-group {
+        opacity: 0.25;
+        transition: opacity 160ms ease;
+      }
+
+      .slot-group.active,
+      .env-group.active {
+        opacity: 1;
+      }
+
+      .label {
+        font-size: 17px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         fill: var(--muted);
       }
 
-      .active .beam,
-      .beam.active {
-        opacity: 1;
-      }
-
-      .target-group.active .target-fill {
-        fill: rgba(233, 177, 74, 0.34);
-      }
-
-      .target-group.active .target {
-        filter: drop-shadow(0 0 18px rgba(233, 177, 74, 0.35));
-      }
-
-      .secret-dot {
-        animation: orbit 4.2s ease-in-out infinite;
-      }
-
-      .copy {
-        max-width: 40rem;
-        margin: 1.25rem auto 0;
-        text-align: center;
-      }
-
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
-      .definition {
-        margin: 0;
-        color: var(--muted);
+      .summary {
+        max-width: 44rem;
+        margin: 1.4rem auto 0;
+        font-size: 0.94rem;
         line-height: 1.7;
+        text-align: center;
+        color: var(--muted);
       }
 
       .controls {
@@ -169,7 +168,7 @@
         justify-content: center;
         flex-wrap: wrap;
         gap: 0.7rem;
-        margin-top: 1.35rem;
+        margin-top: 1.25rem;
       }
 
       .controls button {
@@ -190,147 +189,192 @@
       }
 
       pre {
-        width: min(46rem, 100%);
-        margin: 1.4rem auto 0;
+        width: min(32rem, 100%);
+        margin: 1.3rem auto 0;
         padding: 1rem 1.1rem;
         border: 1px solid var(--line);
-        border-radius: 1.1rem;
+        border-radius: 1rem;
         background: rgba(255, 255, 255, 0.02);
         font-size: 0.86rem;
         line-height: 1.7;
         white-space: pre-wrap;
       }
 
-      @keyframes orbit {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-
-        50% {
-          transform: translateX(18px);
-        }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
     </style>
   </head>
   <body>
-    <main data-mode="env">
-      <h1 class="sr-only">Kimen</h1>
+    <main data-mode="token">
+      <h1 class="sr-only">Kimen Relay Variant</h1>
       <div class="topline">
-        <span>Variant 03 / Orbit</span>
+        <span>Variant 03 / Relay</span>
         <a href="../index.html">Back to variants</a>
       </div>
 
       <div class="stage">
         <svg
-          viewBox="0 0 780 520"
+          viewBox="0 0 920 560"
           role="img"
-          aria-label="Interactive vault projection diagram."
+          aria-label="Interactive relay from vault to config sheet to standard environment variables to a simple application."
         >
-          <circle class="ring" cx="300" cy="260" r="190" />
-          <circle class="vault" cx="300" cy="260" r="108" />
-          <circle class="vault-core" cx="300" cy="260" r="52" />
+          <text class="label" x="60" y="96">Vault</text>
+          <text class="label" x="330" y="96">Config sheet</text>
+          <text class="label" x="648" y="96">Standard env</text>
+          <text class="label" x="804" y="96">App</text>
+
+          <circle class="vault-ring" cx="164" cy="266" r="108" />
+          <circle class="vault-core" cx="164" cy="266" r="44" />
+
+          <circle class="node node-token active" cx="120" cy="188" r="22" />
+          <circle class="node node-db" cx="242" cy="266" r="22" />
+          <circle class="node node-cert" cx="120" cy="344" r="22" />
+
           <rect
-            class="secret-dot"
-            x="118"
-            y="244"
-            width="32"
-            height="32"
-            rx="16"
+            class="sheet"
+            x="308"
+            y="132"
+            width="252"
+            height="272"
+            rx="22"
           />
-          <text class="vault-label" x="244" y="266">Kimen</text>
+          <path class="slot" d="M346 192 H458" />
+          <path class="slot" d="M346 266 H458" />
+          <path class="slot" d="M346 340 H458" />
 
-          <g class="beam-group beam-env">
-            <path class="beam active" d="M386 224 Q500 182 620 122" />
-          </g>
-          <g class="beam-group beam-file">
-            <path class="beam" d="M408 260 H640" />
-          </g>
-          <g class="beam-group beam-child">
-            <path class="beam" d="M386 296 Q500 338 620 398" />
-          </g>
-
-          <g class="target-group target-env active">
-            <circle class="target-fill" cx="646" cy="108" r="44" />
-            <circle class="target" cx="646" cy="108" r="44" />
-            <path class="target" d="M622 108 H670" />
-            <text class="target-label" x="604" y="34">Env</text>
-          </g>
-
-          <g class="target-group target-file">
-            <circle class="target-fill" cx="670" cy="260" r="44" />
-            <circle class="target" cx="670" cy="260" r="44" />
-            <path class="target" d="M646 244 H694" />
-            <path class="target" d="M646 260 H688" />
-            <path class="target" d="M646 276 H680" />
-            <text class="target-label" x="626" y="208">File</text>
-          </g>
-
-          <g class="target-group target-child">
-            <circle class="target-fill" cx="646" cy="412" r="44" />
-            <circle class="target" cx="646" cy="412" r="44" />
+          <g class="slot-group slot-token active">
             <rect
-              class="target"
-              x="626"
-              y="392"
-              width="40"
-              height="40"
-              rx="10"
+              class="slot-fill"
+              x="446"
+              y="174"
+              width="76"
+              height="34"
+              rx="17"
             />
-            <text class="target-label" x="566" y="490">Child process</text>
           </g>
+          <g class="slot-group slot-db">
+            <rect
+              class="slot-fill"
+              x="430"
+              y="248"
+              width="92"
+              height="34"
+              rx="17"
+            />
+          </g>
+          <g class="slot-group slot-cert">
+            <rect
+              class="slot-fill"
+              x="420"
+              y="322"
+              width="102"
+              height="34"
+              rx="17"
+            />
+          </g>
+
+          <path
+            class="path path-token-a active"
+            d="M142 206 C210 202 252 188 308 192"
+          />
+          <path class="path path-token-b active" d="M560 192 H648" />
+          <path class="path path-db-a" d="M220 266 H308" />
+          <path class="path path-db-b" d="M560 266 H648" />
+          <path
+            class="path path-cert-a"
+            d="M142 326 C210 330 252 344 308 340"
+          />
+          <path class="path path-cert-b" d="M560 340 H648" />
+
+          <rect class="env" x="648" y="158" width="116" height="222" rx="18" />
+          <g class="env-group env-token active">
+            <path class="env-line" d="M674 198 H740" />
+          </g>
+          <g class="env-group env-db">
+            <path class="env-line" d="M674 272 H740" />
+          </g>
+          <g class="env-group env-cert">
+            <path class="env-line" d="M674 346 H740" />
+          </g>
+
+          <rect class="app" x="802" y="214" width="90" height="112" rx="18" />
+          <path class="app-line" d="M826 252 H868" />
+          <path class="app-line" d="M826 282 H858" />
         </svg>
       </div>
 
-      <div class="copy">
-        <p class="definition">
-          Store a secret in the encrypted local vault. Choose how to project it.
-          Start the command that needs it.
-        </p>
+      <p class="summary">
+        The app does not change. Pick one secret, trace it through the config
+        sheet, and watch it land as a standard environment variable.
+      </p>
+
+      <div class="controls" aria-label="Projection targets">
+        <button type="button" data-mode="token" aria-pressed="true">
+          Api token
+        </button>
+        <button type="button" data-mode="db" aria-pressed="false">
+          Database url
+        </button>
+        <button type="button" data-mode="cert" aria-pressed="false">
+          Tls cert path
+        </button>
       </div>
 
-      <div class="controls" aria-label="Projection shapes">
-        <button type="button" data-mode="env" aria-pressed="true">
-          Env var
-        </button>
-        <button type="button" data-mode="file" aria-pressed="false">
-          File
-        </button>
-        <button type="button" data-mode="child" aria-pressed="false">
-          Child process
-        </button>
-      </div>
-
-      <pre id="command">
-$ kimen run --env OPENAI_API_KEY=assistant_key -- codex</pre
-      >
+      <pre id="mapping">process.env.API_TOKEN</pre>
     </main>
 
     <script>
-      const commands = {
-        env: "$ kimen run --env OPENAI_API_KEY=assistant_key -- codex",
-        file: '$ kimen render --dir "$OUTDIR" --file service-api-token.txt=demo_service_api_token',
-        child:
-          "$ kimen run --env DATABASE_URL=demo_database_url -- clojure -M:test",
+      const mappingText = {
+        token: "process.env.API_TOKEN",
+        db: "process.env.DATABASE_URL",
+        cert: "process.env.TLS_CERT_PATH",
       };
 
       const root = document.querySelector("main");
-      const command = document.getElementById("command");
+      const mapping = document.getElementById("mapping");
       const buttons = document.querySelectorAll("[data-mode]");
-      const beams = {
-        env: document.querySelector(".beam-env .beam"),
-        file: document.querySelector(".beam-file .beam"),
-        child: document.querySelector(".beam-child .beam"),
+      const nodes = {
+        token: document.querySelector(".node-token"),
+        db: document.querySelector(".node-db"),
+        cert: document.querySelector(".node-cert"),
       };
-      const targets = {
-        env: document.querySelector(".target-env"),
-        file: document.querySelector(".target-file"),
-        child: document.querySelector(".target-child"),
+      const slots = {
+        token: document.querySelector(".slot-token"),
+        db: document.querySelector(".slot-db"),
+        cert: document.querySelector(".slot-cert"),
+      };
+      const envs = {
+        token: document.querySelector(".env-token"),
+        db: document.querySelector(".env-db"),
+        cert: document.querySelector(".env-cert"),
+      };
+      const paths = {
+        token: [
+          document.querySelector(".path-token-a"),
+          document.querySelector(".path-token-b"),
+        ],
+        db: [
+          document.querySelector(".path-db-a"),
+          document.querySelector(".path-db-b"),
+        ],
+        cert: [
+          document.querySelector(".path-cert-a"),
+          document.querySelector(".path-cert-b"),
+        ],
       };
 
       function setMode(mode) {
         root.dataset.mode = mode;
-        command.textContent = commands[mode];
+        mapping.textContent = mappingText[mode];
 
         buttons.forEach((button) => {
           button.setAttribute(
@@ -339,12 +383,22 @@ $ kimen run --env OPENAI_API_KEY=assistant_key -- codex</pre
           );
         });
 
-        Object.entries(beams).forEach(([key, beam]) => {
-          beam.classList.toggle("active", key === mode);
+        Object.entries(nodes).forEach(([key, node]) => {
+          node.classList.toggle("active", key === mode);
         });
 
-        Object.entries(targets).forEach(([key, target]) => {
-          target.classList.toggle("active", key === mode);
+        Object.entries(slots).forEach(([key, slot]) => {
+          slot.classList.toggle("active", key === mode);
+        });
+
+        Object.entries(envs).forEach(([key, env]) => {
+          env.classList.toggle("active", key === mode);
+        });
+
+        Object.entries(paths).forEach(([key, group]) => {
+          group.forEach((path) =>
+            path.classList.toggle("active", key === mode),
+          );
         });
       }
 

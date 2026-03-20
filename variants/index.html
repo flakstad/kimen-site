@@ -6,7 +6,7 @@
     <title>Kimen Variants</title>
     <meta
       name="description"
-      content="Three simpler landing-page variants for Kimen."
+      content="Three new Kimen variants centered on vault, config sheet, env, and app."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,12 +16,11 @@
     />
     <style>
       :root {
-        --bg: #090d12;
-        --panel: #101720;
-        --line: #213042;
-        --text: #f3f6fb;
-        --muted: #99a5b5;
-        --accent: #7ea6ff;
+        --bg: #081019;
+        --line: #213246;
+        --text: #eef3fa;
+        --muted: #96a6bb;
+        --accent: #88a8ff;
       }
 
       * {
@@ -35,14 +34,14 @@
         background:
           radial-gradient(
             circle at top,
-            rgba(126, 166, 255, 0.14),
-            transparent 32%
+            rgba(136, 168, 255, 0.14),
+            transparent 30%
           ),
           var(--bg);
       }
 
       main {
-        width: min(860px, 92vw);
+        width: min(900px, 92vw);
         margin: 0 auto;
         padding: 2.5rem 0 4rem;
       }
@@ -61,10 +60,10 @@
       }
 
       .intro {
-        max-width: 34rem;
+        max-width: 42rem;
         margin: 2rem 0 0;
-        font-size: clamp(1.5rem, 4vw, 2.4rem);
-        line-height: 1.15;
+        font-size: clamp(1.5rem, 4vw, 2.6rem);
+        line-height: 1.12;
       }
 
       .list {
@@ -77,7 +76,7 @@
         grid-template-columns: 4.5rem minmax(0, 1fr);
         gap: 1.25rem;
         align-items: start;
-        padding: 1.3rem 0;
+        padding: 1.35rem 0;
         border-bottom: 1px solid var(--line);
         color: inherit;
         text-decoration: none;
@@ -97,14 +96,14 @@
 
       .body strong {
         display: block;
-        font-size: clamp(1.7rem, 4vw, 3rem);
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
         font-weight: 500;
         line-height: 1;
       }
 
       .body span {
         display: block;
-        max-width: 28rem;
+        max-width: 32rem;
         margin-top: 0.5rem;
         color: var(--muted);
         line-height: 1.5;
@@ -120,36 +119,37 @@
   </head>
   <body>
     <main>
-      <p class="topline">Kimen / three fresh directions</p>
+      <p class="topline">Kimen / vault + config + env</p>
       <p class="intro">
-        Less landing page. More structure, geometry, and plain language about
-        what the tool actually does.
+        Three new sketches around the same idea: Kimen keeps secrets in the
+        local vault, fills the right fields when needed, and lets the
+        application stay simple and read ordinary environment variables.
       </p>
 
       <nav class="list" aria-label="Variants">
         <a class="item" href="./ledger/index.html">
           <span class="index">01</span>
           <span class="body">
-            <strong>Projection</strong>
-            <span>Dark poster. A vault, a beam, one process.</span>
+            <strong>Conduit</strong>
+            <span>Dark flow from vault to config sheet to env to app.</span>
           </span>
         </a>
 
         <a class="item" href="./signal/index.html">
           <span class="index">02</span>
           <span class="body">
-            <strong>Fold</strong>
-            <span>Paper triptych. Three steps, one command, no filler.</span>
+            <strong>Sheet</strong>
+            <span>Paper-first view with static fields and secret blanks.</span>
           </span>
         </a>
 
         <a class="item" href="./chamber/index.html">
           <span class="index">03</span>
           <span class="body">
-            <strong>Orbit</strong>
+            <strong>Relay</strong>
             <span
-              >Interactive vault. Pick the projection shape and watch it
-              move.</span
+              >Interactive trace of one secret through the config into
+              env.</span
             >
           </span>
         </a>
