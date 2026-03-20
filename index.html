@@ -3,34 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen | Keep Secrets Latent Until Runtime</title>
+    <title>Kimen | Vault Secrets Locally. Project Them With Intent.</title>
     <meta
       name="description"
-      content="Kimen is a local-first secrets tool for developers and operators who want encrypted local storage and explicit runtime projection."
+      content="Kimen is a local-first CLI for storing secrets in an encrypted vault and projecting them into the processes that need them only when you ask."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500&amp;family=Fraunces:opsz,wght@9..144,500;9..144,700&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=Azeret+Mono:wght@400;500&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="page-grain" aria-hidden="true"></div>
-    <div class="aura aura-a" aria-hidden="true"></div>
-    <div class="aura aura-b" aria-hidden="true"></div>
-
     <header class="topbar">
       <div class="container topbar-inner">
         <a class="brand" href="#top">
           <span class="brand-word">Kimen</span>
-          <span class="brand-note">latent capability for secrets</span>
+          <span class="brand-note">local-first secrets</span>
         </a>
         <nav class="nav">
           <a href="#model">Model</a>
-          <a href="#recipes">Recipes</a>
-          <a href="#contrast">Contrast</a>
+          <a href="#examples">Examples</a>
+          <a href="#scope">Scope</a>
           <a href="#start">Start</a>
         </nav>
       </div>
@@ -39,352 +35,210 @@
     <main id="top">
       <section class="hero container reveal">
         <div class="hero-copy">
-          <p class="hero-kicker">Local-first runtime projection</p>
-          <h1>Keep secrets latent until the command actually needs them.</h1>
+          <p class="eyebrow">Local-first secrets CLI</p>
+          <h1>
+            Vault secrets locally. Project them into the process that needs
+            them. Only when you ask.
+          </h1>
           <p class="lead">
-            Kimen stores secrets in an encrypted local vault, then projects them
-            into runtime only on explicit intent. Not into every shell. Not into
-            stray env files. Not into every tool that happens to be open.
+            Kimen stores secrets in an encrypted local vault, then materializes
+            them as env vars, files, or envfiles at runtime. The point is
+            simple: keep secrets out of ambient shell state and expose them only
+            with intent.
+          </p>
+          <p class="truth">
+            It is not a hosted control plane. It does not pretend a process is
+            safe after you deliberately give it a secret.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#recipes">See Real Examples</a>
-            <a class="btn btn-ghost" href="#start">Start With The CLI</a>
+            <a class="btn btn-primary" href="#examples">See Examples</a>
+            <a
+              class="btn btn-ghost"
+              href="https://github.com/flakstad/kimen"
+              target="_blank"
+              rel="noreferrer"
+              >GitHub</a
+            >
           </div>
-          <ul class="hero-rules">
-            <li>
-              Scoped runtime shapes: environment variables, files, envfiles,
-              child processes.
-            </li>
-            <li>Local runtime stays usable without a hosted control plane.</li>
-            <li>
-              Team sync stays ciphertext-first instead of turning runtime into
-              SaaS policy plumbing.
-            </li>
-          </ul>
         </div>
 
-        <div class="hero-stage">
-          <p class="stage-label">Projection sequence</p>
-          <div class="state-flow">
-            <article class="state">
-              <p class="state-index">01</p>
-              <h2>Latent</h2>
-              <p>Encrypted at rest inside the local vault.</p>
-            </article>
-            <article class="state">
-              <p class="state-index">02</p>
-              <h2>Mapped</h2>
-              <p>
-                You decide which runtime shape to expose and under what name.
-              </p>
-            </article>
-            <article class="state">
-              <p class="state-index">03</p>
-              <h2>Projected</h2>
-              <p>The child process receives only the value it asked for.</p>
-            </article>
-            <article class="state">
-              <p class="state-index">04</p>
-              <h2>Gone</h2>
-              <p>No permanent shell export and fewer accidental leftovers.</p>
-            </article>
+        <div class="hero-frame">
+          <p class="eyebrow">Vault -> intent -> process</p>
+          <div class="flow">
+            <div class="flow-row">
+              <p class="flow-step">01</p>
+              <div>
+                <strong>Vault</strong>
+                <p>Secrets stay encrypted at rest in local storage.</p>
+              </div>
+            </div>
+            <div class="flow-row">
+              <p class="flow-step">02</p>
+              <div>
+                <strong>Intent</strong>
+                <p>You choose the runtime shape and the target name.</p>
+              </div>
+            </div>
+            <div class="flow-row">
+              <p class="flow-step">03</p>
+              <div>
+                <strong>Process</strong>
+                <p>Only that child process gets the projected value.</p>
+              </div>
+            </div>
           </div>
           <pre class="console"><code>$ kimen vault init
 $ kimen secret set demo_service_api_token
-$ kimen run --env SERVICE_API_TOKEN=demo_service_api_token -- ./your-command
-$ kimen render --dir "$OUTDIR" --file service-api-token.txt=demo_service_api_token</code></pre>
-          <p class="stage-note">
-            <em>Kimen</em> names the incipient form: a secret stays dormant
-            until runtime intent makes it real.
-          </p>
+$ kimen run --env SERVICE_API_TOKEN=demo_service_api_token -- ./your-command</code></pre>
         </div>
       </section>
 
-      <section id="model" class="section-shell container reveal">
-        <aside class="section-rail">
-          <p class="section-number">01</p>
-          <p class="section-name">Field Manual</p>
-        </aside>
-        <div class="section-body">
-          <p class="section-kicker">Who it is for</p>
-          <h2>
-            Built for engineers who want local runtime sovereignty without the
-            usual secret sprawl.
-          </h2>
-          <div class="model-grid">
-            <div class="drift-sheet">
-              <p class="sheet-title">Usual drift</p>
-              <ul class="drift-list">
-                <li>Global shell exports that outlive the task</li>
-                <li>Copied `.env` files with unclear ownership</li>
-                <li>Runtime coupled to a hosted secret provider</li>
-                <li>Agent tooling inheriting secrets it never needed</li>
-              </ul>
-            </div>
-
-            <div class="model-copy">
-              <p>
-                Kimen is for developers, operators, and small technical teams
-                that prefer explicit runtime boundaries over ambient secret
-                availability. The value proposition is narrow on purpose:
-                encrypted local storage, strong CLI contracts, and runtime
-                projection when you actually mean it.
-              </p>
-              <dl class="audience-strip">
-                <div>
-                  <dt>Local dev</dt>
-                  <dd>
-                    Run a tool with one env var for one command, then let it
-                    disappear.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Automation</dt>
-                  <dd>
-                    Generate files or envfiles only when an external tool forces
-                    that shape.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Agent workflows</dt>
-                  <dd>
-                    Narrow the blast radius when an assistant only needs one
-                    projected capability.
-                  </dd>
-                </div>
-              </dl>
-            </div>
+      <section id="model" class="section container reveal">
+        <div class="section-head">
+          <p class="eyebrow">Model</p>
+          <h2>One narrow idea: keep secrets out of ambient runtime state.</h2>
+        </div>
+        <div class="split">
+          <div>
+            <p class="section-label">What Kimen does</p>
+            <ul class="plain-list">
+              <li>Stores secrets in an encrypted local vault.</li>
+              <li>
+                Projects them into env vars, files, envfiles, or child
+                processes.
+              </li>
+              <li>
+                Keeps local runtime usable without requiring a hosted backend.
+              </li>
+              <li>
+                Gives automation structured CLI output instead of brittle text
+                parsing.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p class="section-label">What Kimen does not do</p>
+            <ul class="plain-list">
+              <li>
+                It does not make a secret safe after a process receives it.
+              </li>
+              <li>It does not rely on global shell exports as the default.</li>
+              <li>It does not require a browser UI or an account to work.</li>
+              <li>
+                It does not turn runtime access into a hosted policy problem.
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <section id="recipes" class="section-shell container reveal">
-        <aside class="section-rail">
-          <p class="section-number">02</p>
-          <p class="section-name">Projection Recipes</p>
-        </aside>
-        <div class="section-body">
-          <p class="section-kicker">Concrete examples</p>
-          <h2>
-            More useful than “secure your secrets.” These are the moments where
-            secret sprawl usually begins.
-          </h2>
-          <div class="recipe-grid">
-            <article class="recipe recipe-featured">
-              <p class="recipe-label">One command, one env var</p>
-              <h3>Local development without a global export</h3>
-              <p>
-                Map a vault entry to one child process and keep it out of the
-                rest of the shell session.
-              </p>
-              <pre class="console console-tight"><code>$ kimen run \
+      <section id="examples" class="section container reveal">
+        <div class="section-head">
+          <p class="eyebrow">Examples</p>
+          <h2>Use the secret shape the tool requires. No more.</h2>
+        </div>
+
+        <article class="example">
+          <div class="example-copy">
+            <p class="section-label">Env var for one process</p>
+            <h3>Run a command with one projected secret.</h3>
+            <p>
+              Map one vault entry to one environment variable for one child
+              process instead of exporting it into the whole shell session.
+            </p>
+          </div>
+          <pre class="console"><code>$ kimen run \
     --env SERVICE_API_TOKEN=demo_service_api_token \
     -- sh -lc 'echo "Token length: ${#SERVICE_API_TOKEN}"'</code></pre>
-            </article>
+        </article>
 
-            <article class="recipe">
-              <p class="recipe-label">File-only tool</p>
-              <h3>Render a secret with strict permissions</h3>
-              <p>
-                When a tool insists on a file, generate it just for that run
-                instead of keeping a plaintext artifact around.
-              </p>
-              <pre
-                class="console console-tight"
-              ><code>$ OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
+        <article class="example">
+          <div class="example-copy">
+            <p class="section-label">File when a tool insists on a file</p>
+            <h3>Render a secret with strict permissions.</h3>
+            <p>
+              Some tools only accept files. Generate the file when needed rather
+              than keeping plaintext config around by default.
+            </p>
+          </div>
+          <pre
+            class="console"
+          ><code>$ OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
 $ kimen render --dir "$OUTDIR" \
     --file service-api-token.txt=demo_service_api_token</code></pre>
-            </article>
+        </article>
 
-            <article class="recipe">
-              <p class="recipe-label">Supervisor-friendly</p>
-              <h3>Generate an envfile for systems that expect one</h3>
-              <p>
-                Support process managers and CI wrappers without printing secret
-                values back to the terminal.
-              </p>
-              <pre class="console console-tight"><code>$ kimen envfile \
-    --env SERVICE_API_TOKEN=demo_service_api_token \
-    --out .env.runtime</code></pre>
-            </article>
-
-            <article class="recipe recipe-note">
-              <p class="recipe-label">Agent boundary</p>
-              <h3>
-                Give a coding assistant the one projected key it needs, not your
-                entire shell context.
-              </h3>
-              <pre class="console console-tight"><code>$ kimen run \
+        <article class="example">
+          <div class="example-copy">
+            <p class="section-label">Agent or tool boundary</p>
+            <h3>Project only the capability a tool needs.</h3>
+            <p>
+              If an assistant or subprocess needs one provider key, give it one
+              provider key. Do not hand it the rest of your runtime state.
+            </p>
+          </div>
+          <pre class="console"><code>$ kimen run \
     --env PROVIDER_API_KEY=assistant_key \
     -- codex</code></pre>
-            </article>
-
-            <article class="recipe recipe-wide">
-              <p class="recipe-label">Ciphertext-first team work</p>
-              <h3>
-                Sync encrypted state without changing the local runtime model
-              </h3>
-              <p>
-                Team coordination exists, but Kimen still treats runtime as a
-                local concern instead of a mandatory hosted dependency.
-              </p>
-              <pre
-                class="console console-tight"
-              ><code>$ kimen sync preflight --json
-$ kimen sync status --json
-$ kimen sync push</code></pre>
-            </article>
-          </div>
-        </div>
+        </article>
       </section>
 
-      <section id="contrast" class="section-shell container reveal">
-        <aside class="section-rail">
-          <p class="section-number">03</p>
-          <p class="section-name">Operational Contrast</p>
-        </aside>
-        <div class="section-body">
-          <p class="section-kicker">Difference in practice</p>
-          <h2>From ambient exposure to explicit projection.</h2>
-          <div class="contrast-list">
-            <article class="contrast-row">
-              <p class="contrast-side">Ambient pattern</p>
-              <p class="contrast-copy">
-                Long-lived shell exports and copied env files keep secrets
-                around after the task is over.
-              </p>
-              <p class="contrast-side">Kimen move</p>
-              <p class="contrast-copy">
-                Project one variable or one file for one command, then remove it
-                from the runtime surface again.
-              </p>
-            </article>
-            <article class="contrast-row">
-              <p class="contrast-side">Ambient pattern</p>
-              <p class="contrast-copy">
-                Hosted control planes become part of the runtime path even for
-                local work.
-              </p>
-              <p class="contrast-side">Kimen move</p>
-              <p class="contrast-copy">
-                The vault is local-first. Team sync is useful, but it does not
-                redefine the runtime dependency model.
-              </p>
-            </article>
-            <article class="contrast-row">
-              <p class="contrast-side">Ambient pattern</p>
-              <p class="contrast-copy">
-                Every open process inherits whatever happens to be exported in
-                the current shell.
-              </p>
-              <p class="contrast-side">Kimen move</p>
-              <p class="contrast-copy">
-                Projection is named, scoped, and attached to intent. The blast
-                radius of mistakes gets smaller.
-              </p>
-            </article>
-          </div>
-          <p class="section-note">
-            Kimen reduces accidental exposure. It does not claim magic once you
-            deliberately hand a secret to a process.
+      <section id="scope" class="section container reveal">
+        <div class="section-head">
+          <p class="eyebrow">Scope</p>
+          <h2>Current scope is practical and specific.</h2>
+        </div>
+        <div class="scope-lines">
+          <p>Encrypted local vault.</p>
+          <p>
+            Explicit runtime projection into env vars, files, envfiles, and
+            child processes.
           </p>
+          <p>Optional encrypted sync for team state.</p>
+          <p>Structured CLI output for automation.</p>
         </div>
       </section>
 
-      <section class="section-shell container reveal">
-        <aside class="section-rail">
-          <p class="section-number">04</p>
-          <p class="section-name">Current Scope</p>
-        </aside>
-        <div class="section-body">
-          <p class="section-kicker">Positioning</p>
-          <h2>
-            Local encrypted vault now. Explicit runtime projection now. Team
-            sync now. Mandatory hosted control plane, no.
-          </h2>
-          <div class="scope-grid">
-            <div class="scope-strip">
-              <h3>What exists today</h3>
-              <ul>
-                <li>Encrypted local vault protected by a passphrase.</li>
-                <li>
-                  Projection into env vars, files, envfiles, and child
-                  processes.
-                </li>
-                <li>
-                  Typed CLI output for automation and machine-readable
-                  workflows.
-                </li>
-                <li>Encrypted team sync via `fs` and `git` remotes.</li>
-              </ul>
-            </div>
-            <div class="scope-strip scope-quiet">
-              <h3>What Kimen is not trying to be</h3>
-              <ul>
-                <li>Not a browser-first secret management dashboard.</li>
-                <li>Not a required signup or hosted runtime dependency.</li>
-                <li>
-                  Not a central plaintext execution model wearing a security
-                  label.
-                </li>
-              </ul>
-            </div>
-          </div>
+      <section id="start" class="section container reveal">
+        <div class="section-head">
+          <p class="eyebrow">Start</p>
+          <h2>Start with the CLI.</h2>
         </div>
-      </section>
-
-      <section id="start" class="section-shell container reveal">
-        <aside class="section-rail">
-          <p class="section-number">05</p>
-          <p class="section-name">Start</p>
-        </aside>
-        <div class="section-body">
-          <p class="section-kicker">Get started</p>
-          <h2>Start from the CLI. Keep the runtime boundary visible.</h2>
-          <div class="start-grid">
-            <div>
-              <p class="start-copy">
-                Build from source, initialize a vault, and begin with the
-                smallest possible runtime exposure.
-              </p>
-              <pre
-                class="console"
-              ><code>$ git clone https://github.com/flakstad/kimen.git
+        <div class="start-grid">
+          <div>
+            <p class="lead lead-compact">
+              Build from source, initialize a vault, and start with the smallest
+              possible exposure surface.
+            </p>
+            <pre
+              class="console"
+            ><code>$ git clone https://github.com/flakstad/kimen.git
 $ cd kimen
 $ bb native
 $ kimen vault init</code></pre>
-            </div>
-            <div class="link-stack">
-              <a
-                class="resource-link"
-                href="https://github.com/flakstad/kimen"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span class="resource-label">GitHub</span>
-                <strong>Source, releases, and project history</strong>
-              </a>
-              <a
-                class="resource-link"
-                href="https://github.com/flakstad/kimen/tree/main/docs"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span class="resource-label">Documentation</span>
-                <strong
-                  >CLI reference, projections, automation, threat model</strong
-                >
-              </a>
-              <a
-                class="resource-link"
-                href="https://github.com/flakstad/kimen/blob/main/README.md"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span class="resource-label">Quick start</span>
-                <strong>Five-minute tutorial and install paths</strong>
-              </a>
-            </div>
+          </div>
+          <div class="link-group">
+            <a
+              class="text-link"
+              href="https://github.com/flakstad/kimen"
+              target="_blank"
+              rel="noreferrer"
+              >GitHub</a
+            >
+            <a
+              class="text-link"
+              href="https://github.com/flakstad/kimen/tree/main/docs"
+              target="_blank"
+              rel="noreferrer"
+              >Docs</a
+            >
+            <a
+              class="text-link"
+              href="https://github.com/flakstad/kimen/blob/main/README.md"
+              target="_blank"
+              rel="noreferrer"
+              >Quick start</a
+            >
           </div>
         </div>
       </section>
@@ -393,8 +247,8 @@ $ kimen vault init</code></pre>
     <footer class="footer">
       <div class="container footer-inner">
         <p>
-          Kimen is for keeping secrets dormant until runtime intent makes them
-          real.
+          Store secrets locally. Project them with intent. Keep the runtime
+          surface smaller.
         </p>
         <a href="#top">Back to top</a>
       </div>
