@@ -3,26 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen Variant 02 | Signal</title>
+    <title>Kimen Variant 02 | Fold</title>
     <meta
       name="description"
-      content="Signal concept for Kimen: a runtime-lane landing page."
+      content="Fold concept for Kimen: a simple three-part sheet."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500&amp;family=Public+Sans:wght@400;500;600;700&amp;family=Teko:wght@500;600;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Syne:wght@500;700&amp;display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #071019;
-        --surface: #0d1722;
-        --line: #233247;
-        --text: #eef5ff;
-        --muted: #92a2b8;
-        --accent: #69d1ff;
-        --accent-2: #87f5b7;
+        --paper: #f4efe5;
+        --ink: #171513;
+        --muted: #5c554e;
+        --line: #c9beb0;
+        --accent: #9f2d1f;
       }
 
       * {
@@ -31,39 +29,32 @@
 
       body {
         margin: 0;
-        font-family: "Public Sans", sans-serif;
-        color: var(--text);
+        font-family: "Syne", sans-serif;
+        color: var(--ink);
         background:
-          radial-gradient(
-            circle at 20% 0%,
-            rgba(105, 209, 255, 0.15),
-            transparent 26%
-          ),
-          linear-gradient(180deg, #051019 0%, var(--bg) 100%);
+          linear-gradient(180deg, rgba(159, 45, 31, 0.05), transparent 16%),
+          var(--paper);
       }
 
       main {
-        width: min(1160px, 92vw);
+        width: min(1020px, 92vw);
         margin: 0 auto;
-        padding: 2rem 0 4rem;
+        padding: 1.75rem 0 4rem;
       }
 
       .topline,
-      .eyebrow,
-      .lane-name,
-      .pill,
-      .mono {
-        font-family: "Azeret Mono", monospace;
+      .panel p,
+      .definition,
+      pre {
+        font-family: "IBM Plex Mono", monospace;
       }
 
       .topline {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 0.8rem;
-        letter-spacing: 0.12em;
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
       }
 
@@ -71,183 +62,97 @@
         color: inherit;
       }
 
-      .hero {
+      .sheet {
         display: grid;
-        grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 1.05fr);
-        gap: 2rem;
-        align-items: start;
-        padding: 2.5rem 0 3rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 1.25rem;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.38);
       }
 
-      h1,
-      h2,
-      h3 {
-        margin: 0;
-        font-family: "Teko", sans-serif;
-        font-weight: 600;
-        line-height: 0.92;
-        text-transform: uppercase;
+      .panel {
+        display: grid;
+        justify-items: center;
+        gap: 1rem;
+        min-height: 28rem;
+        padding: 2rem 1.25rem;
+        border-right: 1px solid var(--line);
+        text-align: center;
+      }
+
+      .panel:last-child {
+        border-right: 0;
+      }
+
+      .glyph {
+        width: min(100%, 220px);
+        aspect-ratio: 1;
+      }
+
+      .glyph * {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
 
       h1 {
-        font-size: clamp(4rem, 10vw, 8rem);
-        max-width: 8ch;
-        letter-spacing: -0.04em;
-      }
-
-      h2 {
-        font-size: clamp(2.6rem, 5vw, 4rem);
-        letter-spacing: -0.03em;
-      }
-
-      .eyebrow {
-        margin: 0 0 0.8rem;
-        font-size: 0.75rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-
-      .intro {
-        max-width: 32rem;
-        margin-top: 1rem;
-        font-size: 1.08rem;
-        color: var(--muted);
-      }
-
-      .rail {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        margin-top: 1.3rem;
-      }
-
-      .pill {
-        padding: 0.4rem 0.65rem;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        font-size: 0.77rem;
-        color: var(--accent);
-      }
-
-      .lane-board {
-        padding: 1rem;
-        border: 1px solid var(--line);
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.02),
-          rgba(255, 255, 255, 0.01)
-        );
-      }
-
-      .lane {
-        display: grid;
-        grid-template-columns: 8rem minmax(0, 1fr) auto;
-        gap: 1rem;
-        align-items: center;
-        min-height: 5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .lane:last-child {
-        border-bottom: 0;
-      }
-
-      .lane-name {
-        color: var(--accent);
-        font-size: 0.78rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .track {
-        position: relative;
-        height: 2px;
-        background: rgba(255, 255, 255, 0.12);
-      }
-
-      .token {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 0.45rem 0.7rem;
-        border-radius: 999px;
-        background: var(--accent);
-        color: #071019;
-        font-size: 0.77rem;
+        margin: 0;
+        font-size: clamp(2.2rem, 6vw, 4.3rem);
         font-weight: 700;
-        white-space: nowrap;
+        line-height: 0.95;
       }
 
-      .token.sealed {
-        background: rgba(255, 255, 255, 0.08);
+      .panel p {
+        margin: 0;
+        max-width: 18ch;
+        font-size: 0.88rem;
+        line-height: 1.6;
         color: var(--muted);
       }
 
-      .lane-note {
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      .section {
-        padding-top: 2.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .grammar {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1rem;
-        margin-top: 1.5rem;
-      }
-
-      .grammar div {
-        padding-top: 0.8rem;
-        border-top: 2px solid var(--line);
-      }
-
-      .grammar strong {
-        display: block;
-        color: var(--accent-2);
-      }
-
-      .grammar p {
-        margin: 0.45rem 0 0;
-        color: var(--muted);
-      }
-
-      .commands {
-        display: grid;
-        gap: 1rem;
-        margin-top: 1.5rem;
+      .definition {
+        max-width: 45rem;
+        margin: 1.4rem auto 0;
+        font-size: 0.96rem;
+        line-height: 1.7;
+        text-align: center;
       }
 
       pre {
-        margin: 0;
-        padding: 1rem;
-        overflow-x: auto;
+        width: min(38rem, 100%);
+        margin: 1.4rem auto 0;
+        padding: 1rem 1.1rem;
         border: 1px solid var(--line);
-        background: #06101a;
-        color: #d4e6ff;
-        font-family: "Azeret Mono", monospace;
-        font-size: 0.84rem;
+        background: rgba(255, 255, 255, 0.38);
+        font-size: 0.86rem;
         line-height: 1.7;
+        white-space: pre-wrap;
       }
 
-      .footer {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        margin-top: 3rem;
+      .wordmark {
+        margin-top: 1.1rem;
+        font-size: clamp(3rem, 13vw, 8.5rem);
+        font-weight: 700;
+        line-height: 0.9;
+        letter-spacing: -0.08em;
+        text-align: center;
       }
 
-      @media (max-width: 920px) {
-        .hero,
-        .grammar,
-        .lane {
+      @media (max-width: 820px) {
+        .sheet {
           grid-template-columns: 1fr;
+        }
+
+        .panel {
+          min-height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .panel:last-child {
+          border-bottom: 0;
         }
       }
     </style>
@@ -255,111 +160,73 @@
   <body>
     <main>
       <div class="topline">
-        <span>Variant 02 / Signal</span>
+        <span>Variant 02 / Fold</span>
         <a href="../index.html">Back to variants</a>
       </div>
 
-      <section class="hero">
-        <div>
-          <p class="eyebrow">Runtime lanes</p>
-          <h1>
-            Most vaults answer where a secret sleeps. Kimen answers how it wakes
-            up.
-          </h1>
-          <p class="intro">
-            Keep the value in a local vault. Choose a shape. Name the target.
-            Project it into one process lane instead of making it part of every
-            shell, every command, and every assistant session.
+      <div class="sheet" aria-label="Three step view of Kimen">
+        <div class="panel">
+          <svg
+            class="glyph"
+            viewBox="0 0 220 220"
+            role="img"
+            aria-label="Vault"
+          >
+            <rect x="28" y="28" width="164" height="164" rx="18" />
+            <rect x="68" y="68" width="84" height="84" rx="14" />
+            <circle cx="110" cy="110" r="16" />
+          </svg>
+          <h1>Vault</h1>
+          <p>Keep the secret encrypted on disk until you actually need it.</p>
+        </div>
+
+        <div class="panel">
+          <svg
+            class="glyph"
+            viewBox="0 0 220 220"
+            role="img"
+            aria-label="Intent"
+          >
+            <rect x="34" y="34" width="152" height="152" rx="18" />
+            <path d="M58 110 H162" />
+            <path d="M110 58 V162" />
+            <rect x="92" y="92" width="36" height="36" rx="10" />
+          </svg>
+          <h1>Intent</h1>
+          <p>Name the env var or file and choose which command gets it.</p>
+        </div>
+
+        <div class="panel">
+          <svg
+            class="glyph"
+            viewBox="0 0 220 220"
+            role="img"
+            aria-label="Process"
+          >
+            <rect x="38" y="22" width="144" height="176" rx="18" />
+            <path d="M68 74 H152" />
+            <path d="M68 110 H142" />
+            <path d="M68 146 H128" />
+            <circle cx="160" cy="146" r="12" />
+          </svg>
+          <h1>Run</h1>
+          <p>
+            The target process gets the value. The rest of the shell does not.
           </p>
-          <div class="rail">
-            <span class="pill">env</span>
-            <span class="pill">file</span>
-            <span class="pill">envfile</span>
-            <span class="pill">child process</span>
-          </div>
         </div>
-
-        <div class="lane-board">
-          <div class="lane">
-            <span class="lane-name">build</span>
-            <div class="track">
-              <span class="token sealed" style="left: 8%">sealed</span>
-            </div>
-            <span class="lane-note">no secret needed</span>
-          </div>
-          <div class="lane">
-            <span class="lane-name">deploy</span>
-            <div class="track">
-              <span class="token" style="left: 34%">DEPLOY_TOKEN</span>
-            </div>
-            <span class="lane-note">explicit env projection</span>
-          </div>
-          <div class="lane">
-            <span class="lane-name">assistant</span>
-            <div class="track">
-              <span class="token" style="left: 52%">PROVIDER_API_KEY</span>
-            </div>
-            <span class="lane-note">one key, not whole shell</span>
-          </div>
-          <div class="lane">
-            <span class="lane-name">migrate</span>
-            <div class="track">
-              <span class="token" style="left: 18%">db-url.txt</span>
-            </div>
-            <span class="lane-note">file projection</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <p class="eyebrow">Projection grammar</p>
-        <h2>Vault. Intent. Shape. Target.</h2>
-        <div class="grammar">
-          <div>
-            <strong>Vault</strong>
-            <p>Encrypted local storage is the resting state.</p>
-          </div>
-          <div>
-            <strong>Intent</strong>
-            <p>The user or automation run asks for projection.</p>
-          </div>
-          <div>
-            <strong>Shape</strong>
-            <p>Env var, file, envfile, or direct child process input.</p>
-          </div>
-          <div>
-            <strong>Target</strong>
-            <p>The named process gets it. Others do not.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <p class="eyebrow">Command lines</p>
-        <h2>Direct use.</h2>
-        <div class="commands">
-          <pre>
-$ kimen run \
-  --env SERVICE_API_TOKEN=demo_service_api_token \
-  -- sh -lc 'echo "Token length: ${#SERVICE_API_TOKEN}"'</pre
-          >
-          <pre>
-$ OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
-$ kimen render --dir "$OUTDIR" \
-  --file service-api-token.txt=demo_service_api_token</pre
-          >
-          <pre>
-$ kimen run \
-  --env PROVIDER_API_KEY=assistant_key \
-  -- codex</pre
-          >
-        </div>
-      </section>
-
-      <div class="footer">
-        <p class="mono">Local vault / explicit lane / smaller blast radius</p>
-        <a href="https://github.com/flakstad/kimen">GitHub</a>
       </div>
+
+      <p class="definition">
+        Kimen is an open source command-line tool for local secrets. It stores
+        them in an encrypted vault, then projects one into the environment or
+        files of a command when you ask for it.
+      </p>
+
+      <pre>
+$ kimen render --dir "$OUTDIR" --file service-api-token.txt=demo_service_api_token</pre
+      >
+
+      <div class="wordmark">Kimen</div>
     </main>
   </body>
 </html>

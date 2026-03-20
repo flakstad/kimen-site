@@ -3,25 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen Variant 03 | Chamber</title>
+    <title>Kimen Variant 03 | Orbit</title>
     <meta
       name="description"
-      content="Chamber concept for Kimen: a sculptural vault-door landing page."
+      content="Orbit concept for Kimen: an interactive vault and projection selector."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Work+Sans:wght@400;500;600;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Sora:wght@400;600;700&amp;display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #08090f;
-        --text: #edf1ff;
-        --muted: #a0a7c1;
-        --line: #2f3550;
-        --accent: #6d78ff;
-        --accent-soft: rgba(109, 120, 255, 0.14);
+        --bg: #0b0f18;
+        --panel: #101728;
+        --line: #253149;
+        --text: #edf1f8;
+        --muted: #9aa5b6;
+        --accent: #e9b14a;
       }
 
       * {
@@ -30,27 +30,27 @@
 
       body {
         margin: 0;
-        font-family: "Work Sans", sans-serif;
+        font-family: "Sora", sans-serif;
         color: var(--text);
         background:
           radial-gradient(
-            circle at 50% 20%,
-            rgba(109, 120, 255, 0.2),
-            transparent 28%
+            circle at center,
+            rgba(233, 177, 74, 0.12),
+            transparent 24%
           ),
-          linear-gradient(180deg, #07080d 0%, #0a0c13 100%);
+          var(--bg);
       }
 
       main {
-        width: min(1180px, 94vw);
+        width: min(980px, 92vw);
         margin: 0 auto;
-        padding: 2rem 0 4rem;
+        padding: 1.75rem 0 4rem;
       }
 
       .topline,
-      .eyebrow,
-      .orbit-label,
-      .mono {
+      .controls button,
+      .definition,
+      pre {
         font-family: "IBM Plex Mono", monospace;
       }
 
@@ -58,10 +58,8 @@
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 0.8rem;
-        letter-spacing: 0.12em;
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
       }
 
@@ -69,289 +67,290 @@
         color: inherit;
       }
 
-      .hero {
-        display: grid;
-        grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 1.05fr);
-        gap: 1rem;
-        align-items: center;
-        min-height: 84vh;
+      .stage {
+        width: min(100%, 780px);
+        margin: 1.5rem auto 0;
       }
 
-      h1,
-      h2 {
-        margin: 0;
-        font-family: "Chakra Petch", sans-serif;
-        line-height: 0.92;
-      }
-
-      h1 {
-        max-width: 8ch;
-        font-size: clamp(3.4rem, 9vw, 7.4rem);
-        letter-spacing: -0.05em;
-      }
-
-      h2 {
-        font-size: clamp(2rem, 4vw, 3.6rem);
-        letter-spacing: -0.04em;
-      }
-
-      .eyebrow {
-        margin: 0 0 0.9rem;
-        font-size: 0.76rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #a8b2ff;
-      }
-
-      .intro {
-        max-width: 31rem;
-        margin-top: 1.2rem;
-        color: var(--muted);
-        font-size: 1.08rem;
-      }
-
-      .truths {
-        display: grid;
-        gap: 0.75rem;
-        margin-top: 1.4rem;
-      }
-
-      .truths div {
-        padding-left: 1rem;
-        border-left: 2px solid var(--accent);
-      }
-
-      .vault {
-        position: relative;
-        width: min(42rem, 80vw);
-        aspect-ratio: 1;
-        margin-inline: auto;
+      svg {
+        display: block;
+        width: 100%;
+        height: auto;
       }
 
       .ring,
-      .core,
-      .wheel,
-      .wheel::before,
-      .wheel::after {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
+      .vault,
+      .vault-core,
+      .target,
+      .beam {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
 
-      .ring {
-        border: 1px solid rgba(255, 255, 255, 0.09);
+      .ring,
+      .vault {
+        stroke: var(--line);
+        stroke-width: 3;
       }
 
-      .ring.r2 {
-        inset: 12%;
+      .vault-core,
+      .target {
+        stroke: var(--accent);
+        stroke-width: 3;
       }
 
-      .ring.r3 {
-        inset: 27%;
-        background: radial-gradient(
-          circle,
-          rgba(109, 120, 255, 0.14),
-          transparent 68%
-        );
+      .beam {
+        stroke: var(--accent);
+        stroke-width: 4;
+        opacity: 0.14;
+        transition: opacity 180ms ease;
       }
 
-      .core {
-        inset: 37%;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: linear-gradient(
-          180deg,
-          rgba(109, 120, 255, 0.12),
-          rgba(255, 255, 255, 0.02)
-        );
-        box-shadow: 0 0 120px rgba(109, 120, 255, 0.16);
+      .target-fill,
+      .secret-dot {
+        fill: rgba(233, 177, 74, 0.15);
+        stroke: var(--accent);
+        stroke-width: 3;
       }
 
-      .wheel {
-        inset: 44%;
-      }
-
-      .wheel::before,
-      .wheel::after {
-        content: "";
-        inset: 0;
-        background: linear-gradient(
-          90deg,
-          transparent 48%,
-          rgba(255, 255, 255, 0.7) 48%,
-          rgba(255, 255, 255, 0.7) 52%,
-          transparent 52%
-        );
-      }
-
-      .wheel::after {
-        transform: rotate(90deg);
-      }
-
-      .orbit-label {
-        position: absolute;
-        padding: 0.35rem 0.55rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(10, 12, 19, 0.78);
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: #d6ddff;
-      }
-
-      .o1 {
-        top: 8%;
-        right: 8%;
-      }
-
-      .o2 {
-        bottom: 16%;
-        right: 4%;
-      }
-
-      .o3 {
-        bottom: 8%;
-        left: 10%;
-      }
-
-      .manifest {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .manifest p {
-        margin: 0;
-        padding-top: 0.8rem;
-        border-top: 2px solid var(--line);
-        color: var(--muted);
-      }
-
-      .manifest strong {
-        display: block;
-        margin-bottom: 0.45rem;
-        color: var(--text);
-      }
-
-      .commands {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        margin-top: 2rem;
-      }
-
-      pre {
-        margin: 0;
-        padding: 1rem;
-        overflow-x: auto;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.02);
+      .target-label,
+      .vault-label {
         font-family: "IBM Plex Mono", monospace;
-        font-size: 0.82rem;
+        font-size: 18px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        fill: var(--muted);
+      }
+
+      .active .beam,
+      .beam.active {
+        opacity: 1;
+      }
+
+      .target-group.active .target-fill {
+        fill: rgba(233, 177, 74, 0.34);
+      }
+
+      .target-group.active .target {
+        filter: drop-shadow(0 0 18px rgba(233, 177, 74, 0.35));
+      }
+
+      .secret-dot {
+        animation: orbit 4.2s ease-in-out infinite;
+      }
+
+      .copy {
+        max-width: 40rem;
+        margin: 1.25rem auto 0;
+        text-align: center;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .definition {
+        margin: 0;
+        color: var(--muted);
         line-height: 1.7;
       }
 
-      .footer {
+      .controls {
         display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        margin-top: 3rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin-top: 1.35rem;
       }
 
-      @media (max-width: 980px) {
-        .hero,
-        .manifest,
-        .commands {
-          grid-template-columns: 1fr;
+      .controls button {
+        padding: 0.7rem 0.95rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text);
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .controls button[aria-pressed="true"] {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      pre {
+        width: min(46rem, 100%);
+        margin: 1.4rem auto 0;
+        padding: 1rem 1.1rem;
+        border: 1px solid var(--line);
+        border-radius: 1.1rem;
+        background: rgba(255, 255, 255, 0.02);
+        font-size: 0.86rem;
+        line-height: 1.7;
+        white-space: pre-wrap;
+      }
+
+      @keyframes orbit {
+        0%,
+        100% {
+          transform: translateX(0);
         }
 
-        .hero {
-          min-height: auto;
-          padding: 2rem 0;
+        50% {
+          transform: translateX(18px);
         }
       }
     </style>
   </head>
   <body>
-    <main>
+    <main data-mode="env">
+      <h1 class="sr-only">Kimen</h1>
       <div class="topline">
-        <span>Variant 03 / Chamber</span>
+        <span>Variant 03 / Orbit</span>
         <a href="../index.html">Back to variants</a>
       </div>
 
-      <section class="hero">
-        <div>
-          <p class="eyebrow">Vault object</p>
-          <h1>Stored closed. Opened on intent.</h1>
-          <p class="intro">
-            Kimen is a local-first vault for secrets and config material. Its
-            differentiator is not storage alone. Its differentiator is how
-            values enter runtime: explicitly, narrowly, and only for the target
-            process.
-          </p>
-          <div class="truths">
-            <div>No required account.</div>
-            <div>No browser-first control surface.</div>
-            <div>No mandatory hosted backend in the hot path.</div>
-          </div>
-        </div>
-
-        <div class="vault">
-          <div class="ring"></div>
-          <div class="ring r2"></div>
-          <div class="ring r3"></div>
-          <div class="core"></div>
-          <div class="wheel"></div>
-          <span class="orbit-label o1">vault / local / encrypted</span>
-          <span class="orbit-label o2">projection / env / file / envfile</span>
-          <span class="orbit-label o3">target / named / process</span>
-        </div>
-      </section>
-
-      <section class="manifest">
-        <p>
-          <strong>Before Kimen</strong>
-          Values drift into shell state, copied files, and tools that did not
-          need them.
-        </p>
-        <p>
-          <strong>With Kimen</strong>
-          The vault is the resting state. Projection is an explicit event.
-        </p>
-        <p>
-          <strong>What stays true</strong>
-          Once a process gets a secret, that process has it. Kimen narrows the
-          path up to that point.
-        </p>
-      </section>
-
-      <section class="commands">
-        <pre>
-$ kimen run \
-  --env SERVICE_API_TOKEN=demo_service_api_token \
-  -- ./your-command</pre
+      <div class="stage">
+        <svg
+          viewBox="0 0 780 520"
+          role="img"
+          aria-label="Interactive vault projection diagram."
         >
-        <pre>
-$ kimen render \
-  --dir "$OUTDIR" \
-  --file service-api-token.txt=demo_service_api_token</pre
-        >
-        <pre>
-$ kimen run \
-  --env PROVIDER_API_KEY=assistant_key \
-  -- codex</pre
-        >
-      </section>
+          <circle class="ring" cx="300" cy="260" r="190" />
+          <circle class="vault" cx="300" cy="260" r="108" />
+          <circle class="vault-core" cx="300" cy="260" r="52" />
+          <rect
+            class="secret-dot"
+            x="118"
+            y="244"
+            width="32"
+            height="32"
+            rx="16"
+          />
+          <text class="vault-label" x="244" y="266">Kimen</text>
 
-      <div class="footer">
-        <p class="mono">Kimen / vault first / runtime by intent</p>
-        <a href="https://github.com/flakstad/kimen">GitHub</a>
+          <g class="beam-group beam-env">
+            <path class="beam active" d="M386 224 Q500 182 620 122" />
+          </g>
+          <g class="beam-group beam-file">
+            <path class="beam" d="M408 260 H640" />
+          </g>
+          <g class="beam-group beam-child">
+            <path class="beam" d="M386 296 Q500 338 620 398" />
+          </g>
+
+          <g class="target-group target-env active">
+            <circle class="target-fill" cx="646" cy="108" r="44" />
+            <circle class="target" cx="646" cy="108" r="44" />
+            <path class="target" d="M622 108 H670" />
+            <text class="target-label" x="604" y="34">Env</text>
+          </g>
+
+          <g class="target-group target-file">
+            <circle class="target-fill" cx="670" cy="260" r="44" />
+            <circle class="target" cx="670" cy="260" r="44" />
+            <path class="target" d="M646 244 H694" />
+            <path class="target" d="M646 260 H688" />
+            <path class="target" d="M646 276 H680" />
+            <text class="target-label" x="626" y="208">File</text>
+          </g>
+
+          <g class="target-group target-child">
+            <circle class="target-fill" cx="646" cy="412" r="44" />
+            <circle class="target" cx="646" cy="412" r="44" />
+            <rect
+              class="target"
+              x="626"
+              y="392"
+              width="40"
+              height="40"
+              rx="10"
+            />
+            <text class="target-label" x="566" y="490">Child process</text>
+          </g>
+        </svg>
       </div>
+
+      <div class="copy">
+        <p class="definition">
+          Store a secret in the encrypted local vault. Choose how to project it.
+          Start the command that needs it.
+        </p>
+      </div>
+
+      <div class="controls" aria-label="Projection shapes">
+        <button type="button" data-mode="env" aria-pressed="true">
+          Env var
+        </button>
+        <button type="button" data-mode="file" aria-pressed="false">
+          File
+        </button>
+        <button type="button" data-mode="child" aria-pressed="false">
+          Child process
+        </button>
+      </div>
+
+      <pre id="command">
+$ kimen run --env OPENAI_API_KEY=assistant_key -- codex</pre
+      >
     </main>
+
+    <script>
+      const commands = {
+        env: "$ kimen run --env OPENAI_API_KEY=assistant_key -- codex",
+        file: '$ kimen render --dir "$OUTDIR" --file service-api-token.txt=demo_service_api_token',
+        child:
+          "$ kimen run --env DATABASE_URL=demo_database_url -- clojure -M:test",
+      };
+
+      const root = document.querySelector("main");
+      const command = document.getElementById("command");
+      const buttons = document.querySelectorAll("[data-mode]");
+      const beams = {
+        env: document.querySelector(".beam-env .beam"),
+        file: document.querySelector(".beam-file .beam"),
+        child: document.querySelector(".beam-child .beam"),
+      };
+      const targets = {
+        env: document.querySelector(".target-env"),
+        file: document.querySelector(".target-file"),
+        child: document.querySelector(".target-child"),
+      };
+
+      function setMode(mode) {
+        root.dataset.mode = mode;
+        command.textContent = commands[mode];
+
+        buttons.forEach((button) => {
+          button.setAttribute(
+            "aria-pressed",
+            String(button.dataset.mode === mode),
+          );
+        });
+
+        Object.entries(beams).forEach(([key, beam]) => {
+          beam.classList.toggle("active", key === mode);
+        });
+
+        Object.entries(targets).forEach(([key, target]) => {
+          target.classList.toggle("active", key === mode);
+        });
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => setMode(button.dataset.mode));
+      });
+    </script>
   </body>
 </html>
