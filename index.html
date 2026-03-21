@@ -3,257 +3,165 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen | Vault Secrets Locally. Project Them With Intent.</title>
+    <title>Kimen</title>
     <meta
       name="description"
-      content="Kimen is a local-first CLI for storing secrets in an encrypted vault and projecting them into the processes that need them only when you ask."
+      content="Kimen is a local-first secrets tool. Kimen stores secrets in an encrypted local vault and lets you project them into runtime only when you explicitly ask."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=Azeret+Mono:wght@400;500&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Source+Serif+4:wght@500;600&amp;display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="container topbar-inner">
-        <a class="brand" href="#top">
-          <span class="brand-word">Kimen</span>
-          <span class="brand-note">local-first secrets</span>
-        </a>
-        <nav class="nav">
-          <a href="#model">Model</a>
-          <a href="#examples">Examples</a>
-          <a href="#scope">Scope</a>
-          <a href="#start">Start</a>
-        </nav>
-      </div>
-    </header>
-
-    <main id="top">
-      <section class="hero container reveal">
-        <div class="hero-copy">
-          <p class="eyebrow">Local-first secrets CLI</p>
-          <h1>
-            Vault secrets locally. Project them into the process that needs
-            them. Only when you ask.
-          </h1>
-          <p class="lead">
-            Kimen stores secrets in an encrypted local vault, then materializes
-            them as env vars, files, or envfiles at runtime. The point is
-            simple: keep secrets out of ambient shell state and expose them only
-            with intent.
-          </p>
-          <p class="truth">
-            It is not a hosted control plane. It does not pretend a process is
-            safe after you deliberately give it a secret.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#examples">See Examples</a>
-            <a
-              class="btn btn-ghost"
-              href="https://github.com/flakstad/kimen"
-              target="_blank"
-              rel="noreferrer"
-              >GitHub</a
-            >
-          </div>
+    <main class="site">
+      <header class="site-header">
+        <div class="brand-row">
+          <a class="brand" href="./index.html">Kimen</a>
+          <nav class="site-nav" aria-label="Primary">
+            <a href="#install">install</a>
+            <span>|</span>
+            <a href="./docs/">docs</a>
+            <span>|</span>
+            <a href="https://github.com/flakstad/kimen">github source</a>
+          </nav>
         </div>
+        <p class="tagline">local-first secrets for ordinary applications</p>
+      </header>
 
-        <div class="hero-frame">
-          <p class="eyebrow">Vault -> intent -> process</p>
-          <div class="flow">
-            <div class="flow-row">
-              <p class="flow-step">01</p>
-              <div>
-                <strong>Vault</strong>
-                <p>Secrets stay encrypted at rest in local storage.</p>
-              </div>
-            </div>
-            <div class="flow-row">
-              <p class="flow-step">02</p>
-              <div>
-                <strong>Intent</strong>
-                <p>You choose the runtime shape and the target name.</p>
-              </div>
-            </div>
-            <div class="flow-row">
-              <p class="flow-step">03</p>
-              <div>
-                <strong>Process</strong>
-                <p>Only that child process gets the projected value.</p>
-              </div>
-            </div>
-          </div>
-          <pre class="console"><code>$ kimen vault init
-$ kimen secret set demo_service_api_token
-$ kimen run --env SERVICE_API_TOKEN=demo_service_api_token -- ./your-command</code></pre>
-        </div>
+      <hr class="rule" />
+
+      <section>
+        <h1>Kimen is a local-first secrets tool.</h1>
+        <p class="lede">
+          Kimen stores secrets in an encrypted local vault and lets you project
+          them into runtime only when you explicitly ask.
+        </p>
+        <p class="body-copy">
+          Applications are usually simplest when they read configuration from
+          environment variables or files. Kimen handles secrets outside the
+          application process and provides those values only at launch time. You
+          avoid ad-hoc <code>.env</code> workflows, copied tokens, and
+          long-lived shell exports.
+        </p>
+        <pre><code>kimen run --env SERVICE_API_TOKEN=demo_service_api_token -- sh -lc 'echo "Token length: ${#SERVICE_API_TOKEN}"'</code></pre>
       </section>
 
-      <section id="model" class="section container reveal">
-        <div class="section-head">
-          <p class="eyebrow">Model</p>
-          <h2>One narrow idea: keep secrets out of ambient runtime state.</h2>
-        </div>
+      <hr class="rule" />
+
+      <section id="install">
+        <h2>Install</h2>
+        <p class="body-copy">
+          Kimen is primarily used as a native binary named <code>kimen</code>.
+          Install from the latest GitHub release, or build from source if you
+          are already in the repository.
+        </p>
         <div class="split">
           <div>
-            <p class="section-label">What Kimen does</p>
-            <ul class="plain-list">
-              <li>Stores secrets in an encrypted local vault.</li>
-              <li>
-                Projects them into env vars, files, envfiles, or child
-                processes.
-              </li>
-              <li>
-                Keeps local runtime usable without requiring a hosted backend.
-              </li>
-              <li>
-                Gives automation structured CLI output instead of brittle text
-                parsing.
-              </li>
-            </ul>
+            <h3>Release</h3>
+            <p class="body-copy">
+              Download the latest release artifacts, place <code>kimen</code> on
+              your <code>PATH</code>, and verify the checksum before using it.
+            </p>
+            <p class="link-line">
+              <a href="https://github.com/flakstad/kimen/releases/latest"
+                >latest release</a
+              >
+            </p>
           </div>
           <div>
-            <p class="section-label">What Kimen does not do</p>
-            <ul class="plain-list">
-              <li>
-                It does not make a secret safe after a process receives it.
-              </li>
-              <li>It does not rely on global shell exports as the default.</li>
-              <li>It does not require a browser UI or an account to work.</li>
-              <li>
-                It does not turn runtime access into a hosted policy problem.
-              </li>
-            </ul>
+            <h3>Build From Source</h3>
+            <p class="body-copy">
+              Building from source writes `target/kimen` and refreshes the local
+              launcher under `~/.local/bin/kimen`.
+            </p>
+            <pre><code>bb native
+kimen version
+kimen vault init</code></pre>
           </div>
         </div>
       </section>
 
-      <section id="examples" class="section container reveal">
-        <div class="section-head">
-          <p class="eyebrow">Examples</p>
-          <h2>Use the secret shape the tool requires. No more.</h2>
-        </div>
+      <hr class="rule" />
+
+      <section id="examples">
+        <h2>Examples</h2>
 
         <article class="example">
-          <div class="example-copy">
-            <p class="section-label">Env var for one process</p>
-            <h3>Run a command with one projected secret.</h3>
-            <p>
-              Map one vault entry to one environment variable for one child
-              process instead of exporting it into the whole shell session.
-            </p>
-          </div>
-          <pre class="console"><code>$ kimen run \
-    --env SERVICE_API_TOKEN=demo_service_api_token \
-    -- sh -lc 'echo "Token length: ${#SERVICE_API_TOKEN}"'</code></pre>
-        </article>
-
-        <article class="example">
-          <div class="example-copy">
-            <p class="section-label">File when a tool insists on a file</p>
-            <h3>Render a secret with strict permissions.</h3>
-            <p>
-              Some tools only accept files. Generate the file when needed rather
-              than keeping plaintext config around by default.
-            </p>
-          </div>
-          <pre
-            class="console"
-          ><code>$ OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
-$ kimen render --dir "$OUTDIR" \
-    --file service-api-token.txt=demo_service_api_token</code></pre>
-        </article>
-
-        <article class="example">
-          <div class="example-copy">
-            <p class="section-label">Agent or tool boundary</p>
-            <h3>Project only the capability a tool needs.</h3>
-            <p>
-              If an assistant or subprocess needs one provider key, give it one
-              provider key. Do not hand it the rest of your runtime state.
-            </p>
-          </div>
-          <pre class="console"><code>$ kimen run \
-    --env PROVIDER_API_KEY=assistant_key \
-    -- codex</code></pre>
-        </article>
-      </section>
-
-      <section id="scope" class="section container reveal">
-        <div class="section-head">
-          <p class="eyebrow">Scope</p>
-          <h2>Current scope is practical and specific.</h2>
-        </div>
-        <div class="scope-lines">
-          <p>Encrypted local vault.</p>
-          <p>
-            Explicit runtime projection into env vars, files, envfiles, and
-            child processes.
+          <h3>Use one secret for one process.</h3>
+          <p class="body-copy">
+            Map one vault entry to one env var for one child process instead of
+            exporting it into the whole shell session.
           </p>
-          <p>Optional encrypted sync for team state.</p>
-          <p>Structured CLI output for automation.</p>
-        </div>
+          <pre><code>kimen run --env SERVICE_API_TOKEN=demo_service_api_token -- ./your-command</code></pre>
+        </article>
+
+        <article class="example">
+          <h3>Render a file when a tool insists on a path.</h3>
+          <p class="body-copy">
+            Some tools need a file, not an env var. Render it only when needed
+            and keep the secret out of long-lived config.
+          </p>
+          <pre><code>OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
+kimen render --dir "$OUTDIR" --file service-api-token.txt=demo_service_api_token</code></pre>
+        </article>
+
+        <article class="example">
+          <h3>Generate an envfile for a supervisor.</h3>
+          <p class="body-copy">
+            If a process manager wants `KEY=VALUE` input, generate it without
+            printing secrets to the terminal.
+          </p>
+          <pre><code>kimen envfile --env SERVICE_API_TOKEN=demo_service_api_token --out .env.runtime</code></pre>
+        </article>
       </section>
 
-      <section id="start" class="section container reveal">
-        <div class="section-head">
-          <p class="eyebrow">Start</p>
-          <h2>Start with the CLI.</h2>
-        </div>
-        <div class="start-grid">
-          <div>
-            <p class="lead lead-compact">
-              Build from source, initialize a vault, and start with the smallest
-              possible exposure surface.
-            </p>
-            <pre
-              class="console"
-            ><code>$ git clone https://github.com/flakstad/kimen.git
-$ cd kimen
-$ bb native
-$ kimen vault init</code></pre>
-          </div>
-          <div class="link-group">
-            <a
-              class="text-link"
-              href="https://github.com/flakstad/kimen"
-              target="_blank"
-              rel="noreferrer"
-              >GitHub</a
-            >
-            <a
-              class="text-link"
-              href="https://github.com/flakstad/kimen/tree/main/docs"
-              target="_blank"
-              rel="noreferrer"
-              >Docs</a
-            >
-            <a
-              class="text-link"
-              href="https://github.com/flakstad/kimen/blob/main/README.md"
-              target="_blank"
-              rel="noreferrer"
-              >Quick start</a
-            >
-          </div>
-        </div>
-      </section>
-    </main>
+      <hr class="rule" />
 
-    <footer class="footer">
-      <div class="container footer-inner">
-        <p>
-          Store secrets locally. Project them with intent. Keep the runtime
-          surface smaller.
+      <section id="docs">
+        <h2>Documentation</h2>
+        <p class="body-copy">
+          The docs page covers the 5-minute start, core commands, maps and
+          profiles, and current sync scope.
         </p>
-        <a href="#top">Back to top</a>
-      </div>
-    </footer>
+        <ul class="plain-links">
+          <li><a href="./docs/">docs</a></li>
+          <li><a href="./docs/#start">getting started</a></li>
+          <li><a href="./docs/#commands">commands</a></li>
+          <li><a href="./docs/#maps">maps and profiles</a></li>
+          <li><a href="./docs/#sync">sync</a></li>
+        </ul>
+      </section>
 
-    <script src="./main.js"></script>
+      <hr class="rule" />
+
+      <section id="source">
+        <h2>Source Code</h2>
+        <p class="body-copy">
+          Kimen is open source. The canonical source, releases, and issue
+          tracking live on GitHub.
+        </p>
+        <ul class="plain-links">
+          <li><a href="https://github.com/flakstad/kimen">repository</a></li>
+          <li>
+            <a href="https://github.com/flakstad/kimen/releases">releases</a>
+          </li>
+          <li>
+            <a href="https://github.com/flakstad/kimen/tree/main/docs"
+              >source docs</a
+            >
+          </li>
+          <li><a href="https://github.com/flakstad/kimen/issues">issues</a></li>
+        </ul>
+      </section>
+
+      <footer class="site-footer">
+        <p>Kimen is available under the MIT license.</p>
+        <p><a href="./docs/">Read the docs</a></p>
+      </footer>
+    </main>
   </body>
 </html>

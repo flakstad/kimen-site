@@ -1,20 +1,19 @@
 # kimen-site
 
-Standalone static site for Kimen (marketing + docs gateway), intentionally separate from the CLI/runtime repository.
+Standalone static site for Kimen, intentionally separate from the CLI/runtime repository.
 
 ## Scope
 
-- Product landing page
-- Brand narrative including "why the name Kimen"
-- Current product scope/positioning (local-first, no required signup)
-- Links to the canonical repo and docs, with room to customize later if needed
+- Home page
+- Docs page at `/docs/`
+- Links to the canonical GitHub source and release/docs material
 
 ## Local preview
 
 ```bash
 cd /Users/andreas/Projects/kimen-site
 python3 -m http.server 8080
-# then open http://localhost:8080
+# then open http://localhost:8080 and http://localhost:8080/docs/
 ```
 
 ## Deploy (GitHub Pages)
@@ -25,8 +24,9 @@ A workflow is included at `.github/workflows/pages.yml`.
 2. In repository settings, enable GitHub Pages and set source to GitHub Actions.
 3. Workflow deploys static files from repo root.
 
-## Customization checklist
+## Notes
 
-- Add your canonical social preview image and meta tags.
-- Optional: add custom domain and `CNAME`.
-- Adjust external repo/docs links in `index.html` if the canonical URLs change.
+- The site is deliberately simple and text-first.
+- Root page is `index.html`.
+- Docs page is `docs/index.html`.
+- Adjust external repo/docs links if the canonical URLs change.
