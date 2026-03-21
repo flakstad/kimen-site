@@ -6,7 +6,7 @@
     <title>Kimen Variant 02 | Sheet</title>
     <meta
       name="description"
-      content="Sheet concept for Kimen: a paper form filled by the vault, then handed to a simple env-reading app."
+      content="Sheet concept for Kimen with a simpler paper-first diagram and clearer product explanation."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,11 +17,11 @@
     <style>
       :root {
         --paper: #f4efe6;
-        --ink: #181513;
-        --muted: #5d5650;
+        --ink: #191613;
+        --muted: #5f5851;
         --line: #cdbfaa;
         --accent: #b43825;
-        --accent-soft: rgba(180, 56, 37, 0.1);
+        --accent-soft: rgba(180, 56, 37, 0.12);
       }
 
       * {
@@ -44,9 +44,9 @@
       }
 
       .topline,
-      .summary,
-      pre,
-      .stamp {
+      .copy-label,
+      .stamp,
+      pre {
         font-family: "IBM Plex Mono", monospace;
       }
 
@@ -63,8 +63,19 @@
         color: inherit;
       }
 
-      .stage {
-        margin: 1rem 0 0;
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
+        gap: 1.5rem;
+        margin-top: 1.25rem;
+      }
+
+      .diagram {
+        margin: 0;
+        padding: 1rem;
+        border: 1px solid var(--line);
+        border-radius: 1.4rem;
+        background: rgba(255, 255, 255, 0.34);
       }
 
       svg {
@@ -73,111 +84,125 @@
         height: auto;
       }
 
-      .sheet,
-      .env-slip,
-      .app,
-      .stamp-ring,
-      .field,
-      .field-fill,
-      .app-line {
+      .frame,
+      .arrow {
         fill: none;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
 
-      .sheet,
-      .env-slip,
-      .app {
+      .frame {
         stroke: var(--line);
+        stroke-width: 3;
+      }
+
+      .arrow {
+        stroke: var(--accent);
         stroke-width: 4;
       }
 
-      .stamp-ring,
-      .field,
-      .field-fill,
-      .app-line {
+      .filled {
+        fill: var(--accent-soft);
         stroke: var(--accent);
         stroke-width: 3;
       }
 
-      .field-fill {
-        fill: var(--accent-soft);
-      }
-
-      .static-line {
+      .plain {
         fill: none;
-        stroke: #82776d;
+        stroke: #81766c;
         stroke-width: 3;
         stroke-linecap: round;
       }
 
-      .beam {
-        fill: none;
-        stroke: var(--accent);
-        stroke-width: 4;
-        stroke-dasharray: 12 16;
-        animation: drift 9s linear infinite;
-      }
-
-      .label,
-      .field-label {
+      .diagram-label,
+      .diagram-small {
         font-family: "IBM Plex Mono", monospace;
         text-transform: uppercase;
       }
 
-      .label {
+      .diagram-label {
         font-size: 18px;
         letter-spacing: 0.12em;
         fill: var(--muted);
       }
 
-      .field-label {
-        font-size: 16px;
+      .diagram-small {
+        font-size: 15px;
         letter-spacing: 0.08em;
-        fill: var(--ink);
+        fill: var(--muted);
       }
 
-      .summary {
-        max-width: 48rem;
-        margin: 1.4rem auto 0;
-        font-size: 0.94rem;
+      h1 {
+        margin: 0;
+        font-size: clamp(3rem, 7vw, 5.2rem);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+
+      .intro {
+        margin: 1rem 0 0;
+        font-size: 1.04rem;
         line-height: 1.7;
-        text-align: center;
+      }
+
+      .copy-list {
+        display: grid;
+        gap: 0.9rem;
+        margin-top: 1.5rem;
+      }
+
+      .copy-row {
+        padding-top: 0.9rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .copy-label {
+        margin: 0 0 0.45rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .copy-row p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
       }
 
       .stamp {
         display: inline-block;
-        margin: 1rem auto 0;
-        padding: 0.4rem 0.7rem;
+        margin-top: 1.1rem;
+        padding: 0.35rem 0.7rem;
         border: 2px solid var(--accent);
         color: var(--accent);
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        transform: rotate(-4deg);
+        transform: rotate(-3deg);
       }
 
-      .stamp-wrap {
-        text-align: center;
+      .example {
+        margin-top: 1.4rem;
+        padding: 1rem;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.34);
+      }
+
+      .example p {
+        margin: 0 0 0.7rem;
+        color: var(--muted);
       }
 
       pre {
-        width: min(30rem, 100%);
-        margin: 1.3rem auto 0;
-        padding: 1rem 1.1rem;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.38);
+        margin: 0;
         font-size: 0.86rem;
         line-height: 1.7;
         white-space: pre-wrap;
       }
 
-      @keyframes drift {
-        from {
-          stroke-dashoffset: 0;
-        }
-
-        to {
-          stroke-dashoffset: -220;
+      @media (max-width: 860px) {
+        .layout {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -189,85 +214,117 @@
         <a href="../index.html">Back to variants</a>
       </div>
 
-      <figure class="stage">
-        <svg
-          viewBox="0 0 1040 620"
-          role="img"
-          aria-label="A config sheet filled by secrets from a vault stamp and passed to an application that reads normal environment variables."
-        >
-          <text class="label" x="108" y="116">Vault</text>
-          <text class="label" x="378" y="90">Config sheet</text>
-          <text class="label" x="780" y="450">Env</text>
-          <text class="label" x="900" y="450">App</text>
+      <div class="layout">
+        <figure class="diagram">
+          <svg
+            viewBox="0 0 560 470"
+            role="img"
+            aria-label="Simple paper-first diagram showing a config sheet with plain values and secret fields filled from the vault before reaching the app."
+          >
+            <text class="diagram-label" x="52" y="76">Vault</text>
+            <text class="diagram-label" x="214" y="76">Config sheet</text>
+            <text class="diagram-label" x="404" y="368">Env</text>
 
-          <circle class="stamp-ring" cx="170" cy="250" r="92" />
-          <circle class="stamp-ring" cx="170" cy="250" r="46" />
-          <path class="beam" d="M242 232 C304 210 334 190 396 174" />
-          <path class="beam" d="M254 250 C318 250 344 250 408 250" />
-          <path class="beam" d="M242 268 C304 290 336 314 396 336" />
+            <circle class="frame" cx="104" cy="164" r="56" />
+            <circle class="filled" cx="104" cy="164" r="18" />
 
-          <g transform="translate(340 116) rotate(-3 180 170)">
-            <rect class="sheet" x="0" y="0" width="360" height="360" rx="26" />
-            <text class="field-label" x="34" y="72">App mode</text>
-            <path class="static-line" d="M182 64 H298" />
-            <text class="field-label" x="34" y="138">Region</text>
-            <path class="static-line" d="M144 130 H298" />
-            <text class="field-label" x="34" y="204">Api token</text>
+            <g transform="translate(180 88) rotate(-3 110 120)">
+              <rect
+                class="frame"
+                x="0"
+                y="0"
+                width="238"
+                height="246"
+                rx="20"
+              />
+              <path class="plain" d="M34 54 H188" />
+              <path class="plain" d="M34 98 H176" />
+              <path class="filled" d="M34 144 H200" />
+              <path class="filled" d="M34 188 H180" />
+            </g>
+
+            <path class="arrow" d="M154 150 C190 142 202 140 226 138" />
+            <path class="arrow" d="M156 178 C192 190 208 200 238 220" />
+
             <rect
-              class="field-fill"
-              x="146"
-              y="178"
-              width="152"
-              height="34"
-              rx="17"
+              class="frame"
+              x="376"
+              y="300"
+              width="132"
+              height="94"
+              rx="16"
             />
-            <path class="field" d="M166 195 H274" />
-            <text class="field-label" x="34" y="270">Database url</text>
+            <path class="arrow" d="M382 264 C396 282 404 290 420 300" />
+            <path class="arrow" d="M404 330 H470" />
+            <path class="arrow" d="M404 356 H486" />
+
             <rect
-              class="field-fill"
-              x="176"
-              y="244"
-              width="122"
-              height="34"
-              rx="17"
+              class="frame"
+              x="404"
+              y="130"
+              width="112"
+              height="96"
+              rx="16"
             />
-            <path class="field" d="M196 261 H270" />
-            <text class="field-label" x="34" y="336">Log format</text>
-            <path class="static-line" d="M182 328 H298" />
-          </g>
+            <path class="arrow" d="M432 164 H486" />
+            <path class="arrow" d="M432 192 H474" />
 
-          <g transform="translate(708 330) rotate(4 108 82)">
-            <rect
-              class="env-slip"
-              x="0"
-              y="0"
-              width="216"
-              height="164"
-              rx="18"
-            />
-            <path class="field" d="M28 46 H186" />
-            <path class="field" d="M28 78 H174" />
-            <path class="field" d="M28 110 H194" />
-            <path class="field" d="M28 142 H168" />
-          </g>
+            <text class="diagram-small" x="42" y="248">
+              Encrypted local secret
+            </text>
+            <text class="diagram-small" x="214" y="360">
+              Plain values + secret fields
+            </text>
+            <text class="diagram-small" x="406" y="430">
+              Normal env for the app
+            </text>
+          </svg>
+        </figure>
 
-          <rect class="app" x="876" y="210" width="112" height="116" rx="22" />
-          <path class="app-line" d="M906 246 H956" />
-          <path class="app-line" d="M906 276 H942" />
-        </svg>
-      </figure>
+        <div>
+          <h1>Keep the stable parts of config plain.</h1>
+          <p class="intro">
+            Kimen is a local-first secrets tool. It stores secrets in an
+            encrypted local vault and lets you project them into runtime only
+            when you explicitly ask. Stable settings can live in a normal file
+            or template. Sensitive fields can stay in the vault until Kimen
+            prepares the runtime environment for the app.
+          </p>
 
-      <p class="summary">
-        Think of the app config as a mostly static sheet with a few empty
-        fields. Kimen fills those fields from the local vault when needed, then
-        hands the application a normal environment.
-      </p>
+          <div class="copy-list">
+            <div class="copy-row">
+              <p class="copy-label">Local Vault</p>
+              <p>
+                Secret values are stored locally and kept encrypted until you
+                choose to project them.
+              </p>
+            </div>
 
-      <div class="stamp-wrap">
-        <span class="stamp">App stays simple</span>
+            <div class="copy-row">
+              <p class="copy-label">Static Config</p>
+              <p>
+                Plain values do not need special treatment. The interesting part
+                is filling the sensitive slots only when a process needs them.
+              </p>
+            </div>
+
+            <div class="copy-row">
+              <p class="copy-label">Application</p>
+              <p>
+                The app can stay boring. It still reads env the way it always
+                has, because Kimen prepares it up front.
+              </p>
+            </div>
+          </div>
+
+          <span class="stamp">App stays simple</span>
+
+          <div class="example">
+            <p>Typical reader inside the application:</p>
+            <pre>apiToken := os.Getenv("API_TOKEN")</pre>
+          </div>
+        </div>
       </div>
-
-      <pre>apiToken := os.Getenv("API_TOKEN")</pre>
     </main>
   </body>
 </html>

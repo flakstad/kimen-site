@@ -155,12 +155,20 @@
       }
 
       .summary {
-        max-width: 44rem;
+        max-width: 48rem;
         margin: 1.4rem auto 0;
-        font-size: 0.94rem;
+        font-size: 1rem;
         line-height: 1.7;
         text-align: center;
         color: var(--muted);
+      }
+
+      .intro-detail {
+        max-width: 44rem;
+        margin: 1rem auto 0;
+        text-align: center;
+        color: var(--muted);
+        line-height: 1.7;
       }
 
       .controls {
@@ -200,6 +208,47 @@
         white-space: pre-wrap;
       }
 
+      .detail-grid,
+      .example-grid {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .detail-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .example-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .detail-card,
+      .example-card {
+        padding: 1rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .detail-card p,
+      .example-card p {
+        margin: 0;
+      }
+
+      .detail-label {
+        margin-bottom: 0.5rem;
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .detail-card .detail-body,
+      .example-card p {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
       .sr-only {
         position: absolute;
         width: 1px;
@@ -210,6 +259,13 @@
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
         border: 0;
+      }
+
+      @media (max-width: 860px) {
+        .detail-grid,
+        .example-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -313,8 +369,14 @@
       </div>
 
       <p class="summary">
-        The app does not change. Pick one secret, trace it through the config
-        sheet, and watch it land as a standard environment variable.
+        Kimen is a local-first secrets tool. It stores secrets in an encrypted
+        local vault and lets you project them into runtime only when you
+        explicitly ask.
+      </p>
+      <p class="intro-detail">
+        Pick one secret, trace it through the config sheet, and watch it land as
+        a standard environment variable. The app does not need special
+        secret-handling logic if something prepares the env before it starts.
       </p>
 
       <div class="controls" aria-label="Projection targets">
@@ -329,17 +391,67 @@
         </button>
       </div>
 
-      <pre id="mapping">process.env.API_TOKEN</pre>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <p class="detail-label">Vault Entry</p>
+          <p id="vault-entry" class="detail-body">assistant_key</p>
+        </div>
+
+        <div class="detail-card">
+          <p class="detail-label">Target Env</p>
+          <p id="env-name" class="detail-body">API_TOKEN</p>
+        </div>
+
+        <div class="detail-card">
+          <p class="detail-label">App Side</p>
+          <p class="detail-body">
+            Reads env directly. No custom secret client inside the app.
+          </p>
+        </div>
+      </div>
+
+      <div class="example-grid">
+        <div class="example-card">
+          <p>One possible runtime command:</p>
+          <pre id="command">
+$ kimen run --env API_TOKEN=assistant_key -- myapp</pre
+          >
+        </div>
+
+        <div class="example-card">
+          <p>What the application code still looks like:</p>
+          <pre id="mapping">process.env.API_TOKEN</pre>
+        </div>
+      </div>
     </main>
 
     <script>
-      const mappingText = {
-        token: "process.env.API_TOKEN",
-        db: "process.env.DATABASE_URL",
-        cert: "process.env.TLS_CERT_PATH",
+      const projectionData = {
+        token: {
+          vault: "assistant_key",
+          env: "API_TOKEN",
+          command: "$ kimen run --env API_TOKEN=assistant_key -- myapp",
+          reader: "process.env.API_TOKEN",
+        },
+        db: {
+          vault: "demo_database_url",
+          env: "DATABASE_URL",
+          command: "$ kimen run --env DATABASE_URL=demo_database_url -- myapp",
+          reader: "process.env.DATABASE_URL",
+        },
+        cert: {
+          vault: "demo_tls_cert_path",
+          env: "TLS_CERT_PATH",
+          command:
+            "$ kimen run --env TLS_CERT_PATH=demo_tls_cert_path -- myapp",
+          reader: "process.env.TLS_CERT_PATH",
+        },
       };
 
       const root = document.querySelector("main");
+      const vaultEntry = document.getElementById("vault-entry");
+      const envName = document.getElementById("env-name");
+      const command = document.getElementById("command");
       const mapping = document.getElementById("mapping");
       const buttons = document.querySelectorAll("[data-mode]");
       const nodes = {
@@ -374,7 +486,10 @@
 
       function setMode(mode) {
         root.dataset.mode = mode;
-        mapping.textContent = mappingText[mode];
+        vaultEntry.textContent = projectionData[mode].vault;
+        envName.textContent = projectionData[mode].env;
+        command.textContent = projectionData[mode].command;
+        mapping.textContent = projectionData[mode].reader;
 
         buttons.forEach((button) => {
           button.setAttribute(

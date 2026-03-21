@@ -6,7 +6,7 @@
     <title>Kimen Variants</title>
     <meta
       name="description"
-      content="Three new Kimen variants centered on vault, config sheet, env, and app."
+      content="Three Kimen landing-page variants that explain vault, config, env, and app."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +41,7 @@
       }
 
       main {
-        width: min(900px, 92vw);
+        width: min(920px, 92vw);
         margin: 0 auto;
         padding: 2.5rem 0 4rem;
       }
@@ -60,10 +60,17 @@
       }
 
       .intro {
-        max-width: 42rem;
+        max-width: 46rem;
         margin: 2rem 0 0;
-        font-size: clamp(1.5rem, 4vw, 2.6rem);
-        line-height: 1.12;
+        font-size: clamp(1.45rem, 4vw, 2.5rem);
+        line-height: 1.14;
+      }
+
+      .intro-detail {
+        max-width: 44rem;
+        margin: 1rem 0 0;
+        color: var(--muted);
+        line-height: 1.6;
       }
 
       .list {
@@ -103,10 +110,10 @@
 
       .body span {
         display: block;
-        max-width: 32rem;
+        max-width: 34rem;
         margin-top: 0.5rem;
         color: var(--muted);
-        line-height: 1.5;
+        line-height: 1.55;
       }
 
       @media (max-width: 640px) {
@@ -119,11 +126,16 @@
   </head>
   <body>
     <main>
-      <p class="topline">Kimen / vault + config + env</p>
+      <p class="topline">Kimen / local CLI for encrypted secrets</p>
       <p class="intro">
-        Three new sketches around the same idea: Kimen keeps secrets in the
-        local vault, fills the right fields when needed, and lets the
-        application stay simple and read ordinary environment variables.
+        Kimen is a local-first secrets tool. Kimen stores secrets in an
+        encrypted local vault and lets you project them into runtime only when
+        you explicitly ask.
+      </p>
+      <p class="intro-detail">
+        That means apps can stay simple and read config and secrets from env
+        directly, as long as something prepares the env up front. These variants
+        all explore that model.
       </p>
 
       <nav class="list" aria-label="Variants">
@@ -131,7 +143,10 @@
           <span class="index">01</span>
           <span class="body">
             <strong>Conduit</strong>
-            <span>Dark flow from vault to config sheet to env to app.</span>
+            <span>
+              A direct explanation of Kimen as a runtime pipe from vault to
+              config to env to app.
+            </span>
           </span>
         </a>
 
@@ -139,7 +154,10 @@
           <span class="index">02</span>
           <span class="body">
             <strong>Sheet</strong>
-            <span>Paper-first view with static fields and secret blanks.</span>
+            <span>
+              A paper-first page that explains how static config and secret
+              fields live together.
+            </span>
           </span>
         </a>
 
@@ -147,10 +165,10 @@
           <span class="index">03</span>
           <span class="body">
             <strong>Relay</strong>
-            <span
-              >Interactive trace of one secret through the config into
-              env.</span
-            >
+            <span>
+              An interactive mapping from one vault entry to the env var the app
+              reads.
+            </span>
           </span>
         </a>
       </nav>
