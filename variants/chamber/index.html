@@ -412,7 +412,7 @@
 
       <div class="example-grid">
         <div class="example-card">
-          <p>One possible runtime command:</p>
+          <p>One possible Kimen command:</p>
           <pre id="command">
 $ kimen run --env API_TOKEN=assistant_key -- myapp</pre
           >
@@ -436,14 +436,15 @@ $ kimen run --env API_TOKEN=assistant_key -- myapp</pre
         db: {
           vault: "demo_database_url",
           env: "DATABASE_URL",
-          command: "$ kimen run --env DATABASE_URL=demo_database_url -- myapp",
+          command:
+            "$ kimen envfile --env DATABASE_URL=demo_database_url --out .env.runtime",
           reader: "process.env.DATABASE_URL",
         },
         cert: {
           vault: "demo_tls_cert_path",
           env: "TLS_CERT_PATH",
           command:
-            "$ kimen run --env TLS_CERT_PATH=demo_tls_cert_path -- myapp",
+            "$ kimen run --file tls/cert.pem=demo_tls_cert_path --envpath TLS_CERT_PATH=tls/cert.pem -- myapp",
           reader: "process.env.TLS_CERT_PATH",
         },
       };
