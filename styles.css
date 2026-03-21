@@ -123,6 +123,10 @@ h3 {
   font-size: 1.2rem;
 }
 
+section > h3:not(:first-child) {
+  margin-top: 1.35rem;
+}
+
 .lede {
   max-width: 42rem;
   margin: 1rem 0 0;

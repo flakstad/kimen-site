@@ -6,7 +6,7 @@
     <title>Docs | Kimen</title>
     <meta
       name="description"
-      content="Kimen documentation: getting started, core commands, maps and profiles, and current sync scope."
+      content="Kimen documentation: install, getting started, core commands, maps and profiles, and current sync scope."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,8 +35,8 @@
       <section>
         <h1>Docs</h1>
         <p class="lede">
-          Start here if you want to use Kimen as a local-first secrets tool for
-          ordinary applications and scripts.
+          This page is the one-page manual for using Kimen as a local-first
+          secrets tool for ordinary applications and scripts.
         </p>
         <p class="body-copy">
           Kimen stores secrets in an encrypted local vault and lets you project
@@ -45,13 +45,34 @@
           the secret, and prepare env or files only at launch time.
         </p>
         <ul class="doc-toc">
+          <li><a href="#install">install</a></li>
           <li><a href="#start">getting started</a></li>
           <li><a href="#commands">commands</a></li>
           <li><a href="#sources">value sources</a></li>
           <li><a href="#maps">maps and profiles</a></li>
           <li><a href="#sync">sync</a></li>
-          <li><a href="#more">more docs</a></li>
+          <li><a href="#links">project links</a></li>
         </ul>
+      </section>
+
+      <hr class="rule" />
+
+      <section id="install">
+        <h2>Install</h2>
+        <p class="body-copy">
+          Kimen is usually installed as a native binary named
+          <code>kimen</code>. You can download a release build or compile it
+          from source.
+        </p>
+        <pre><code>bb native
+kimen version
+kimen vault init</code></pre>
+        <p class="body-copy">
+          Release artifacts and checksums are published on GitHub:
+          <a href="https://github.com/flakstad/kimen/releases/latest"
+            >latest release</a
+          >.
+        </p>
       </section>
 
       <hr class="rule" />
@@ -187,9 +208,17 @@ kimen run --profile dev -- ./your-command</code></pre>
 
       <hr class="rule" />
 
-      <section id="more">
-        <h2>More Docs</h2>
+      <section id="links">
+        <h2>Project Links</h2>
+        <p class="body-copy">
+          This page is the compact manual. Use the links below for the source
+          repository, releases, and the deeper design and reference material.
+        </p>
         <ul class="plain-links">
+          <li><a href="https://github.com/flakstad/kimen">repository</a></li>
+          <li>
+            <a href="https://github.com/flakstad/kimen/releases">releases</a>
+          </li>
           <li>
             <a href="https://github.com/flakstad/kimen/blob/main/README.md"
               >README</a
