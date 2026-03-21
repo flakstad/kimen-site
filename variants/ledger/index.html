@@ -3,26 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen Variant 01 | Conduit</title>
+    <title>Kimen Variant 01 | Bench</title>
     <meta
       name="description"
-      content="Conduit concept for Kimen with a simplified vault to config to env to app diagram."
+      content="Bench concept for Kimen: a quiet workbench layout with one system flow."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600&amp;display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #070b11;
-        --panel: #0f1621;
-        --line: #1b2b40;
-        --text: #f2f7fb;
-        --muted: #9aacbf;
-        --accent: #89a7ff;
-        --accent-soft: rgba(137, 167, 255, 0.14);
+        --bg: oklch(0.17 0.018 252);
+        --panel: oklch(0.2 0.018 252);
+        --line: oklch(0.32 0.022 252);
+        --text: oklch(0.95 0.008 252);
+        --muted: oklch(0.74 0.018 252);
+        --accent: oklch(0.77 0.055 240);
+        --accent-soft: oklch(0.28 0.03 240);
       }
 
       * {
@@ -31,27 +31,19 @@
 
       body {
         margin: 0;
-        font-family: "Space Grotesk", sans-serif;
+        background: var(--bg);
         color: var(--text);
-        background:
-          radial-gradient(
-            circle at center,
-            rgba(137, 167, 255, 0.12),
-            transparent 28%
-          ),
-          var(--bg);
+        font-family: "Space Grotesk", sans-serif;
       }
 
       main {
-        width: min(1100px, 94vw);
+        width: min(68rem, 94vw);
         margin: 0 auto;
-        padding: 1.75rem 0 4rem;
+        padding: 1.9rem 0 4rem;
       }
 
       .topline,
-      .diagram-note,
-      .copy-label,
-      code,
+      .rule-label,
       pre {
         font-family: "IBM Plex Mono", monospace;
       }
@@ -69,18 +61,34 @@
         color: inherit;
       }
 
-      .hero {
+      .mast {
         display: grid;
-        gap: 1.5rem;
-        margin-top: 1.25rem;
+        gap: 1rem;
+        margin-top: 1.4rem;
+      }
+
+      h1 {
+        max-width: 12ch;
+        margin: 0;
+        font-size: clamp(3rem, 8vw, 5.6rem);
+        font-weight: 500;
+        line-height: 0.96;
+        letter-spacing: -0.06em;
+      }
+
+      .intro {
+        max-width: 46rem;
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.06rem;
+        line-height: 1.7;
       }
 
       .diagram {
-        margin: 0;
-        padding: 1.25rem;
+        margin: 1.5rem 0 0;
+        padding: 1.2rem;
         border: 1px solid var(--line);
-        border-radius: 1.5rem;
-        background: rgba(255, 255, 255, 0.02);
+        background: color-mix(in oklch, var(--panel) 88%, var(--bg));
       }
 
       svg {
@@ -89,126 +97,102 @@
         height: auto;
       }
 
-      .block,
+      .box,
       .arrow {
         fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
       }
 
-      .block {
+      .box {
         stroke: var(--line);
-        stroke-width: 3;
+        stroke-width: 2.5;
       }
 
       .arrow {
         stroke: var(--accent);
-        stroke-width: 4;
+        stroke-width: 3;
       }
 
-      .accent-fill {
-        fill: var(--accent-soft);
+      .filled {
+        fill: color-mix(in oklch, var(--accent-soft) 75%, transparent);
         stroke: var(--accent);
-        stroke-width: 3;
+        stroke-width: 2.5;
       }
 
       .diagram-label,
-      .diagram-small {
+      .diagram-note {
         font-family: "IBM Plex Mono", monospace;
-        fill: var(--muted);
         text-transform: uppercase;
       }
 
       .diagram-label {
-        font-size: 19px;
+        font-size: 17px;
         letter-spacing: 0.12em;
-      }
-
-      .diagram-small {
-        font-size: 15px;
-        letter-spacing: 0.08em;
-      }
-
-      h1 {
-        max-width: 12ch;
-        margin: 0;
-        font-size: clamp(3rem, 8vw, 6rem);
-        line-height: 0.96;
-        letter-spacing: -0.06em;
-      }
-
-      .intro {
-        max-width: 44rem;
-        margin: 1rem 0 0;
-        font-size: clamp(1.06rem, 2vw, 1.28rem);
-        line-height: 1.6;
+        fill: var(--muted);
       }
 
       .diagram-note {
-        margin: 0.9rem 0 0;
-        font-size: 0.8rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--accent);
+        font-size: 14px;
+        letter-spacing: 0.08em;
+        fill: var(--muted);
       }
 
-      .copy-grid {
+      .grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+        grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.9fr);
+        gap: 2rem;
         margin-top: 2rem;
       }
 
-      .copy-card {
-        padding: 1rem;
-        border: 1px solid var(--line);
-        border-radius: 1rem;
-        background: rgba(255, 255, 255, 0.02);
+      .section {
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
       }
 
-      .copy-label {
-        margin: 0 0 0.7rem;
-        font-size: 0.78rem;
+      .section p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .facts {
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .fact {
+        display: grid;
+        grid-template-columns: 9rem minmax(0, 1fr);
+        gap: 1rem;
+        padding-top: 0.9rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .rule-label {
+        font-size: 0.76rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--accent);
       }
 
-      .copy-card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.6;
-      }
-
-      .examples {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
+      .command {
         margin-top: 1.5rem;
-      }
-
-      .example {
-        padding: 1rem;
-        border: 1px solid var(--line);
-        border-radius: 1rem;
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      .example p {
-        margin: 0 0 0.7rem;
-        color: var(--muted);
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
       }
 
       pre {
-        margin: 0;
+        margin: 0.7rem 0 0;
+        color: var(--text);
+        white-space: pre-wrap;
         font-size: 0.86rem;
         line-height: 1.7;
-        white-space: pre-wrap;
       }
 
       @media (max-width: 860px) {
-        .copy-grid,
-        .examples {
+        .grid,
+        .fact {
           grid-template-columns: 1fr;
         }
       }
@@ -217,150 +201,101 @@
   <body>
     <main>
       <div class="topline">
-        <span>Variant 01 / Conduit</span>
+        <span>Variant 01 / Bench</span>
         <a href="../index.html">Back to variants</a>
       </div>
 
-      <div class="hero">
-        <figure class="diagram">
-          <svg
-            viewBox="0 0 1000 360"
-            role="img"
-            aria-label="Simplified flow from local vault to config sheet to standard environment variables to the application."
-          >
-            <text class="diagram-label" x="56" y="72">Vault</text>
-            <text class="diagram-label" x="330" y="72">Config</text>
-            <text class="diagram-label" x="600" y="72">Env</text>
-            <text class="diagram-label" x="826" y="72">App</text>
+      <section class="mast">
+        <h1>Kimen keeps the vault local and the app ordinary.</h1>
+        <p class="intro">
+          Kimen is a local-first secrets tool. Kimen stores secrets in an
+          encrypted local vault and lets you project them into runtime only when
+          you explicitly ask. Stable config can stay plain. Kimen prepares env
+          or files before the process starts, so the application can keep
+          reading normal configuration inputs.
+        </p>
+      </section>
 
-            <rect
-              class="block"
-              x="44"
-              y="100"
-              width="180"
-              height="160"
-              rx="22"
-            />
-            <rect
-              class="accent-fill"
-              x="88"
-              y="146"
-              width="92"
-              height="28"
-              rx="14"
-            />
-            <rect
-              class="accent-fill"
-              x="88"
-              y="186"
-              width="116"
-              height="28"
-              rx="14"
-            />
+      <figure class="diagram">
+        <svg
+          viewBox="0 0 1000 280"
+          role="img"
+          aria-label="Vault to config to environment to application system diagram."
+        >
+          <text class="diagram-label" x="44" y="54">Vault</text>
+          <text class="diagram-label" x="298" y="54">Config</text>
+          <text class="diagram-label" x="548" y="54">Env</text>
+          <text class="diagram-label" x="774" y="54">App</text>
 
-            <rect
-              class="block"
-              x="310"
-              y="100"
-              width="190"
-              height="160"
-              rx="22"
-            />
-            <path class="arrow" d="M226 180 H310" />
-            <path class="arrow" d="M390 142 H452" />
-            <path class="arrow" d="M390 182 H470" />
-            <path class="arrow" d="M346 222 H454" />
+          <rect class="box" x="36" y="82" width="172" height="128" />
+          <rect class="filled" x="74" y="120" width="82" height="22" />
+          <rect class="filled" x="74" y="154" width="104" height="22" />
 
-            <rect
-              class="block"
-              x="580"
-              y="118"
-              width="136"
-              height="124"
-              rx="18"
-            />
-            <path class="arrow" d="M500 180 H580" />
-            <path class="arrow" d="M614 154 H684" />
-            <path class="arrow" d="M614 180 H694" />
-            <path class="arrow" d="M614 206 H672" />
+          <rect class="box" x="284" y="82" width="180" height="128" />
+          <path class="arrow" d="M208 146 H284" />
+          <path class="arrow" d="M328 118 H412" />
+          <path class="arrow" d="M328 146 H438" />
+          <path class="arrow" d="M328 174 H392" />
 
-            <rect
-              class="block"
-              x="794"
-              y="126"
-              width="150"
-              height="108"
-              rx="18"
-            />
-            <path class="arrow" d="M716 180 H794" />
-            <path class="arrow" d="M832 164 H892" />
-            <path class="arrow" d="M832 194 H876" />
+          <rect class="box" x="536" y="96" width="144" height="100" />
+          <path class="arrow" d="M464 146 H536" />
+          <path class="arrow" d="M572 126 H636" />
+          <path class="arrow" d="M572 152 H644" />
+          <path class="arrow" d="M572 178 H622" />
 
-            <text class="diagram-small" x="68" y="286">
-              Encrypted local store
-            </text>
-            <text class="diagram-small" x="324" y="286">
-              Static values + secret slots
-            </text>
-            <text class="diagram-small" x="590" y="286">
-              Normal environment
-            </text>
-            <text class="diagram-small" x="822" y="286">
-              Reads standard env
-            </text>
-          </svg>
-        </figure>
+          <rect class="box" x="760" y="100" width="184" height="92" />
+          <path class="arrow" d="M680 146 H760" />
+          <path class="arrow" d="M804 128 H876" />
+          <path class="arrow" d="M804 156 H860" />
 
-        <div>
-          <h1>Kimen is a local-first secrets tool.</h1>
-          <p class="intro">
-            Kimen stores secrets in an encrypted local vault and lets you
-            project them into runtime only when you explicitly ask. The point is
-            not just storage. The point is controlling how a secret enters
-            runtime and which process receives it.
-          </p>
-          <p class="diagram-note">Vault -> config -> env -> app</p>
-        </div>
-      </div>
+          <text class="diagram-note" x="48" y="238">
+            Encrypted local storage
+          </text>
+          <text class="diagram-note" x="286" y="238">
+            Static values plus secret fields
+          </text>
+          <text class="diagram-note" x="540" y="238">Prepared runtime env</text>
+          <text class="diagram-note" x="764" y="238">
+            Reads config the normal way
+          </text>
+        </svg>
+      </figure>
 
-      <div class="copy-grid">
-        <div class="copy-card">
-          <p class="copy-label">What It Is</p>
+      <div class="grid">
+        <section class="section">
           <p>
-            A local-first CLI. Secrets stay encrypted at rest in the vault until
-            you deliberately project them for one run.
+            The important thing is the projection step. Many tools solve only
+            storage. Kimen also solves the handoff into runtime. That is where
+            secrets often spread into copied files, shell history, global
+            exports, or tools that did not need them.
           </p>
-        </div>
 
-        <div class="copy-card">
-          <p class="copy-label">How It Fits Config</p>
-          <p>
-            Stable config can stay plain. The sensitive fields come from Kimen
-            at runtime, so you do not need to spread secrets through copied
-            files or long-lived shell exports.
-          </p>
-        </div>
+          <div class="command">
+            <span class="rule-label">Example</span>
+            <pre>$ kimen run --env API_TOKEN=assistant_key -- myapp</pre>
+          </div>
+        </section>
 
-        <div class="copy-card">
-          <p class="copy-label">What The App Sees</p>
-          <p>
-            Nothing special. The app still reads normal env vars or files. The
-            projection logic stays outside the application, because Kimen can
-            prepare the runtime env up front.
-          </p>
-        </div>
-      </div>
+        <section class="facts">
+          <div class="fact">
+            <span class="rule-label">Storage</span>
+            <p>
+              Secrets stay in an encrypted local vault until projection time.
+            </p>
+          </div>
 
-      <div class="examples">
-        <div class="example">
-          <p>Start a process with one secret env var:</p>
-          <pre>$ kimen run --env API_TOKEN=assistant_key -- myapp</pre>
-        </div>
+          <div class="fact">
+            <span class="rule-label">Projection</span>
+            <p>
+              Kimen can prepare env vars or files for the process being started.
+            </p>
+          </div>
 
-        <div class="example">
-          <p>The application code can stay ordinary:</p>
-          <pre>const apiToken = process.env.API_TOKEN;</pre>
-        </div>
+          <div class="fact">
+            <span class="rule-label">Application</span>
+            <p>The app can keep reading `process.env` or a normal file path.</p>
+          </div>
+        </section>
       </div>
     </main>
   </body>

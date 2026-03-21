@@ -3,25 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen Variant 02 | Sheet</title>
+    <title>Kimen Variant 02 | Spec</title>
     <meta
       name="description"
-      content="Sheet concept for Kimen with a simpler paper-first diagram and clearer product explanation."
+      content="Spec concept for Kimen: a quiet reference sheet with a minimal diagram."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Syne:wght@500;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Source+Serif+4:wght@500;600&amp;display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --paper: #f4efe6;
-        --ink: #191613;
-        --muted: #5f5851;
-        --line: #cdbfaa;
-        --accent: #b43825;
-        --accent-soft: rgba(180, 56, 37, 0.12);
+        --paper: oklch(0.96 0.01 85);
+        --ink: oklch(0.25 0.014 70);
+        --muted: oklch(0.47 0.018 70);
+        --line: oklch(0.84 0.016 70);
+        --accent: oklch(0.54 0.055 48);
+        --accent-soft: oklch(0.91 0.025 48);
       }
 
       * {
@@ -30,22 +30,19 @@
 
       body {
         margin: 0;
-        font-family: "Syne", sans-serif;
+        background: var(--paper);
         color: var(--ink);
-        background:
-          linear-gradient(180deg, rgba(180, 56, 37, 0.04), transparent 18%),
-          var(--paper);
+        font-family: "IBM Plex Sans", sans-serif;
       }
 
       main {
-        width: min(1040px, 94vw);
+        width: min(70rem, 94vw);
         margin: 0 auto;
-        padding: 1.75rem 0 4rem;
+        padding: 2rem 0 4rem;
       }
 
       .topline,
-      .copy-label,
-      .stamp,
+      .label,
       pre {
         font-family: "IBM Plex Mono", monospace;
       }
@@ -63,19 +60,37 @@
         color: inherit;
       }
 
-      .layout {
+      .sheet {
         display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
-        gap: 1.5rem;
-        margin-top: 1.25rem;
+        grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+        gap: 2rem;
+        margin-top: 1.6rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid var(--line);
+      }
+
+      h1 {
+        max-width: 12ch;
+        margin: 0;
+        font-family: "Source Serif 4", serif;
+        font-size: clamp(2.8rem, 7vw, 5rem);
+        line-height: 0.98;
+        font-weight: 600;
+      }
+
+      .lede {
+        max-width: 38rem;
+        margin: 1rem 0 0;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.75;
       }
 
       .diagram {
         margin: 0;
         padding: 1rem;
         border: 1px solid var(--line);
-        border-radius: 1.4rem;
-        background: rgba(255, 255, 255, 0.34);
+        background: color-mix(in oklch, white 76%, var(--paper));
       }
 
       svg {
@@ -85,123 +100,79 @@
       }
 
       .frame,
-      .arrow {
+      .path {
         fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
       }
 
       .frame {
         stroke: var(--line);
-        stroke-width: 3;
+        stroke-width: 2;
       }
 
-      .arrow {
+      .path {
         stroke: var(--accent);
-        stroke-width: 4;
+        stroke-width: 2.5;
       }
 
-      .filled {
+      .fill {
         fill: var(--accent-soft);
         stroke: var(--accent);
-        stroke-width: 3;
+        stroke-width: 2;
       }
 
-      .plain {
-        fill: none;
-        stroke: #81766c;
-        stroke-width: 3;
-        stroke-linecap: round;
-      }
-
-      .diagram-label,
-      .diagram-small {
-        font-family: "IBM Plex Mono", monospace;
-        text-transform: uppercase;
-      }
-
-      .diagram-label {
-        font-size: 18px;
-        letter-spacing: 0.12em;
-        fill: var(--muted);
-      }
-
-      .diagram-small {
-        font-size: 15px;
+      .label {
+        font-size: 14px;
         letter-spacing: 0.08em;
+        text-transform: uppercase;
         fill: var(--muted);
       }
 
-      h1 {
-        margin: 0;
-        font-size: clamp(3rem, 7vw, 5.2rem);
-        line-height: 0.95;
-        letter-spacing: -0.05em;
-      }
-
-      .intro {
-        margin: 1rem 0 0;
-        font-size: 1.04rem;
-        line-height: 1.7;
-      }
-
-      .copy-list {
-        display: grid;
-        gap: 0.9rem;
-        margin-top: 1.5rem;
-      }
-
-      .copy-row {
-        padding-top: 0.9rem;
+      .rows {
+        margin-top: 2rem;
         border-top: 1px solid var(--line);
       }
 
-      .copy-label {
-        margin: 0 0 0.45rem;
-        font-size: 0.78rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--accent);
+      .row {
+        display: grid;
+        grid-template-columns: 13rem minmax(0, 1fr);
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--line);
       }
 
-      .copy-row p {
+      .row strong {
+        font-weight: 500;
+      }
+
+      .row p {
         margin: 0;
         color: var(--muted);
-        line-height: 1.6;
-      }
-
-      .stamp {
-        display: inline-block;
-        margin-top: 1.1rem;
-        padding: 0.35rem 0.7rem;
-        border: 2px solid var(--accent);
-        color: var(--accent);
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        transform: rotate(-3deg);
+        line-height: 1.7;
       }
 
       .example {
-        margin-top: 1.4rem;
-        padding: 1rem;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.34);
+        margin-top: 1.6rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
       }
 
       .example p {
-        margin: 0 0 0.7rem;
+        margin: 0;
         color: var(--muted);
       }
 
       pre {
-        margin: 0;
+        margin: 0.7rem 0 0;
         font-size: 0.86rem;
         line-height: 1.7;
         white-space: pre-wrap;
       }
 
       @media (max-width: 860px) {
-        .layout {
+        .sheet,
+        .row {
           grid-template-columns: 1fr;
         }
       }
@@ -210,121 +181,90 @@
   <body>
     <main>
       <div class="topline">
-        <span>Variant 02 / Sheet</span>
+        <span>Variant 02 / Spec</span>
         <a href="../index.html">Back to variants</a>
       </div>
 
-      <div class="layout">
+      <section class="sheet">
+        <div>
+          <h1>Kimen prepares secrets before the app starts.</h1>
+          <p class="lede">
+            Kimen is a local-first secrets tool. Kimen stores secrets in an
+            encrypted local vault and lets you project them into runtime only
+            when you explicitly ask. The app itself can stay simple. If Kimen
+            prepares env or files up front, the application can keep reading its
+            normal config inputs.
+          </p>
+        </div>
+
         <figure class="diagram">
           <svg
-            viewBox="0 0 560 470"
+            viewBox="0 0 320 280"
             role="img"
-            aria-label="Simple paper-first diagram showing a config sheet with plain values and secret fields filled from the vault before reaching the app."
+            aria-label="Minimal Kimen system sketch."
           >
-            <text class="diagram-label" x="52" y="76">Vault</text>
-            <text class="diagram-label" x="214" y="76">Config sheet</text>
-            <text class="diagram-label" x="404" y="368">Env</text>
+            <text class="label" x="20" y="34">Vault</text>
+            <text class="label" x="116" y="34">Config</text>
+            <text class="label" x="230" y="34">App</text>
 
-            <circle class="frame" cx="104" cy="164" r="56" />
-            <circle class="filled" cx="104" cy="164" r="18" />
+            <rect class="frame" x="20" y="56" width="72" height="72" />
+            <rect class="fill" x="34" y="84" width="44" height="16" />
 
-            <g transform="translate(180 88) rotate(-3 110 120)">
-              <rect
-                class="frame"
-                x="0"
-                y="0"
-                width="238"
-                height="246"
-                rx="20"
-              />
-              <path class="plain" d="M34 54 H188" />
-              <path class="plain" d="M34 98 H176" />
-              <path class="filled" d="M34 144 H200" />
-              <path class="filled" d="M34 188 H180" />
-            </g>
+            <rect class="frame" x="116" y="56" width="92" height="112" />
+            <path class="path" d="M92 92 H116" />
+            <path class="path" d="M138 90 H188" />
+            <path class="path" d="M138 118 H198" />
+            <path class="path" d="M138 146 H176" />
 
-            <path class="arrow" d="M154 150 C190 142 202 140 226 138" />
-            <path class="arrow" d="M156 178 C192 190 208 200 238 220" />
+            <rect class="frame" x="230" y="78" width="70" height="68" />
+            <path class="path" d="M208 110 H230" />
+            <path class="path" d="M248 100 H282" />
+            <path class="path" d="M248 124 H274" />
 
-            <rect
-              class="frame"
-              x="376"
-              y="300"
-              width="132"
-              height="94"
-              rx="16"
-            />
-            <path class="arrow" d="M382 264 C396 282 404 290 420 300" />
-            <path class="arrow" d="M404 330 H470" />
-            <path class="arrow" d="M404 356 H486" />
-
-            <rect
-              class="frame"
-              x="404"
-              y="130"
-              width="112"
-              height="96"
-              rx="16"
-            />
-            <path class="arrow" d="M432 164 H486" />
-            <path class="arrow" d="M432 192 H474" />
-
-            <text class="diagram-small" x="42" y="248">
-              Encrypted local secret
+            <text class="label" x="20" y="210">Encrypted local secret</text>
+            <text class="label" x="116" y="232">
+              Plain config plus secret values
             </text>
-            <text class="diagram-small" x="214" y="360">
-              Plain values + secret fields
-            </text>
-            <text class="diagram-small" x="406" y="430">
-              Normal env for the app
-            </text>
+            <text class="label" x="230" y="254">Normal env or files</text>
           </svg>
         </figure>
+      </section>
 
-        <div>
-          <h1>Keep the stable parts of config plain.</h1>
-          <p class="intro">
-            Kimen is a local-first secrets tool. It stores secrets in an
-            encrypted local vault and lets you project them into runtime only
-            when you explicitly ask. Stable settings can live in a normal file
-            or template. Sensitive fields can stay in the vault until Kimen
-            prepares the runtime environment for the app.
+      <section class="rows">
+        <div class="row">
+          <strong>What it solves</strong>
+          <p>
+            Secret storage is only half the problem. Kimen also narrows the
+            runtime handoff, so you do not need to leave values in global shell
+            state or commit them into static files.
           </p>
-
-          <div class="copy-list">
-            <div class="copy-row">
-              <p class="copy-label">Local Vault</p>
-              <p>
-                Secret values are stored locally and kept encrypted until you
-                choose to project them.
-              </p>
-            </div>
-
-            <div class="copy-row">
-              <p class="copy-label">Static Config</p>
-              <p>
-                Plain values do not need special treatment. The interesting part
-                is filling the sensitive slots only when a process needs them.
-              </p>
-            </div>
-
-            <div class="copy-row">
-              <p class="copy-label">Application</p>
-              <p>
-                The app can stay boring. It still reads env the way it always
-                has, because Kimen prepares it up front.
-              </p>
-            </div>
-          </div>
-
-          <span class="stamp">App stays simple</span>
-
-          <div class="example">
-            <p>Typical reader inside the application:</p>
-            <pre>apiToken := os.Getenv("API_TOKEN")</pre>
-          </div>
         </div>
-      </div>
+
+        <div class="row">
+          <strong>What stays plain</strong>
+          <p>
+            Non-secret config can stay where it already lives. Kimen only needs
+            to supply the sensitive fields.
+          </p>
+        </div>
+
+        <div class="row">
+          <strong>What the app sees</strong>
+          <p>
+            Regular env vars or file paths. Kimen does not require the
+            application to adopt a custom secrets API.
+          </p>
+        </div>
+      </section>
+
+      <section class="example">
+        <p>
+          Example: render a file when a tool wants a path instead of an env var.
+        </p>
+        <pre>
+$ kimen render --dir "$OUTDIR" --file tls/cert.pem=demo_tls_cert_path</pre
+        >
+      </section>
     </main>
   </body>
 </html>
