@@ -19,7 +19,7 @@
         <h1>Keep secrets out of your code — and out of your coding agent.</h1>
         <p class="lede">Kimen is a small local vault plus a projection step. Your repository describes the runtime shape without containing secret values. Kimen supplies them only when a trusted process starts — or keeps them to itself while completing an approved operation for an agent.</p>
         <div class="hero-actions">
-          <a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access</a>
+          <a class="button" href="mailto:hello@andreasflakstad.no?subject=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values%20or%20sensitive%20infrastructure%20details.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access</a>
           <a href="#model">How Kimen works ↓</a>
         </div>
       </section>
@@ -81,8 +81,8 @@ kimen session lock</code></pre>
         </header>
         <div class="workflow-list">
           <article><h3>Codex finishes the release. You deploy it yourself.</h3><p>Kimen constrains the target and the exact revision.</p></article>
-          <article><h3>The agent prepares the package. You run publish.</h3><p>Kimen keeps the registry credential local and constrains package and version.</p></article>
-          <article><h3>The agent diagnoses the problem. You run the production operation.</h3><p>Kimen exposes one known operation against one known system.</p></article>
+          <article><h3>The agent identifies the need for a backup. You trigger it yourself.</h3><p>Kimen asks the database provider to run one server-side backup against one known database.</p></article>
+          <article><h3>The agent fixes a service. You restart it yourself.</h3><p>Kimen triggers the predefined restart without exposing SSH or infrastructure credentials.</p></article>
         </div>
       </section>
 
@@ -98,7 +98,7 @@ kimen session lock</code></pre>
         <header class="section-head"><h2>Keep authority local. Let the agent finish.</h2><p>Start with the secret in your workspace or the privileged step you still perform by hand.</p></header>
         <div class="routes">
           <article><h3>The agent can read a secret simply because it sits beside the code</h3><p>Move one <code>.env</code> out of the workspace and into Kimen's local encrypted vault.</p><a href="../../docs/#start">Try Kimen on this repository ↗</a></article>
-          <article><h3>You stop the agent before it can finish the job</h3><p>Give Kimen the operation, target and credential you still handle manually.</p><a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access ↗</a></article>
+          <article><h3>You stop the agent before it can finish the job</h3><p>Give Kimen the operation, target and credential you still handle manually.</p><a class="button" href="mailto:hello@andreasflakstad.no?subject=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values%20or%20sensitive%20infrastructure%20details.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access ↗</a></article>
         </div>
       </section>
     </main>

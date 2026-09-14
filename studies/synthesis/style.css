@@ -106,7 +106,7 @@ footer nav { justify-content: flex-end; }
   .model-row > span:nth-child(2)::before { content: "Project states"; }
   .model-row > span:nth-child(3)::before { content: "Local Kimen controls"; }
   .model-row > span:nth-child(4)::before { content: "Caller receives"; }
-  .product-pair { display: block; margin-top: 55px; }
+        .product-pair { display: block; margin-top: 55px; }
   .product-pair article, .product-pair article + article { padding: 30px 0; border-left: 0; }
   .product-pair article + article { border-top: 1px solid var(--line); }
   .workflow-list article { display: block; }
