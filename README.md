@@ -10,7 +10,7 @@ separate from the CLI/runtime repository.
 - Honest separation between shipped vault/projection features and the proposed
   constrained-actions direction
 - Production pages have no JavaScript, build system, analytics or runtime service
-- Design studies at `/studies/` use a small local script for illustrative state changes
+- Three deliberately different design studies live at `/studies/`
 
 The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
 domain mapping.
@@ -26,7 +26,7 @@ Then open:
 - <http://localhost:8080/>
 - <http://localhost:8080/docs/>
 - <http://localhost:8080/404.html>
-- <http://localhost:8080/studies/> — three interactive composition studies
+- <http://localhost:8080/studies/> — three alternative composition studies
 
 ## Validation
 

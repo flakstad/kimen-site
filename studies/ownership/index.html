@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex" /><title>Kimen — Two sides study</title><link rel="stylesheet" href="./style.css" /></head>
+  <body>
+    <header><a class="brand" href="../"><i></i>kimen</a><nav><a href="../../docs/">manual</a><a href="https://github.com/flakstad/kimen">source ↗</a></nav></header>
+    <main>
+      <section class="hero"><p class="overline">Configuration has two owners.</p><h1>The project names what it needs.<br />Your machine supplies the rest.</h1><p class="lede">Kimen joins a portable declaration to local values when you run the program. The repository never needs to contain those values.</p></section>
+      <section class="two-sides" aria-label="Project requirements and local values meet at runtime"><article class="project"><div class="side-head"><span>PROJECT</span><small>shareable</small></div><h2>Names and intent</h2><pre><code><span>env</span> DATABASE_URL=<b>secret:database_url</b>
+<span>env</span> API_KEY=<b>secret:api_key</b>
+<span>env</span> PORT=<b>value:8080</b></code></pre><p>Committed as <code>.kimen/profiles/dev.kmap</code></p></article><div class="joint" aria-label="Kimen joins both sides"><span>k</span><small>resolved locally</small></div><article class="local"><div class="side-head"><span>ENVIRONMENT</span><small>local</small></div><h2>Values and authority</h2><dl><div><dt>database_url</dt><dd>••••••••••••</dd></div><div><dt>api_key</dt><dd>••••••••••••</dd></div><div><dt>port</dt><dd>8080</dd></div></dl><p>Encrypted in <code>~/.config/kimen/vault.kv</code></p></article><div class="runtime"><span class="arrow" aria-hidden="true">↓</span><div><small>AT INVOCATION</small><code>kimen run --profile dev -- ./app</code><strong>one prepared process ↗</strong></div></div></section>
+      <section class="meaning"><p class="overline">The small piece that makes the project real in its environment.</p><div class="meaning-grid"><h2>Readable to tools.<br />Concrete at runtime.</h2><div><p>A coding agent can inspect the project and understand its runtime requirements without finding plaintext values in the map.</p><p>When invoked, Kimen resolves the local bindings and passes them to the process through ordinary env, files or stdin.</p><a href="../../docs/">Start with one repository ↗</a></div></div></section>
+    </main>
+    <footer><span>03 / Two sides</span><span>Ownership first · structural identity</span></footer>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex" /><title>Kimen — Invocation study</title><link rel="stylesheet" href="./style.css" /></head>
+  <body>
+    <header><a class="brand" href="../">KIMEN</a><span>LOCAL RUNTIME CONFIGURATION</span><nav><a href="../../docs/">DOCS</a><a href="https://github.com/flakstad/kimen">GITHUB ↗</a></nav></header>
+    <main>
+      <section class="opening"><div class="promise"><p class="index">02 — INVOCATION</p><h1>Run the app.<br /><span>Leave the secrets in Kimen.</span></h1><p class="lede">Your code declares what it needs. One command resolves those names from a local encrypted vault and starts the process.</p><a href="../../docs/">Install Kimen <span>→</span></a></div><figure class="terminal"><figcaption><span>runtime / dev</span><span>local session</span></figcaption><pre><code><span class="muted">$</span> kimen session start --ttl 8h
+<span class="ok">●</span> session started: …/kimen/session
+
+<span class="muted">$</span> kimen run --profile dev -- ./server
+<span class="quiet">server listening on :8080</span></code></pre><div class="terminal-foot"><span>Values are never printed.</span><span class="cursor" aria-hidden="true"></span></div></figure></section>
+      <section class="sequence"><article><span class="num">01</span><h2>Declare</h2><pre><code>env DATABASE_URL=secret:database_url
+env API_KEY=secret:api_key</code></pre><p>Commit names and mappings in <code>.kmap</code>. The project stays understandable.</p></article><article><span class="num">02</span><h2>Resolve</h2><pre><code>~/.config/kimen/vault.kv
+████████████████████████</code></pre><p>The actual values are encrypted locally and remain absent from the workspace.</p></article><article><span class="num">03</span><h2>Run</h2><pre><code>kimen run --profile dev -- ./server</code></pre><p>Kimen prepares the environment and starts an ordinary process.</p></article></section>
+      <section class="agent-note"><p>Broad agent access and secret access are different decisions.</p><div><span>Agent reads</span><strong>code · names · mappings</strong></div><div><span>Trusted runtime receives</span><strong>the resolved values</strong></div><a href="../../index.html#boundary">Read the exact boundary ↗</a></section>
+    </main>
+    <footer><span>02 / Invocation</span><span>Command first · dark operator surface</span></footer>
+  </body>
+</html>

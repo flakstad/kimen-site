@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex" />
+    <title>Kimen — Direct study</title><link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="site-head"><a class="brand" href="../">kimen</a><nav><a href="../../docs/">Manual</a><a href="https://github.com/flakstad/kimen">Source ↗</a></nav></header>
+    <main>
+      <section class="hero"><p class="eyebrow">Local secrets for the programs you run</p><h1>Secrets belong to your environment.<br /><em>Not your project.</em></h1><p class="lede">Kimen keeps passwords and API keys in an encrypted local vault, then passes them to your application when you run it.</p><div class="install"><code>brew install flakstad/kimen/kimen</code><span>Homebrew</span></div><p class="proof">Native CLI · works offline · MIT licensed</p></section>
+      <section class="change"><div class="section-title"><span>One practical change</span><h2>Remove the <code>.env</code> file from the workspace.</h2></div><div class="comparison"><article class="before"><p class="caption">In the project today</p><pre><code>DATABASE_URL=postgres://…
+STRIPE_KEY=sk_live_…</code></pre><p>Plaintext sits beside the code, where tools and coding agents can find it.</p></article><div class="turn" aria-hidden="true">→</div><article class="after"><p class="caption">With Kimen</p><pre><code>env DATABASE_URL=secret:database_url
+env STRIPE_KEY=secret:stripe_key</code></pre><p>The project keeps readable requirements. The values stay in your local vault.</p></article></div></section>
+      <section class="run"><p class="step">Then run the program normally.</p><pre><code><span>$</span> kimen run --profile dev -- ./your-app</code></pre><p>Your application receives ordinary environment variables. It does not need a Kimen library or SDK.</p><a class="primary" href="../../docs/">Set up one project <span>↗</span></a></section>
+    </main>
+    <footer><span>01 / Direct</span><span>Benefit first · warm editorial utility</span></footer>
+  </body>
+</html>
