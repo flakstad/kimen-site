@@ -4,101 +4,189 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Kimen — authority for agent-driven development</title>
-    <meta name="description" content="A local vault for runtime configuration and controlled agent access." />
+    <title>Kimen — secrets for apps, not coding agents</title>
+    <meta name="description" content="Keep secrets outside your repository. Kimen gives trusted apps the values they need and gives coding agents only approved actions." />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
-      <nav><a href="#model">How it works</a><a href="#boundary">Boundary</a><a href="../../docs/">Manual ↗</a></nav>
+      <nav><a href="#how">How it works</a><a href="#agents">For agents</a><a href="../../docs/#start">Install ↗</a></nav>
     </header>
 
     <main>
       <section class="hero">
-        <h1>Keep secrets out of your code — and out of your coding agent.</h1>
-        <p class="lede">Kimen is a small local vault plus a projection step. Your repository describes the runtime shape without containing secret values. Kimen supplies them only when a trusted process starts — or keeps them to itself while completing an approved operation for an agent.</p>
-        <div class="hero-actions">
-          <a class="button" href="mailto:hello@andreasflakstad.no?subject=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values%20or%20sensitive%20infrastructure%20details.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access</a>
-          <a href="#model">How Kimen works ↓</a>
+        <div class="hero-copy">
+          <h1>Secrets don't belong in the project your agent can read.</h1>
+          <p class="lede">Your app still needs database passwords, API keys and service credentials. Kimen keeps them in a local encrypted vault and supplies them only when they are used.</p>
+          <div class="hero-actions">
+            <a class="button" href="../../docs/#start">Install Kimen</a>
+            <a href="#how">See how it works ↓</a>
+          </div>
+        </div>
+
+        <figure class="system-map">
+          <svg viewBox="0 0 620 500" role="img" aria-labelledby="system-title system-desc">
+            <title id="system-title">How Kimen separates a project from its secrets</title>
+            <desc id="system-desc">The project contains application code and a Kimen map without secret values. Kimen holds encrypted values in the local environment and supplies them to the running application.</desc>
+
+            <rect class="map-area project-area" x="22" y="28" width="242" height="254" />
+            <text class="map-label" x="44" y="58">PROJECT</text>
+            <text class="map-title" x="44" y="94">Application code</text>
+            <text class="map-copy" x="44" y="119">reads DATABASE_URL</text>
+            <line class="map-rule" x1="44" y1="142" x2="242" y2="142" />
+            <text class="map-title" x="44" y="175">.kimen/profiles/dev.kmap</text>
+            <text class="map-code" x="44" y="205">DATABASE_URL</text>
+            <text class="map-code muted" x="44" y="228">→ dev.database_url</text>
+            <text class="map-safe" x="44" y="260">NO SECRET VALUES</text>
+
+            <rect class="map-area environment-area" x="342" y="28" width="256" height="444" />
+            <text class="map-label" x="364" y="58">LOCAL ENVIRONMENT</text>
+            <rect class="vault-box" x="364" y="83" width="212" height="112" />
+            <rect class="seed" x="382" y="101" width="10" height="10" />
+            <text class="vault-title" x="404" y="112">Kimen vault</text>
+            <text class="vault-copy" x="382" y="145">dev.database_url</text>
+            <text class="vault-secret" x="382" y="170">••••••••••••••</text>
+
+            <path class="active-path" d="M470 195 L470 268" />
+            <text class="path-label" x="487" y="236">kimen run</text>
+
+            <rect class="runtime-box" x="364" y="268" width="212" height="126" />
+            <text class="map-label" x="382" y="296">RUNNING APPLICATION</text>
+            <text class="map-code" x="382" y="330">DATABASE_URL</text>
+            <text class="map-code muted" x="382" y="354">available to this process</text>
+            <text class="map-safe" x="382" y="380">ONLY WHILE RUNNING</text>
+
+            <path class="request-path" d="M264 196 C304 196 305 139 342 139" />
+            <circle class="request-dot" cx="304" cy="181" r="5" />
+            <text class="path-label" x="280" y="222">vault key</text>
+
+            <rect class="agent-box" x="22" y="338" width="242" height="98" />
+            <text class="map-label" x="44" y="368">CODING AGENT</text>
+            <text class="map-copy" x="44" y="397">can read the project</text>
+            <text class="map-copy" x="44" y="420">cannot read the secret value</text>
+            <path class="agent-path" d="M143 338 L143 282" />
+          </svg>
+          <figcaption>The repository describes what the app needs. The value stays in the environment where the app runs.</figcaption>
+        </figure>
+      </section>
+
+      <section class="problem">
+        <header class="section-head">
+          <h2><code>.gitignore</code> protects secrets from Git. Not from your agent.</h2>
+          <p>If a secret is a file in the working tree, a coding agent with file access can read it.</p>
+        </header>
+        <div class="plain-flow" aria-label="How a local secret reaches an agent">
+          <article><h3>The secret is beside the code</h3><p>An <code>.env</code>, private key or service-account file contains the real value.</p></article>
+          <span aria-hidden="true">→</span>
+          <article><h3>The agent reads local files</h3><p>Ignored by Git still means visible to Codex, Claude Code and other local tools.</p></article>
+          <span aria-hidden="true">→</span>
+          <article><h3>The value enters agent context</h3><p>It can appear in prompts, command output or logs. A leaked secret must be rotated.</p></article>
         </div>
       </section>
 
-      <section class="scenario">
+      <section class="how" id="how">
         <header class="section-head">
-          <h2>Your coding agent finishes the code. Then you take over.</h2>
-          <p>A broad credential should not be the price of letting an agent finish. Kimen turns it into one locally controlled operation.</p>
-        </header>
-        <div class="flow" aria-label="Example of a constrained deployment">
-          <article><h3>The agent asks</h3><p>“Deploy the revision I just finished to staging.”</p></article>
-          <span aria-hidden="true">→</span>
-          <article class="kimen"><h3>Kimen decides locally</h3><p>This operation, target and revision are allowed. The deploy credential stays here.</p></article>
-          <span aria-hidden="true">→</span>
-          <article><h3>The work finishes</h3><p>The deployment system performs the approved operation. The agent receives success or failure.</p></article>
-        </div>
-      </section>
-
-      <section class="model" id="model">
-        <header class="section-head">
-          <h2>The project carries the requirement. You keep the authority.</h2>
-          <p>A checked-in profile describes what the software expects. Protected local bindings decide which values and permissions fulfil it.</p>
+          <h2>Move the values out. Leave a readable map behind.</h2>
+          <p>Kimen is a small local vault plus a step that prepares the environment immediately before your app starts.</p>
         </header>
 
-        <div class="model-table" role="table" aria-label="Kimen authority model">
-          <div class="model-row model-head" role="row"><span role="columnheader"></span><span role="columnheader">The project states</span><span role="columnheader">Local Kimen controls</span><span role="columnheader">The caller receives</span></div>
-          <div class="model-row" role="row"><strong role="rowheader">Secret</strong><span role="cell">The application needs <code>DATABASE_URL</code></span><span role="cell">The encrypted value and which environment it belongs to</span><span role="cell">A chosen program receives the value when it starts</span></div>
-          <div class="model-row" role="row"><strong role="rowheader">Action</strong><span role="cell">The project may request a staging deployment</span><span role="cell">The provider, target, credential and permitted inputs</span><span role="cell">The agent receives the outcome, never the credential</span></div>
-        </div>
-
-        <div class="product-pair">
+        <div class="code-story">
           <article>
-            <h3>Describe the runtime shape. Keep the values elsewhere.</h3>
-            <p>In a <code>.kmap</code>, the left side is what the app sees. The right side is a key Kimen resolves from the local encrypted vault. The map is safe to commit because it contains no secret values.</p>
-            <figure class="real-code">
-              <figcaption>.kimen/profiles/dev.kmap</figcaption>
-              <pre><code>env DATABASE_URL=dev.database_url
-file credentials.json=dev.gcp_credentials_json
-envpath GOOGLE_APPLICATION_CREDENTIALS=credentials.json</code></pre>
+            <h3>Store the value in Kimen</h3>
+            <p>Kimen prompts safely. The secret does not pass through shell history, an environment variable or a plaintext file.</p>
+            <figure class="terminal">
               <figcaption>terminal</figcaption>
-              <pre><code>kimen session start --ttl 15m
-kimen run --profile dev -- ./app
-kimen session lock</code></pre>
+              <pre><code>kimen secret set dev.database_url</code></pre>
             </figure>
-            <p class="note">The app sees ordinary environment variables and file paths. It does not call Kimen or know about the vault.</p>
           </article>
           <article>
-            <h3>Let the agent request the outcome. Keep the credential in Kimen.</h3>
-            <p>Moving a credential to another vault does not help if the agent can still fetch it. Kimen uses the credential itself and returns only the result.</p>
-            <p>The protected local binding defines the operation, its target and its accepted inputs. The project can request that operation, but it cannot redefine it or gain the broader authority behind it.</p>
+            <h3>Describe what the app expects</h3>
+            <p>The left side is what the app sees. The right side names a value in the vault. This file is safe to commit.</p>
+            <figure class="terminal">
+              <figcaption>.kimen/profiles/dev.kmap</figcaption>
+              <pre><code>env DATABASE_URL=dev.database_url</code></pre>
+            </figure>
+          </article>
+          <article>
+            <h3>Start the app through Kimen</h3>
+            <p>Kimen resolves the map and gives <code>DATABASE_URL</code> to this process. The app itself does not change.</p>
+            <figure class="terminal">
+              <figcaption>terminal</figcaption>
+              <pre><code>kimen run --profile dev -- ./app</code></pre>
+            </figure>
           </article>
         </div>
+
+        <div class="session-line">
+          <div><strong>Several runs ahead?</strong><span>Open the vault for a short, bounded session, then lock it again.</span></div>
+          <code>kimen session start --ttl 15m</code>
+          <code>kimen session lock</code>
+        </div>
+      </section>
+
+      <section class="agent" id="agents">
+        <div class="agent-copy">
+          <h2>Let the agent deploy. Keep the deploy credential.</h2>
+          <p>Moving a credential to another vault is not enough if the agent can fetch it. Kimen uses the credential itself, performs one permitted action and returns only the result.</p>
+          <p>The operation, target and accepted inputs are defined outside the repository. The agent can request the action. It cannot redefine it or gain the broader access behind it.</p>
+        </div>
+
+        <figure class="action-map">
+          <svg viewBox="0 0 600 350" role="img" aria-labelledby="action-title action-desc">
+            <title id="action-title">An agent deploys through Kimen without receiving the credential</title>
+            <desc id="action-desc">The agent requests a staging deployment. Kimen checks the request, keeps the credential and calls the deployment provider. Only the result returns to the agent.</desc>
+
+            <rect class="action-box" x="24" y="58" width="154" height="104" />
+            <text class="action-label" x="44" y="86">AGENT</text>
+            <text class="action-title" x="44" y="119">Deploy revision</text>
+            <text class="action-code" x="44" y="143">8d2f74a → staging</text>
+
+            <path class="action-arrow" d="M178 110 L223 110" />
+            <polygon class="arrow-head" points="223,110 213,104 213,116" />
+
+            <rect class="action-kimen" x="223" y="32" width="154" height="156" />
+            <rect class="seed" x="243" y="53" width="10" height="10" />
+            <text class="action-label light" x="265" y="63">KIMEN</text>
+            <text class="action-copy light" x="243" y="99">checks target</text>
+            <text class="action-copy light" x="243" y="122">checks revision</text>
+            <text class="action-copy light" x="243" y="145">uses credential</text>
+            <text class="action-secret" x="243" y="172">KEY ••••••••</text>
+
+            <path class="action-arrow" d="M377 110 L422 110" />
+            <polygon class="arrow-head" points="422,110 412,104 412,116" />
+
+            <rect class="action-box" x="422" y="58" width="154" height="104" />
+            <text class="action-label" x="442" y="86">PROVIDER</text>
+            <text class="action-title" x="442" y="119">Staging deploy</text>
+            <text class="action-code" x="442" y="143">accepted</text>
+
+            <path class="result-path" d="M499 162 C499 264 101 264 101 162" />
+            <polygon class="result-head" points="101,162 95,172 107,172" />
+            <text class="result-label" x="251" y="291">RESULT ONLY</text>
+          </svg>
+          <figcaption>The credential stays inside Kimen. The agent receives success or failure.</figcaption>
+        </figure>
       </section>
 
       <section class="workflows">
         <header class="section-head">
-          <h2>Where does your agent stop?</h2>
-          <p>Kimen closes the gap when a repeated, specific task is blocked by a credential that grants far more power than the task requires.</p>
+          <h2>Give agents the smallest useful action.</h2>
+          <p>Kimen holds the broad credential and exposes a narrow, predefined operation.</p>
         </header>
         <div class="workflow-list">
-          <article><h3>Codex finishes the release. You deploy it yourself.</h3><p>Kimen constrains the target and the exact revision.</p></article>
-          <article><h3>The agent identifies the need for a backup. You trigger it yourself.</h3><p>Kimen asks the database provider to run one server-side backup against one known database.</p></article>
-          <article><h3>The agent fixes a service. You restart it yourself.</h3><p>Kimen triggers the predefined restart without exposing SSH or infrastructure credentials.</p></article>
-        </div>
-      </section>
-
-      <section class="boundary" id="boundary">
-        <h2>The agent can ask. Only you can decide what that request means.</h2>
-        <div>
-          <p>The repository may name a secret or operation, but it cannot create a credential, change the target or replace the approved operation with arbitrary code. Those decisions live in the protected local binding.</p>
-          <p>For a trusted app, the important boundary is before it starts: Kimen supplies the environment variables and files it expects. When an agent only needs an outcome, that boundary stays closed — Kimen keeps the credential and performs the operation.</p>
+          <article><h3>Deploy one revision to staging</h3><p>Fix the environment and limit the request to the revision the agent completed.</p></article>
+          <article><h3>Trigger a server-side backup</h3><p>Back up one known database without sharing the provider's API credential.</p></article>
+          <article><h3>Restart a known service</h3><p>Expose the predefined restart, not SSH access or arbitrary server commands.</p></article>
         </div>
       </section>
 
       <section class="closing">
-        <header class="section-head"><h2>Keep authority local. Let the agent finish.</h2><p>Start with the secret in your workspace or the privileged step you still perform by hand.</p></header>
-        <div class="routes">
-          <article><h3>The agent can read a secret simply because it sits beside the code</h3><p>Move one <code>.env</code> out of the workspace and into Kimen's local encrypted vault.</p><a href="../../docs/#start">Try Kimen on this repository ↗</a></article>
-          <article><h3>You stop the agent before it can finish the job</h3><p>Give Kimen the operation, target and credential you still handle manually.</p><a class="button" href="mailto:hello@andreasflakstad.no?subject=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values%20or%20sensitive%20infrastructure%20details.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access ↗</a></article>
+        <h2>Start with one secret.</h2>
+        <p>Move it out of the workspace. Keep the app unchanged. Let Kimen provide it only where it is needed.</p>
+        <div class="hero-actions">
+          <a class="button" href="../../docs/#start">Install Kimen</a>
+          <a href="https://github.com/flakstad/kimen">View source ↗</a>
         </div>
       </section>
     </main>
