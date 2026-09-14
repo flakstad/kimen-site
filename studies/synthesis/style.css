@@ -28,7 +28,7 @@ code, pre { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
 .brand span { width: 10px; height: 10px; background: var(--orange); }
 .topbar nav, footer nav { display: flex; gap: 28px; font-size: 12px; }
 
-.hero, .problem, .how, .agent, .workflows, .closing {
+.hero, .problem, .how, .agent, .closing {
   padding-left: max(5vw, calc((100vw - 1240px) / 2));
   padding-right: max(5vw, calc((100vw - 1240px) / 2));
 }
@@ -48,30 +48,45 @@ h1 { max-width: 700px; margin: 0; font-size: clamp(42px, 4.2vw, 60px); font-weig
 
 .system-map { min-width: 0; margin: 0; }
 .system-map svg { display: block; width: 100%; height: auto; background: var(--surface); border: 1px solid var(--line); }
-.system-map figcaption, .action-map figcaption { margin-top: 12px; color: var(--muted); font-size: 11px; line-height: 1.5; }
-.map-area, .agent-box { fill: none; stroke: #9da79d; stroke-width: 1.2; }
-.environment-area { fill: #eef2eb; stroke: var(--green); }
-.vault-box { fill: var(--dark); }
-.runtime-box { fill: var(--surface); stroke: var(--green); stroke-width: 1.2; }
+.system-map figcaption, .run-map figcaption { margin-top: 12px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.grid-field { fill: url(#map-grid); }
+.grid-line { fill: none; stroke: #e8e8e1; stroke-width: 1; }
+.environment-field { fill: #e7eee4; stroke: #99ac9b; stroke-width: 1.2; }
+.project-card, .agent-card, .runtime-card { fill: var(--surface); stroke: #9da79d; stroke-width: 1.2; }
+.vault-card { fill: var(--dark); }
 .seed { fill: var(--orange); }
 .map-label, .map-safe, .path-label { font: 700 11px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .08em; }
 .map-label { fill: #667067; }
+.map-label.light { fill: #cbd2ca; }
+.environment-label { fill: var(--green); }
 .map-title { fill: var(--ink); font: 700 16px "Avenir Next", Arial, sans-serif; }
 .map-copy { fill: var(--muted); font: 14px Charter, Georgia, serif; }
 .map-code { fill: var(--ink); font: 13px ui-monospace, "SFMono-Regular", Menlo, monospace; }
 .map-code.muted { fill: var(--muted); }
+.map-file { fill: var(--ink); font: 700 12px ui-monospace, "SFMono-Regular", Menlo, monospace; }
 .map-safe { fill: var(--green); font-size: 10px; }
 .map-rule { stroke: var(--line); }
-.vault-title { fill: white; font: 700 17px "Avenir Next", Arial, sans-serif; }
 .vault-copy { fill: #cbd2ca; font: 13px ui-monospace, "SFMono-Regular", Menlo, monospace; }
 .vault-secret { fill: white; font: 17px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .08em; }
-.active-path { fill: none; stroke: var(--orange); stroke-width: 2.5; }
-.request-path { fill: none; stroke: var(--green); stroke-width: 1.5; }
+.agent-dot { fill: var(--orange); }
+.app-dot { fill: var(--green); }
+.runtime-label { fill: #667067; font: 700 10px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .09em; }
+.runtime-key { fill: var(--ink); font: 700 12px ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.runtime-value { fill: var(--green); font: 12px ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.kimen-halo { fill: none; stroke: var(--green); }
+.kimen-halo.outer { opacity: .22; stroke-width: 1.2; }
+.kimen-halo.inner { opacity: .45; stroke-width: 1.2; }
+.kimen-core { fill: var(--green); }
+.kimen-label { fill: white; font: 700 13px "Avenir Next", Arial, sans-serif; text-anchor: middle; }
+.active-path, .vault-path, .request-path { fill: none; stroke-width: 1.7; }
+.active-path { stroke: var(--orange); }
+.vault-path, .request-path { stroke: var(--green); }
 .request-dot { fill: var(--orange); }
 .path-label { fill: var(--green); font-size: 9px; }
+.path-label.active { fill: var(--orange); }
 .agent-path { fill: none; stroke: #7f8980; stroke-width: 1.2; stroke-dasharray: 5 5; }
 
-.problem, .how, .agent, .workflows, .closing { padding-top: 95px; padding-bottom: 100px; }
+.problem, .how, .agent, .closing { padding-top: 95px; padding-bottom: 100px; }
 .problem { background: var(--green-soft); }
 .section-head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 9vw; align-items: end; margin-bottom: 60px; }
 h2 { max-width: 820px; margin: 0; font-size: clamp(32px, 3.35vw, 48px); font-weight: 600; line-height: 1.08; letter-spacing: -.045em; }
@@ -100,28 +115,27 @@ h3 { margin: 0; font-size: 19px; line-height: 1.3; letter-spacing: -.02em; }
 .agent { display: grid; grid-template-columns: minmax(0, .82fr) minmax(500px, 1.18fr); gap: 8vw; align-items: center; background: var(--dark); color: white; }
 .agent-copy p { color: #cbd2ca; font: 16px/1.65 Charter, Georgia, serif; }
 .agent-copy p + p { margin-top: 24px; padding-top: 24px; border-top: 1px solid #465047; }
-.action-map { min-width: 0; margin: 0; }
-.action-map svg { display: block; width: 100%; height: auto; background: #202a22; border: 1px solid #465047; }
-.action-map figcaption { color: #aeb9af; }
-.action-box { fill: var(--surface); stroke: #8d988e; }
-.action-kimen { fill: var(--green); stroke: #81a487; }
-.action-label { fill: #5e675e; font: 700 10px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .08em; }
-.action-label.light, .action-copy.light { fill: white; }
-.action-title { fill: var(--ink); font: 700 16px "Avenir Next", Arial, sans-serif; }
-.action-code, .action-secret { fill: var(--muted); font: 11px ui-monospace, "SFMono-Regular", Menlo, monospace; }
-.action-copy { font: 13px Charter, Georgia, serif; }
-.action-secret { fill: #e8eee8; letter-spacing: .06em; }
-.action-arrow { stroke: var(--orange); stroke-width: 2; }
+.run-map { min-width: 0; margin: 0; }
+.run-map svg { display: block; width: 100%; height: auto; background: #202a22; border: 1px solid #465047; }
+.run-map figcaption { color: #aeb9af; }
+.dark-grid-field { fill: url(#run-grid); }
+.dark-grid-line { fill: none; stroke: #29352c; stroke-width: 1; }
+.run-card { fill: var(--surface); stroke: #8d988e; }
+.run-label { fill: #5e675e; font: 700 10px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .08em; }
+.run-title { fill: var(--ink); font: 700 17px "Avenir Next", Arial, sans-serif; }
+.run-code { fill: var(--muted); font: 12px ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.run-code.success { fill: var(--green); font-weight: 700; }
+.child-dot { fill: var(--green); }
+.run-halo { fill: none; stroke: #7aa183; }
+.run-halo.outer { opacity: .28; stroke-width: 1.2; }
+.run-halo.inner { opacity: .55; stroke-width: 1.2; }
+.run-core { fill: var(--green); }
+.run-kimen-label { fill: white; font: 700 18px "Avenir Next", Arial, sans-serif; text-anchor: middle; }
+.run-check { fill: #d8e4da; font: 12px Charter, Georgia, serif; text-anchor: middle; }
+.run-secret { fill: #e8eee8; font: 10px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .06em; text-anchor: middle; }
+.run-arrow { stroke: var(--orange); stroke-width: 2; }
 .arrow-head { fill: var(--orange); }
-.result-path { fill: none; stroke: #91a495; stroke-width: 1.5; stroke-dasharray: 5 5; }
-.result-head { fill: #91a495; }
-.result-label { fill: #aeb9af; font: 700 10px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .12em; }
-
-.workflows { background: var(--paper); }
-.workflow-list { border-top: 1px solid var(--ink); }
-.workflow-list article { display: grid; grid-template-columns: minmax(270px, .8fr) 1fr; gap: 50px; padding: 23px 0; border-bottom: 1px solid var(--ink); align-items: baseline; }
-.workflow-list p { max-width: 620px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
-
+.run-path-label { fill: #dd8a70; font: 700 9px ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .08em; }
 .closing { background: var(--surface); }
 .closing > p { max-width: 650px; margin: 25px 0 30px; color: var(--muted); font: 18px/1.6 Charter, Georgia, serif; }
 
@@ -133,7 +147,7 @@ footer nav { justify-content: flex-end; }
   .hero { grid-template-columns: 1fr; }
   .system-map { max-width: 680px; margin-top: 20px; }
   .agent { grid-template-columns: 1fr; }
-  .action-map { max-width: 700px; }
+  .run-map { max-width: 700px; }
 }
 
 @media (max-width: 900px) {
@@ -152,7 +166,7 @@ footer nav { justify-content: flex-end; }
 
 @media (max-width: 640px) {
   .topbar { padding: 0 20px; }
-  .hero, .problem, .how, .agent, .workflows, .closing { padding-left: 20px; padding-right: 20px; }
+  .hero, .problem, .how, .agent, .closing { padding-left: 20px; padding-right: 20px; }
   .hero { min-height: 0; padding-top: 68px; padding-bottom: 74px; }
   h1 { font-size: clamp(36px, 9.5vw, 42px); }
   h2 { font-size: clamp(29px, 8vw, 38px); }
@@ -163,9 +177,7 @@ footer nav { justify-content: flex-end; }
   .plain-flow article, .plain-flow article + span + article { padding: 26px 0; }
   .plain-flow > span { transform: rotate(90deg); }
   .agent h2 { margin-bottom: 30px; }
-  .action-map { margin-top: 22px; }
-  .workflow-list article { display: block; }
-  .workflow-list p { margin-top: 12px; }
+  .run-map { margin-top: 22px; }
   footer { display: block; padding: 30px 20px; }
   footer p, footer nav { margin-top: 25px; }
   footer nav { justify-content: flex-start; flex-wrap: wrap; }

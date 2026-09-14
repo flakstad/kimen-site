@@ -5,12 +5,17 @@ separate from the CLI/runtime repository.
 
 ## Scope
 
-- Product and market-probe homepage
+- Product homepage
 - One-page manual at `/docs/`
-- Honest separation between shipped vault/projection features and the proposed
-  constrained-actions direction
+- A direct agent story based on keeping plaintext values out of the workspace
+  and projecting them only when a process starts
 - Production pages have no JavaScript, build system, analytics or runtime service
 - Three deliberately different design studies live at `/studies/`
+
+Stronger credential-backed agent operations remain a separate product and
+architecture exploration in
+[`docs/stronger-agent-operations.md`](docs/stronger-agent-operations.md). They
+are not required to explain or use Kimen's current vault and projection model.
 
 The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
 domain mapping.
@@ -37,8 +42,8 @@ Run the local site check:
 ./scripts/check-site.sh
 ```
 
-The check validates internal links, referenced local files, document titles,
-HTML parsing and that planned Actions are marked as exploration.
+The check validates internal links, referenced local files, document titles and
+HTML parsing.
 
 ## GitHub Pages handoff
 
@@ -52,6 +57,3 @@ Andreas performs publication and external configuration:
 3. In repository settings, select GitHub Actions as the Pages source.
 4. Configure the `kimen.systems` DNS records GitHub requests.
 5. Verify the custom domain and HTTPS in Pages settings.
-
-Do not put credentials or private workflow details in the public Actions
-discovery issue linked from the homepage.

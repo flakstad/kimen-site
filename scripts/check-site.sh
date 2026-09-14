@@ -77,14 +77,13 @@ for source, parser in pages.items():
 
 homepage = Path("index.html").read_text(encoding="utf-8")
 required = [
-    "Available today:",
-    "exploration",
-    "not claims of the current release",
-    "Show me the action you still do manually",
+    "Kimen",
+    ".kmap",
+    "kimen run",
 ]
 for text in required:
     if text not in homepage:
-        raise SystemExit(f"homepage is missing required boundary text: {text}")
+        raise SystemExit(f"homepage is missing required product text: {text}")
 
 print(f"checked {len(pages)} HTML pages")
 PY

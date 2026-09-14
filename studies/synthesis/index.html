@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Kimen — secrets for apps, not coding agents</title>
-    <meta name="description" content="Keep secrets outside your repository. Kimen gives trusted apps the values they need and gives coding agents only approved actions." />
+    <title>Kimen — local secrets and runtime configuration</title>
+    <meta name="description" content="Keep secrets out of your repository and everyday coding-agent context. Kimen supplies them directly when your application starts." />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -18,7 +18,7 @@
       <section class="hero">
         <div class="hero-copy">
           <h1>Secrets don't belong in the project your agent can read.</h1>
-          <p class="lede">Your app still needs database passwords, API keys and service credentials. Kimen keeps them in a local encrypted vault and supplies them only when they are used.</p>
+          <p class="lede">Your app still needs database passwords, API keys and service credentials. Kimen keeps them in a local encrypted vault, outside the workspace, and supplies them directly when your application starts.</p>
           <div class="hero-actions">
             <a class="button" href="../../docs/#start">Install Kimen</a>
             <a href="#how">See how it works ↓</a>
@@ -26,48 +26,73 @@
         </div>
 
         <figure class="system-map">
-          <svg viewBox="0 0 620 500" role="img" aria-labelledby="system-title system-desc">
+          <svg viewBox="0 0 700 500" role="img" aria-labelledby="system-title system-desc">
             <title id="system-title">How Kimen separates a project from its secrets</title>
-            <desc id="system-desc">The project contains application code and a Kimen map without secret values. Kimen holds encrypted values in the local environment and supplies them to the running application.</desc>
+            <desc id="system-desc">The project contains application code and a Kimen map without secret values. Kimen retrieves encrypted values and supplies them directly to the application when it starts.</desc>
 
-            <rect class="map-area project-area" x="22" y="28" width="242" height="254" />
-            <text class="map-label" x="44" y="58">PROJECT</text>
-            <text class="map-title" x="44" y="94">Application code</text>
-            <text class="map-copy" x="44" y="119">reads DATABASE_URL</text>
-            <line class="map-rule" x1="44" y1="142" x2="242" y2="142" />
-            <text class="map-title" x="44" y="175">.kimen/profiles/dev.kmap</text>
-            <text class="map-code" x="44" y="205">DATABASE_URL</text>
-            <text class="map-code muted" x="44" y="228">→ dev.database_url</text>
-            <text class="map-safe" x="44" y="260">NO SECRET VALUES</text>
+            <defs>
+              <pattern id="map-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                <path d="M24 0H0V24" class="grid-line" />
+              </pattern>
+            </defs>
+            <rect class="grid-field" width="700" height="500" />
 
-            <rect class="map-area environment-area" x="342" y="28" width="256" height="444" />
-            <text class="map-label" x="364" y="58">LOCAL ENVIRONMENT</text>
-            <rect class="vault-box" x="364" y="83" width="212" height="112" />
-            <rect class="seed" x="382" y="101" width="10" height="10" />
-            <text class="vault-title" x="404" y="112">Kimen vault</text>
-            <text class="vault-copy" x="382" y="145">dev.database_url</text>
-            <text class="vault-secret" x="382" y="170">••••••••••••••</text>
+            <circle class="environment-field" cx="510" cy="260" r="176" />
+            <text class="map-label environment-label" x="420" y="58">APPLICATION ENVIRONMENT</text>
 
-            <path class="active-path" d="M470 195 L470 268" />
-            <text class="path-label" x="487" y="236">kimen run</text>
+            <rect class="project-card" x="22" y="54" width="230" height="220" />
+            <text class="map-label" x="46" y="86">PROJECT</text>
+            <text class="map-title" x="46" y="126">Application code</text>
+            <text class="map-copy" x="46" y="152">expects DATABASE_URL</text>
+            <line class="map-rule" x1="46" y1="175" x2="228" y2="175" />
+            <text class="map-file" x="46" y="205">.kimen/profiles/dev.kmap</text>
+            <text class="map-code" x="46" y="236">DATABASE_URL</text>
+            <text class="map-code muted" x="46" y="258">→ dev.database_url</text>
 
-            <rect class="runtime-box" x="364" y="268" width="212" height="126" />
-            <text class="map-label" x="382" y="296">RUNNING APPLICATION</text>
-            <text class="map-code" x="382" y="330">DATABASE_URL</text>
-            <text class="map-code muted" x="382" y="354">available to this process</text>
-            <text class="map-safe" x="382" y="380">ONLY WHILE RUNNING</text>
+            <rect class="vault-card" x="278" y="54" width="134" height="100" />
+            <text class="map-label light" x="298" y="83">KIMEN VAULT</text>
+            <text class="vault-copy" x="298" y="112">encrypted</text>
+            <text class="vault-secret" x="298" y="139">••••••••</text>
 
-            <path class="request-path" d="M264 196 C304 196 305 139 342 139" />
-            <circle class="request-dot" cx="304" cy="181" r="5" />
-            <text class="path-label" x="280" y="222">vault key</text>
+            <rect class="agent-card" x="22" y="346" width="230" height="82" />
+            <circle class="agent-dot" cx="48" cy="376" r="8" />
+            <text class="map-title" x="70" y="382">Coding agent</text>
+            <text class="map-copy" x="46" y="410">sees code and names · not values</text>
 
-            <rect class="agent-box" x="22" y="338" width="242" height="98" />
-            <text class="map-label" x="44" y="368">CODING AGENT</text>
-            <text class="map-copy" x="44" y="397">can read the project</text>
-            <text class="map-copy" x="44" y="420">cannot read the secret value</text>
-            <path class="agent-path" d="M143 338 L143 282" />
+            <rect class="runtime-card" x="406" y="92" width="254" height="350" />
+            <text class="map-label" x="432" y="124">PREPARED BY KIMEN</text>
+            <circle class="app-dot" cx="440" cy="161" r="8" />
+            <text class="map-title" x="462" y="167">Your application</text>
+            <line class="map-rule" x1="432" y1="191" x2="634" y2="191" />
+            <text class="runtime-label" x="432" y="220">ENVIRONMENT</text>
+            <text class="runtime-key" x="432" y="249">DATABASE_URL</text>
+            <text class="runtime-value" x="432" y="270">postgres://…8f2</text>
+            <text class="runtime-key" x="432" y="300">STRIPE_API_KEY</text>
+            <text class="runtime-value" x="432" y="321">sk_live_…A7</text>
+            <text class="runtime-label" x="432" y="356">RUNTIME FILE</text>
+            <text class="runtime-key" x="432" y="385">credentials.json</text>
+            <text class="runtime-value" x="432" y="406">{ "private_key": "…Q9" }</text>
+            <text class="map-safe" x="432" y="428">AVAILABLE TO THIS PROCESS</text>
+
+            <circle class="kimen-halo outer" cx="332" cy="276" r="61" />
+            <circle class="kimen-halo inner" cx="332" cy="276" r="45" />
+            <circle class="kimen-core" cx="332" cy="276" r="31" />
+            <rect class="seed" x="326" y="254" width="12" height="12" />
+            <text class="kimen-label" x="332" y="289">kimen</text>
+
+            <path class="request-path" d="M252 230C276 230 286 253 301 265" />
+            <circle class="request-dot" cx="276" cy="238" r="4" />
+            <text class="path-label" x="258" y="218">reads map</text>
+
+            <path class="vault-path" d="M345 154V230" />
+            <text class="path-label" x="355" y="194">decrypts</text>
+
+            <path class="active-path" d="M363 276H406" />
+            <text class="path-label active" x="368" y="262">prepares</text>
+
+            <path class="agent-path" d="M137 346V274" />
           </svg>
-          <figcaption>The repository describes what the app needs. The value stays in the environment where the app runs.</figcaption>
+          <figcaption>The agent sees the code and the map, but no values are stored there. Kimen supplies them directly to the application process.</figcaption>
         </figure>
       </section>
 
@@ -127,58 +152,56 @@
 
       <section class="agent" id="agents">
         <div class="agent-copy">
-          <h2>Let the agent deploy. Keep the deploy credential.</h2>
-          <p>Moving a credential to another vault is not enough if the agent can fetch it. Kimen uses the credential itself, performs one permitted action and returns only the result.</p>
-          <p>The operation, target and accepted inputs are defined outside the repository. The agent can request the action. It cannot redefine it or gain the broader access behind it.</p>
+          <h2>The agent can start the app without a <code>.env</code> file.</h2>
+          <p>The agent can inspect the code and <code>.kmap</code>, make changes and invoke the same <code>kimen run</code> command you use. Kimen resolves the values after invocation and passes them directly to the child process.</p>
+          <p>The secret does not need to appear in the workspace or the agent's prompt. The child process does receive it: if the program prints a secret, it can still appear in command output or logs.</p>
         </div>
 
-        <figure class="action-map">
-          <svg viewBox="0 0 600 350" role="img" aria-labelledby="action-title action-desc">
-            <title id="action-title">An agent deploys through Kimen without receiving the credential</title>
-            <desc id="action-desc">The agent requests a staging deployment. Kimen checks the request, keeps the credential and calls the deployment provider. Only the result returns to the agent.</desc>
+        <figure class="run-map">
+          <svg viewBox="0 0 680 340" role="img" aria-labelledby="run-title run-desc">
+            <title id="run-title">A coding agent starts an application through Kimen</title>
+            <desc id="run-desc">The agent invokes Kimen with a profile and application command. Kimen resolves the named vault values and supplies them to the child application process.</desc>
 
-            <rect class="action-box" x="24" y="58" width="154" height="104" />
-            <text class="action-label" x="44" y="86">AGENT</text>
-            <text class="action-title" x="44" y="119">Deploy revision</text>
-            <text class="action-code" x="44" y="143">8d2f74a → staging</text>
+            <defs>
+              <pattern id="run-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                <path d="M24 0H0V24" class="dark-grid-line" />
+              </pattern>
+            </defs>
+            <rect class="dark-grid-field" width="680" height="340" />
 
-            <path class="action-arrow" d="M178 110 L223 110" />
-            <polygon class="arrow-head" points="223,110 213,104 213,116" />
+            <rect class="run-card" x="24" y="98" width="218" height="132" />
+            <circle class="agent-dot" cx="50" cy="129" r="8" />
+            <text class="run-label" x="72" y="134">CODING AGENT</text>
+            <text class="run-title" x="48" y="168">Starts the app</text>
+            <text class="run-code" x="48" y="197">kimen run --profile dev</text>
+            <text class="run-code" x="48" y="216">-- ./app</text>
 
-            <rect class="action-kimen" x="223" y="32" width="154" height="156" />
-            <rect class="seed" x="243" y="53" width="10" height="10" />
-            <text class="action-label light" x="265" y="63">KIMEN</text>
-            <text class="action-copy light" x="243" y="99">checks target</text>
-            <text class="action-copy light" x="243" y="122">checks revision</text>
-            <text class="action-copy light" x="243" y="145">uses credential</text>
-            <text class="action-secret" x="243" y="172">KEY ••••••••</text>
+            <circle class="run-halo outer" cx="340" cy="164" r="74" />
+            <circle class="run-halo inner" cx="340" cy="164" r="57" />
+            <circle class="run-core" cx="340" cy="164" r="43" />
+            <rect class="seed" x="334" y="128" width="12" height="12" />
+            <text class="run-kimen-label" x="340" y="162">kimen</text>
+            <text class="run-check" x="340" y="187">resolves map</text>
+            <text class="run-secret" x="340" y="220">••••••••</text>
 
-            <path class="action-arrow" d="M377 110 L422 110" />
-            <polygon class="arrow-head" points="422,110 412,104 412,116" />
+            <rect class="run-card" x="438" y="76" width="218" height="176" />
+            <circle class="child-dot" cx="464" cy="107" r="8" />
+            <text class="run-label" x="486" y="112">CHILD PROCESS</text>
+            <text class="run-title" x="462" y="148">Your application</text>
+            <text class="run-code" x="462" y="180">DATABASE_URL</text>
+            <text class="run-code success" x="462" y="201">postgres://…8f2</text>
+            <text class="run-code" x="462" y="229">credentials.json · {…}</text>
 
-            <rect class="action-box" x="422" y="58" width="154" height="104" />
-            <text class="action-label" x="442" y="86">PROVIDER</text>
-            <text class="action-title" x="442" y="119">Staging deploy</text>
-            <text class="action-code" x="442" y="143">accepted</text>
+            <path class="run-arrow" d="M242 164H297" />
+            <polygon class="arrow-head" points="297,164 287,158 287,170" />
+            <text class="run-path-label" x="251" y="147">invokes</text>
 
-            <path class="result-path" d="M499 162 C499 264 101 264 101 162" />
-            <polygon class="result-head" points="101,162 95,172 107,172" />
-            <text class="result-label" x="251" y="291">RESULT ONLY</text>
+            <path class="run-arrow" d="M383 164H438" />
+            <polygon class="arrow-head" points="438,164 428,158 428,170" />
+            <text class="run-path-label" x="390" y="147">supplies env</text>
           </svg>
-          <figcaption>The credential stays inside Kimen. The agent receives success or failure.</figcaption>
+          <figcaption>The values go to the child process rather than being copied into the prompt or workspace. Program output can still reveal them.</figcaption>
         </figure>
-      </section>
-
-      <section class="workflows">
-        <header class="section-head">
-          <h2>Give agents the smallest useful action.</h2>
-          <p>Kimen holds the broad credential and exposes a narrow, predefined operation.</p>
-        </header>
-        <div class="workflow-list">
-          <article><h3>Deploy one revision to staging</h3><p>Fix the environment and limit the request to the revision the agent completed.</p></article>
-          <article><h3>Trigger a server-side backup</h3><p>Back up one known database without sharing the provider's API credential.</p></article>
-          <article><h3>Restart a known service</h3><p>Expose the predefined restart, not SSH access or arbitrary server commands.</p></article>
-        </div>
       </section>
 
       <section class="closing">
