@@ -3,17 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Docs | Kimen</title>
+    <title>Documentation — Kimen</title>
     <meta
       name="description"
-      content="Kimen documentation: install, getting started, core commands, maps and profiles, and current sync scope."
+      content="Install Kimen, create a local encrypted vault and project secrets into trusted runtimes with env, files or stdin."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Source+Serif+4:wght@500;600&amp;display=swap"
-      rel="stylesheet"
-    />
+    <link rel="canonical" href="https://kimen.systems/docs/" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
@@ -23,8 +19,8 @@
           <a class="brand" href="../index.html">Kimen</a>
           <nav class="site-nav" aria-label="Primary">
             <a href="../index.html">home</a>
-            <span>|</span>
-            <a href="https://github.com/flakstad/kimen">github source</a>
+            <span aria-hidden="true">|</span>
+            <a href="https://github.com/flakstad/kimen">source</a>
           </nav>
         </div>
         <p class="tagline">documentation</p>
@@ -33,25 +29,21 @@
       <hr class="rule" />
 
       <section>
-        <h1>Docs</h1>
+        <h1>Use Kimen.</h1>
         <p class="lede">
-          This page is the one-page manual for using Kimen as a local-first
-          secrets tool for ordinary applications and scripts.
-        </p>
-        <p class="body-copy">
-          Kimen stores secrets in an encrypted local vault and lets you project
-          them into runtime only when you explicitly ask. The main idea is
-          simple: keep secret storage separate from the process that consumes
-          the secret, and prepare env or files only at launch time.
+          Keep plaintext secrets outside the repository, declare what the
+          application needs and project values into a trusted runtime only when
+          you ask.
         </p>
         <ul class="doc-toc">
           <li><a href="#install">install</a></li>
-          <li><a href="#start">getting started</a></li>
-          <li><a href="#commands">commands</a></li>
-          <li><a href="#sources">value sources</a></li>
-          <li><a href="#maps">maps and profiles</a></li>
-          <li><a href="#sync">sync</a></li>
-          <li><a href="#links">project links</a></li>
+          <li><a href="#start">five-minute setup</a></li>
+          <li><a href="#security">security boundary</a></li>
+          <li><a href="#vault">vault</a></li>
+          <li><a href="#profiles">profiles</a></li>
+          <li><a href="#projections">projections</a></li>
+          <li><a href="#sessions">sessions</a></li>
+          <li><a href="#reference">command reference</a></li>
         </ul>
       </section>
 
@@ -59,204 +51,247 @@
 
       <section id="install">
         <h2>Install</h2>
+        <p class="body-copy">Install the native binary with Homebrew:</p>
+        <pre><code>brew install flakstad/kimen/kimen
+kimen --version</code></pre>
         <p class="body-copy">
-          Kimen is usually installed as a native binary named
-          <code>kimen</code>. You can download a release build or compile it
-          from source.
-        </p>
-        <pre><code>bb native
-kimen version
-kimen vault init</code></pre>
-        <p class="body-copy">
-          Release artifacts and checksums are published on GitHub:
+          You can also download the
           <a href="https://github.com/flakstad/kimen/releases/latest"
             >latest release</a
-          >.
+          >. To build from source, install
+          <a href="https://github.com/kvist-lang/kvist">Kvist</a> and run:
         </p>
+        <pre><code>kvist build src/main.kvist</code></pre>
       </section>
 
       <hr class="rule" />
 
       <section id="start">
-        <h2>Getting Started</h2>
+        <h2>Five-minute setup</h2>
         <p class="body-copy">
-          A short path through the core workflow: initialize a vault, store a
-          secret, and use that secret for a single command.
+          Start with a test or staging value while you learn the boundary.
         </p>
-        <pre><code>kimen vault init
-kimen secret set demo_service_api_token
-kimen run --env SERVICE_API_TOKEN=demo_service_api_token -- ./your-command</code></pre>
-        <ol class="doc-list">
-          <li>
-            <code>kimen vault init</code> creates the encrypted local vault.
-          </li>
-          <li>
-            <code>kimen secret set NAME</code> stores a named secret in that
-            vault.
-          </li>
-          <li>
-            <code>kimen run</code> projects the value only for the child process
-            you start.
-          </li>
-        </ol>
-      </section>
 
-      <hr class="rule" />
+        <h3>1. Create the local encrypted vault</h3>
+        <pre><code>kimen vault init</code></pre>
 
-      <section id="commands">
-        <h2>Core Commands</h2>
-
-        <h3><code>kimen run</code></h3>
+        <h3>2. Store one value</h3>
+        <pre><code>kimen secret set stripe_api_key</code></pre>
         <p class="body-copy">
-          Run a child process with projected env vars, files, or stdin. This is
-          the primary command for development and automation.
+          Kimen prompts for the secret without requiring it as a shell
+          argument. You can also pipe a value to
+          <code>kimen secret set stripe_api_key --stdin</code>.
         </p>
-        <pre><code>kimen run --env API_KEY=api_key -- curl -H "Authorization: Bearer $API_KEY" https://example.com</code></pre>
 
-        <h3><code>kimen render</code></h3>
+        <h3>3. Declare the requirement</h3>
         <p class="body-copy">
-          Write projected files into a directory when a tool wants a file path
-          instead of an env var.
+          Create <code>.kimen/profiles/dev.kmap</code> in the project:
         </p>
-        <pre><code>OUTDIR="$(mktemp -d -t kimen-render.XXXXXX)"
-kimen render --dir "$OUTDIR" --file cfg.txt=api_key</code></pre>
+        <pre><code>env STRIPE_API_KEY=secret:stripe_api_key</code></pre>
 
-        <h3><code>kimen envfile</code></h3>
-        <p class="body-copy">
-          Generate a `KEY=VALUE` envfile for supervisors or deploy scripts.
-        </p>
-        <pre><code>kimen envfile --env SERVICE_API_TOKEN=demo_service_api_token --out .env.runtime</code></pre>
-
-        <h3><code>kimen plan</code></h3>
-        <p class="body-copy">
-          Print the projection plan without printing secret values. Useful for
-          review and automation.
-        </p>
-        <pre><code>kimen plan --profile dev
-kimen plan --profile dev --json</code></pre>
-      </section>
-
-      <hr class="rule" />
-
-      <section id="sources">
-        <h2>Value Sources</h2>
-        <p class="body-copy">
-          On the right-hand side of an env, file, or stdin mapping, Kimen
-          normally expects a vault secret name. It also supports a few explicit
-          source forms.
-        </p>
-        <ul class="doc-list">
-          <li>
-            <code>secret:name</code> or bare <code>name</code>: read from the
-            local vault
-          </li>
-          <li><code>const:value</code>: use a literal value</li>
-          <li>
-            <code>exec:command...</code>: run a local command and use its stdout
-          </li>
-        </ul>
-        <pre><code>kimen run \
-  --env SERVICE_API_TOKEN=secret:demo_service_api_token \
-  --env REGION=const:eu-north-1 \
-  --env TOKEN=exec:./scripts/derive_token.sh \
-  -- your-command</code></pre>
-      </section>
-
-      <hr class="rule" />
-
-      <section id="maps">
-        <h2>Maps And Profiles</h2>
-        <p class="body-copy">
-          Use <code>.kmap</code> files and named profiles when you want
-          repeatable intent instead of repeating flags on every command.
-        </p>
-        <pre><code>mkdir -p .kimen/profiles
-cat &gt; .kimen/profiles/dev.kmap &lt;&lt;'EOF'
-env SERVICE_API_TOKEN=demo_service_api_token
-file service-api-token.txt=demo_service_api_token
-EOF
-
-kimen map lint --profile dev --strict
+        <h3>4. Check and run</h3>
+        <pre><code>kimen map lint --profile dev --strict
+kimen doctor --profile dev --strict
 kimen plan --profile dev
-kimen run --profile dev -- ./your-command</code></pre>
+kimen run --profile dev -- ./your-app</code></pre>
+        <p class="body-copy">
+          The application continues to read an ordinary
+          <code>STRIPE_API_KEY</code> environment variable. The plaintext value
+          does not need to live in the repository or a project-local
+          <code>.env</code>.
+        </p>
       </section>
 
       <hr class="rule" />
 
-      <section id="sync">
-        <h2>Current Sync Scope</h2>
+      <section id="security">
+        <h2>Current security boundary</h2>
         <p class="body-copy">
-          Kimen supports encrypted bundle sync through <code>fs</code> and
-          <code>git</code> remotes. The main surfaces are
-          <code>kimen remote ...</code> and <code>kimen sync ...</code>.
+          Kimen encrypts values at rest and removes the need for plaintext
+          secrets in the repository. It projects a value only when you invoke a
+          runtime operation.
         </p>
-        <ul class="doc-list">
-          <li><code>kimen remote add|get|set|list|rm</code></li>
-          <li><code>kimen sync</code></li>
-          <li>
-            <code
-              >kimen sync
-              init|preflight|status|conflicts|changes|push|pull|resolve|reset-baseline|unlock|restore</code
-            >
-          </li>
-        </ul>
         <p class="body-copy">
-          For most users, the important point is that sync does not change the
-          local runtime model. Secrets are still projected locally when you ask.
+          A process receiving a value through env, a file or stdin can read and
+          copy it. Treat that process and its descendants as inside the secret
+          boundary. If a coding agent controls the program's code, launching it
+          with a production secret does not make the program trusted.
+        </p>
+        <p class="body-copy">
+          An active Kimen session stores unlock material in an owner-readable
+          local file. That protects against other Unix users, but not against an
+          unrestricted process running as you. Keep the vault locked while an
+          untrusted same-user agent has broad shell access. Agent-aware unlock
+          and client controls are product exploration, not guarantees in the
+          current release.
+        </p>
+        <p class="note">
+          Never paste a real secret into an issue, prompt, command argument or
+          support request. Rotate a credential if you believe it has appeared
+          in agent context or tool output.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <section id="vault">
+        <h2>Vault</h2>
+        <p class="body-copy">
+          The default vault is <code>~/.config/kimen/vault.kv</code>. Use a
+          different vault explicitly:
+        </p>
+        <pre><code>kimen vault init --vault ~/.config/kimen/work.kv
+kimen secret list --vault ~/.config/kimen/work.kv</code></pre>
+        <p class="body-copy">Or select it for the current shell:</p>
+        <pre><code>export KIMEN_VAULT=~/.config/kimen/work.kv
+kimen secret list</code></pre>
+
+        <h3>Vault commands</h3>
+        <pre><code>kimen vault init
+kimen vault path
+kimen vault info
+kimen vault rekey
+kimen vault rekey --passphrase-cmd &lt;cmd&gt;
+kimen vault rekey --dry-run
+kimen vault rekey --backup-dir &lt;path&gt;</code></pre>
+
+        <h3>Secret commands</h3>
+        <pre><code>kimen secret set &lt;name&gt;
+kimen secret set &lt;name&gt; --stdin
+kimen secret list
+kimen secret get &lt;name&gt; --unsafe-stdout
+kimen secret rm &lt;name&gt;
+kimen secret mv &lt;from&gt; &lt;to&gt;</code></pre>
+        <p class="note">
+          <code>--unsafe-stdout</code> can place a plaintext value in terminal
+          output, logs or agent context. Use it only when that exposure is
+          intentional.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <section id="profiles">
+        <h2>Maps and profiles</h2>
+        <p class="body-copy">
+          Profiles are small <code>.kmap</code> files. Mapping values are vault
+          keys by default:
+        </p>
+        <pre><code>env NAME=secret:name
+env DATABASE_URL=prod.database_url
+env MODE=const:dev
+file token.txt=secret:api_token
+envpath TOKEN_FILE=token.txt
+stdin secret:request_body</code></pre>
+        <p class="body-copy">
+          Prefix a value with <code>const:</code> for a literal,
+          <code>secret:</code> for an explicit vault key or
+          <code>exec:</code> to read stdout from a command.
+        </p>
+
+        <h3>Profile lookup</h3>
+        <pre><code>.kimen/profiles/&lt;name&gt;.kmap
+$XDG_CONFIG_HOME/kimen/profiles/&lt;name&gt;.kmap
+~/.config/kimen/profiles/&lt;name&gt;.kmap</code></pre>
+        <p class="body-copy">
+          Pass <code>--profile &lt;name&gt;</code> to use lookup, or
+          <code>--map &lt;path&gt;</code> for an explicit file.
+          <code>kimen doctor</code> validates the map, opens the vault and checks
+          that every referenced secret exists.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <section id="projections">
+        <h2>Projection modes</h2>
+
+        <h3>Run a trusted process</h3>
+        <pre><code>kimen run --env API_KEY=secret:api_key -- ./your-command</code></pre>
+
+        <h3>Render files</h3>
+        <pre><code>RUNTIME_DIR="$(mktemp -d -t kimen-runtime.XXXXXX)"
+kimen render --dir "$RUNTIME_DIR" --file token.txt=secret:api_token</code></pre>
+        <p class="body-copy">
+          Rendered files contain plaintext. Choose a protected runtime
+          directory and remove it when the receiving program no longer needs
+          it. For systemd, Kimen can render under
+          <code>/run/kimen/&lt;service&gt;</code> with
+          <code>--systemd-service &lt;name&gt;</code>.
+        </p>
+
+        <h3>Generate an envfile</h3>
+        <pre><code>kimen envfile --out /protected/runtime/app.env \
+  --env API_KEY=secret:api_key</code></pre>
+        <p class="body-copy">
+          An envfile contains plaintext too. Kimen controls its creation, not
+          the lifecycle or permissions of every consumer after it is written.
+        </p>
+
+        <h3>Inspect without values</h3>
+        <pre><code>kimen plan --profile dev</code></pre>
+      </section>
+
+      <hr class="rule" />
+
+      <section id="sessions">
+        <h2>Sessions</h2>
+        <p class="body-copy">
+          A session avoids repeated passphrase prompts. It also widens the
+          local boundary because a same-user process can read the session file.
+        </p>
+        <pre><code>kimen session start --ttl 30m
+kimen session status
+kimen session lock</code></pre>
+        <p class="body-copy">
+          Prefer a short TTL, lock the session when finished and do not leave it
+          active while an untrusted same-user agent has unrestricted shell or
+          filesystem access.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <section id="reference">
+        <h2>Command reference</h2>
+        <pre><code>kimen vault init|path|info|rekey
+kimen secret set|list|get|rm|mv
+kimen session start|status|lock|stop
+kimen run [source] [projection...] -- &lt;command&gt;...
+kimen render (--dir &lt;path&gt;|--systemd-service &lt;name&gt;) [source]
+kimen envfile --out &lt;path&gt; [source]
+kimen plan [source] [projection...]
+kimen map lint (--profile &lt;name&gt;|--map &lt;path&gt;) [--strict]
+kimen doctor (--profile &lt;name&gt;|--map &lt;path&gt;) [--strict]</code></pre>
+        <p class="body-copy">
+          A source is <code>--profile &lt;name&gt;</code> or
+          <code>--map &lt;path&gt;</code>. Projections are
+          <code>--env NAME=value</code>, <code>--file path=value</code>,
+          <code>--envpath NAME=path</code> or <code>--stdin value</code>.
         </p>
       </section>
 
       <hr class="rule" />
 
       <section id="links">
-        <h2>Project Links</h2>
-        <p class="body-copy">
-          This page is the compact manual. Use the links below for the source
-          repository, releases, and the deeper design and reference material.
-        </p>
+        <h2>Project links</h2>
         <ul class="plain-links">
-          <li><a href="https://github.com/flakstad/kimen">repository</a></li>
+          <li><a href="https://github.com/flakstad/kimen">source code</a></li>
           <li>
             <a href="https://github.com/flakstad/kimen/releases">releases</a>
           </li>
           <li>
             <a href="https://github.com/flakstad/kimen/blob/main/README.md"
-              >README</a
+              >canonical README</a
             >
           </li>
-          <li>
-            <a href="https://github.com/flakstad/kimen/blob/main/docs/cli.md"
-              >CLI reference</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://github.com/flakstad/kimen/blob/main/docs/projections.md"
-              >projection model</a
-            >
-          </li>
-          <li>
-            <a href="https://github.com/flakstad/kimen/blob/main/docs/maps.md"
-              >maps and profiles</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://github.com/flakstad/kimen/blob/main/docs/automation-contract.md"
-              >automation contract</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://github.com/flakstad/kimen/blob/main/docs/threat-model.md"
-              >threat model</a
-            >
-          </li>
+          <li><a href="https://github.com/flakstad/kimen/issues">issues</a></li>
         </ul>
       </section>
 
       <footer class="site-footer">
         <p><a href="../index.html">Back to home</a></p>
+        <p>Kimen Systems · MIT licensed</p>
       </footer>
     </main>
   </body>

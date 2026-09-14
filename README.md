@@ -1,32 +1,54 @@
 # kimen-site
 
-Standalone static site for Kimen, intentionally separate from the CLI/runtime repository.
+Standalone static site for [Kimen](https://github.com/flakstad/kimen), kept
+separate from the CLI/runtime repository.
 
 ## Scope
 
-- Home page
-- Docs page at `/docs/`
-- Links to the canonical GitHub source and release/docs material
+- Product and market-probe homepage
+- One-page manual at `/docs/`
+- Honest separation between shipped vault/projection features and the proposed
+  constrained-actions direction
+- No JavaScript, build system, analytics or runtime service
+
+The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
+domain mapping.
 
 ## Local preview
 
 ```bash
-cd /Users/andreas/Projects/kimen-site
 python3 -m http.server 8080
-# then open http://localhost:8080 and http://localhost:8080/docs/
 ```
 
-## Deploy (GitHub Pages)
+Then open:
 
-A workflow is included at `.github/workflows/pages.yml`.
+- <http://localhost:8080/>
+- <http://localhost:8080/docs/>
+- <http://localhost:8080/404.html>
 
-1. Push this repo to GitHub.
-2. In repository settings, enable GitHub Pages and set source to GitHub Actions.
-3. Workflow deploys static files from repo root.
+## Validation
 
-## Notes
+Run the local site check:
 
-- The site is deliberately simple and text-first.
-- Root page is `index.html`.
-- Docs page is `docs/index.html`.
-- Adjust external repo/docs links if the canonical URLs change.
+```bash
+./scripts/check-site.sh
+```
+
+The check validates internal links, referenced local files, document titles,
+HTML parsing and that planned Actions are marked as exploration.
+
+## GitHub Pages handoff
+
+The workflow at `.github/workflows/pages.yml` deploys static files from the
+repository root after a push to `main`.
+
+Andreas performs publication and external configuration:
+
+1. Review and merge the site branch.
+2. Push `main` to GitHub.
+3. In repository settings, select GitHub Actions as the Pages source.
+4. Configure the `kimen.systems` DNS records GitHub requests.
+5. Verify the custom domain and HTTPS in Pages settings.
+
+Do not put credentials or private workflow details in the public Actions
+discovery issue linked from the homepage.
