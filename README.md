@@ -19,6 +19,11 @@ are recorded in
 [`docs/stronger-agent-operations.md`](docs/stronger-agent-operations.md), but
 protocol design and broker implementation wait for external product signal.
 
+The complete product, positioning, commercial, design and validation thesis is
+kept in [`docs/product-direction.md`](docs/product-direction.md). Update that
+document when a product decision changes so the reasoning is not trapped in a
+chat transcript.
+
 The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
 domain mapping.
 

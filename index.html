@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen — local secrets and runtime configuration</title>
-    <meta name="description" content="Keep secrets out of your workspace. Kimen stores them in a local encrypted vault and supplies them only to the runtime that needs them." />
+    <title>Kimen — move secrets out of your project</title>
+    <meta name="description" content="Store database URLs and API keys outside your project, then pass them to your application with kimen run." />
     <link rel="canonical" href="https://kimen.systems/" />
     <meta property="og:title" content="Kimen" />
-    <meta property="og:description" content="Local secrets and runtime configuration for applications, tools and coding agents." />
+    <meta property="og:description" content="Store secrets outside your project. Pass them to the application only when it starts." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -22,8 +22,8 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-          <h1>Secrets don't belong in the project your agent can read.</h1>
-          <p class="lede">Your application still needs database passwords, API keys and service credentials. Kimen keeps the values in a local encrypted vault, outside the workspace, and supplies them only when a runtime needs them.</p>
+          <h1>Move secrets out of the folder your coding agent can read.</h1>
+          <p class="lede">Store database URLs, API keys and private files in Kimen instead of <code>.env</code>. Start your application with <code>kimen run</code>. The app gets the values it needs without keeping them beside the code.</p>
           <div class="hero-actions"><a class="button" href="./docs/#start">Install Kimen</a><a href="#how">See how it works ↓</a></div>
         </div>
 
@@ -77,7 +77,7 @@
             <path class="map-arrow" d="M266 240H302" /><polygon class="arrow-head" points="302,240 292,234 292,246" />
             <path class="map-arrow" d="M406 240H446" /><polygon class="arrow-head" points="446,240 436,234 436,246" />
           </svg>
-          <figcaption>The workspace contains code and a readable map. The values exist only in Kimen's vault and in the runtime environment prepared for the application.</figcaption>
+          <figcaption>The project contains secret names, not secret values. Kimen adds the real values to the application's environment when it starts.</figcaption>
         </figure>
       </section>
 
@@ -87,7 +87,7 @@
           <p>A coding agent with file access can read an ignored <code>.env</code>, private key or service-account file just as easily as your editor can.</p>
         </header>
         <div class="plain-flow">
-          <article><h3>The value sits beside the code</h3><p>A plaintext file contains a reusable credential with no runtime boundary.</p></article><span aria-hidden="true">→</span>
+          <article><h3>The value sits beside the code</h3><p>A plaintext file contains a reusable credential that any permitted local process can read.</p></article><span aria-hidden="true">→</span>
           <article><h3>Tools can read the workspace</h3><p>Local agents, scripts and commands inherit access to the same files.</p></article><span aria-hidden="true">→</span>
           <article><h3>A read secret cannot be unread</h3><p>It may enter context, output or logs and must be treated as exposed.</p></article>
         </div>
@@ -95,21 +95,21 @@
 
       <section class="how" id="how">
         <header class="section-head">
-          <h2>Move the values out. Leave a readable map behind.</h2>
-          <p>Kimen is a local vault and a runtime preparation step. Your application keeps using ordinary environment variables and files.</p>
+          <h2>Keep using environment variables. Stop storing them in <code>.env</code>.</h2>
+          <p>Your application does not need a Kimen library. Kimen stores the values and supplies the same environment variables when you start the app.</p>
         </header>
         <div class="code-story">
           <article><h3>Store the value locally</h3><p>Kimen prompts for the value without putting it in shell history or a plaintext file.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen secret set dev.database_url</code></pre></figure></article>
-          <article><h3>Describe what the app needs</h3><p>The map is safe to commit. It exposes the runtime contract, not the credential.</p><figure class="terminal"><figcaption>.kimen/profiles/dev.kmap</figcaption><pre><code>env DATABASE_URL=dev.database_url</code></pre></figure></article>
-          <article><h3>Prepare the runtime</h3><p>Kimen resolves the selected map and supplies its values to this invocation.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen run --profile dev -- ./app</code></pre></figure></article>
+          <article><h3>Map it to an environment variable</h3><p>This file contains only the environment-variable name and the Kimen secret name, so it can stay with the project.</p><figure class="terminal"><figcaption>.kimen/profiles/dev.kmap</figcaption><pre><code>env DATABASE_URL=dev.database_url</code></pre></figure></article>
+          <article><h3>Start the application</h3><p>Kimen reads the map and sets <code>DATABASE_URL</code> for <code>./app</code>. Nothing is exported to the rest of your shell.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen run --profile dev -- ./app</code></pre></figure></article>
         </div>
         <div class="session-line"><div><strong>Several runs ahead?</strong><span>Open the vault for a short session, then lock it again.</span></div><code>kimen session start --ttl 15m</code><code>kimen session lock</code></div>
       </section>
 
       <section class="runtimes" id="runtimes">
         <header class="section-head">
-          <h2>One project map. More than one kind of runtime.</h2>
-          <p>Kimen is not tied to deployment. It prepares values for the local application, a test, a build tool, a one-off command or a runtime file.</p>
+          <h2>Use the same stored values without copying them into every tool.</h2>
+          <p>Pass secrets to a local application or test, render a file for a program that requires one, or generate an envfile for a process manager.</p>
         </header>
         <div class="runtime-examples">
           <article><h3>Run an application</h3><code>kimen run --profile dev -- ./app</code></article>
@@ -121,8 +121,8 @@
       </section>
 
       <section class="authority-callout">
-        <div><h2>Sometimes the agent needs an outcome, not the credential behind it.</h2><p>Starting your application is one case. Deploying staging, reading scoped logs or restarting a known service is different: the agent should be able to request the operation without receiving a general GitHub, cloud or infrastructure credential.</p></div>
-        <a class="button light" href="./agents/">See Kimen for agents &amp; teams →</a>
+        <div><h2>Do not give an agent a GitHub token just to deploy staging once.</h2><p>Kimen can keep the token and perform the one allowed deployment itself. The agent provides the commit and gets the deployment status—not the credential or general GitHub access.</p></div>
+        <a class="button light" href="./agents/">See the staging example →</a>
       </section>
 
       <section class="closing">
