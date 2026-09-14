@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Kimen — authority for agent-driven development</title>
-    <meta name="description" content="Keep credentials under local control while coding agents work." />
+    <meta name="description" content="A local vault for runtime configuration and controlled agent access." />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -17,7 +17,7 @@
     <main>
       <section class="hero">
         <h1>Keep secrets out of your code — and out of your coding agent.</h1>
-        <p class="lede">Kimen keeps values and external authority behind a local boundary. Your project describes what it needs. You decide whether Kimen supplies a trusted runtime or performs a constrained action for an agent.</p>
+        <p class="lede">Kimen is a small local vault plus a projection step. Your repository describes the runtime shape without containing secret values. Kimen supplies them only when a trusted process starts — or keeps them to itself while completing an approved operation for an agent.</p>
         <div class="hero-actions">
           <a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Set%20up%20Kimen%20for%20my%20agent&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%3A%0A%0ACredential%20or%20permission%20Kimen%20should%20hold%3A%0A%0AWhat%20a%20successful%20outcome%20looks%20like%3A">Set up agent access</a>
           <a href="#model">How Kimen works ↓</a>
@@ -27,7 +27,7 @@
       <section class="scenario">
         <header class="section-head">
           <h2>Your coding agent finishes the code. Then you take over.</h2>
-          <p>You deploy, publish or operate manually because the available credential can do far more than this one task requires.</p>
+          <p>A broad credential should not be the price of letting an agent finish. Kimen turns it into one locally controlled operation.</p>
         </header>
         <div class="flow" aria-label="Example of a constrained deployment">
           <article><h3>The agent asks</h3><p>“Deploy the revision I just finished to staging.”</p></article>
@@ -41,7 +41,7 @@
       <section class="model" id="model">
         <header class="section-head">
           <h2>The project carries the requirement. You keep the authority.</h2>
-          <p>Kimen separates understanding what the software needs from possessing the power to provide it.</p>
+          <p>A checked-in profile describes what the software expects. Protected local bindings decide which values and permissions fulfil it.</p>
         </header>
 
         <div class="model-table" role="table" aria-label="Kimen authority model">
@@ -52,15 +52,24 @@
 
         <div class="product-pair">
           <article>
-            <h3>Keep plaintext secrets out of the workspace.</h3>
-            <p>A committed <code>.kmap</code> lets people and agents see what the application needs. The actual values live in the local encrypted vault.</p>
-            <div class="real-code"><pre><code>env DATABASE_URL=secret:database_url</code></pre><pre><code>kimen run --profile dev -- ./app</code></pre></div>
-            <p class="note">Kimen passes the value only to the chosen process when it starts. That process can read it.</p>
+            <h3>Describe the runtime shape. Keep the values elsewhere.</h3>
+            <p>In a <code>.kmap</code>, the left side is what the app sees. The right side is a key Kimen resolves from the local encrypted vault. The map is safe to commit because it contains no secret values.</p>
+            <figure class="real-code">
+              <figcaption>.kimen/profiles/dev.kmap</figcaption>
+              <pre><code>env DATABASE_URL=dev.database_url
+file credentials.json=dev.gcp_credentials_json
+envpath GOOGLE_APPLICATION_CREDENTIALS=credentials.json</code></pre>
+              <figcaption>terminal</figcaption>
+              <pre><code>kimen session start --ttl 15m
+kimen run --profile dev -- ./app
+kimen session lock</code></pre>
+            </figure>
+            <p class="note">The app sees ordinary environment variables and file paths. It does not call Kimen or know about the vault.</p>
           </article>
           <article>
-            <h3>Delegate use of authority, not possession of it.</h3>
-            <p>Moving a credential to another vault does not help if the agent can still fetch it. Kimen mediates the operation itself and returns only the result.</p>
-            <p>The protected local binding defines what the operation means, where it may run and which inputs are accepted. The project can request that operation, but it cannot redefine it.</p>
+            <h3>Let the agent request the outcome. Keep the credential in Kimen.</h3>
+            <p>Moving a credential to another vault does not help if the agent can still fetch it. Kimen uses the credential itself and returns only the result.</p>
+            <p>The protected local binding defines the operation, its target and its accepted inputs. The project can request that operation, but it cannot redefine it or gain the broader authority behind it.</p>
           </article>
         </div>
       </section>
@@ -81,7 +90,7 @@
         <h2>The agent can ask. Only you can decide what that request means.</h2>
         <div>
           <p>The repository may name a secret or operation, but it cannot create a credential, change the target or replace the approved operation with arbitrary code. Those decisions live in the protected local binding.</p>
-          <p>When a trusted program genuinely needs a secret, Kimen projects it at runtime. When an agent only needs an outcome, Kimen keeps the credential and mediates the operation.</p>
+          <p>For a trusted app, the important boundary is before it starts: Kimen supplies the environment variables and files it expects. When an agent only needs an outcome, that boundary stays closed — Kimen keeps the credential and performs the operation.</p>
         </div>
       </section>
 

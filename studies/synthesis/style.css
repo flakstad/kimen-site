@@ -53,8 +53,9 @@ h3 { margin: 0; font-size: 20px; line-height: 1.3; letter-spacing: -.02em; }
 .product-pair article + article { padding-left: 50px; border-left: 1px solid var(--line); }
 .product-pair p { color: var(--muted); font-size: 14px; line-height: 1.6; }
 .real-code { margin: 25px 0; background: var(--dark); color: white; }
-.real-code pre { margin: 0; padding: 15px 18px; font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.real-code pre + pre { padding-top: 0; }
+.real-code figcaption { padding: 13px 18px 0; color: #91a495; font: 9px/1.4 ui-monospace, "SFMono-Regular", Menlo, monospace; text-transform: uppercase; }
+.real-code pre { margin: 0; padding: 9px 18px 15px; font-size: 11px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.real-code pre + figcaption { border-top: 1px solid #364239; }
 .note { color: var(--green) !important; font: 10px/1.55 ui-monospace, monospace !important; text-transform: uppercase; }
 
 .workflows { background: var(--paper); }
