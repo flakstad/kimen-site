@@ -27,6 +27,7 @@ Then open:
 - <http://localhost:8080/docs/>
 - <http://localhost:8080/404.html>
 - <http://localhost:8080/studies/> — three alternative composition studies
+- <http://localhost:8080/studies/synthesis/> — complete product-story study
 
 ## Validation
 

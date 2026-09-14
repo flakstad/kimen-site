@@ -6,12 +6,19 @@
     <meta name="robots" content="noindex" />
     <title>Kimen — design studies, second pass</title>
     <link rel="stylesheet" href="./index.css" />
+    <style>
+      .synthesis-link { display: grid; grid-template-columns: 90px 1fr auto; gap: 30px; align-items: center; padding: 30px 22px; margin: 0 0 60px; border: 2px solid #171717; color: #171717; text-decoration: none; background: #f7f6f1; }
+      .synthesis-link strong { font-size: clamp(25px, 3vw, 44px); font-weight: 400; letter-spacing: -.045em; }
+      .synthesis-link small { max-width: 330px; font: 12px/1.5 monospace; }
+      @media (max-width: 700px) { .synthesis-link { grid-template-columns: 35px 1fr; } .synthesis-link small { grid-column: 2; } }
+    </style>
   </head>
   <body>
     <header><strong>kimen / studies 02</strong><a href="../">current site ↗</a></header>
     <main>
       <p class="intro">Three different first impressions.</p>
       <h1>What should Kimen make obvious?</h1>
+      <a class="synthesis-link" href="./synthesis/"><span>04</span><strong>Complete product story ↗</strong><small>Current synthesis: today’s useful product, the honest boundary, and the Actions exploration in one page.</small></a>
       <div class="studies">
         <a class="study direct" href="./direct/"><span class="number">01</span><span class="title">The benefit</span><span class="description">Plain language first. Warm, typographic and deliberately easy to understand.</span><span class="open">Open Direct ↗</span></a>
         <a class="study invocation" href="./invocation/"><span class="number">02</span><span class="title">The invocation</span><span class="description">The command is the main object. Dark, operational and focused on the moment Kimen acts.</span><span class="open">Open Invocation ↗</span></a>
