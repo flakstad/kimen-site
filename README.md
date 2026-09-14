@@ -13,6 +13,11 @@ separate from the CLI/runtime repository.
 - Production pages have no JavaScript, build system, analytics or runtime service
 - Three deliberately different design studies live at `/studies/`
 
+The `/agents/` page includes the early-access form presentation, but no private
+submission service is configured in this repository. Connect that form to a
+private endpoint before publication; do not replace it with email or a public
+issue tracker.
+
 The agent product path extends the same model from project-declared values to
 project-declared operations. The implementation boundary and security questions
 are recorded in

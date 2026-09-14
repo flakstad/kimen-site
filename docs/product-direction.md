@@ -505,20 +505,23 @@ managers are use cases; this is not only deployment.
 
 ### Kimen for agents and teams
 
-Sell the problem before explaining the mechanism. Start where autonomous work
-actually stops:
+Lead with the concrete product promise:
 
-> Your agent finishes the code and the tests. You still deploy staging yourself,
-> because the available deployment credential can do far more than deploy one
-> revision.
+> Give the agent the operation, not the credential.
 
-The opening visual should show completed agent work, the too-powerful credential
-which stops it, and the resulting manual handoff. It should not begin with a
-broker diagram, session model or configuration internals.
+The opening visual must sell the problem and the change without requiring
+architecture vocabulary. Contrast a coding agent receiving `GITHUB_TOKEN` and
+therefore every permission it carries with the agent receiving only
+`deploy-staging("abc123")`. Show the first path branching into broad access and
+the second narrowing through Kimen into one staging deployment.
 
-Immediately afterwards, present the concrete replacement:
+The first scenario then starts where autonomous work currently stops: the agent
+has finished the code and tests, but the developer takes over because the
+available credential can do far more than the next job requires. Present the
+concrete replacement immediately:
 
-> Give the agent `deploy-staging(revision)`. Keep `DEPLOY_TOKEN` in Kimen.
+> Let the agent call `deploy-staging(revision)`. Keep the deployment credential
+> in Kimen.
 
 Then show exactly what the agent supplies, what Kimen fixes and checks, what
 provider call happens, and what result comes back. Only after the visitor has
@@ -537,8 +540,8 @@ action calls near the top of the agent page:
 
 ```text
 deploy-staging(revision)
-read-service-logs(service, since)
-restart-staging-service(service)
+inspect-logs(service, since, filter)
+restart-staging(service)
 ```
 
 The provider is deliberately generic in the primary story. Kimen may call a
@@ -547,20 +550,26 @@ names can appear in integrations and documentation later, but the product must
 not read as an add-on for one agent or source-control vendor.
 
 Do not use numbered `01 / 02 / 03` decoration, oversized headings in narrow
-columns, unexplained code boxes, fake CLI commands, eyebrows above headings or
-generic security imagery. Code examples must be verified against the current
-Kimen CLI. Planned operation examples should be expressed as user intent and
-system behaviour until a real public API exists.
+columns, unexplained code boxes, eyebrows above headings or generic security
+imagery. Code examples for current Kimen must be verified against the real CLI.
+Planned Action syntax may be shown when it materially explains the model, but it
+must be explicitly labelled illustrative rather than presented as settled API
+design.
 
 The agent product should be presented as a coherent Kimen product promise, not
-as an apologetic internal “commercial probe.” Do not claim that unimplemented
-commands can be installed and run today. Internal documents remain explicit
-about implementation status.
+as an apologetic internal “commercial probe.” Discreetly identify Kimen Actions
+as a planned extension. Explicitly distinguish the proposed Action-only session
+from today's convenience session, which unlocks the vault for the user's Kimen
+operations. Do not claim that unimplemented commands can be installed and run
+today.
 
 The site should not send sensitive infrastructure descriptions into public
 GitHub issues or use an email link as its primary CTA. A private form or another
 intent-capture mechanism must be chosen before the public market test depends
-on conversion data.
+on conversion data. The form should ask which agent the visitor uses, which
+external jobs it should perform, how credentials are handled today, whether
+team governance matters and for an email address. Never ask for credentials or
+sensitive infrastructure details.
 
 ## Validation order
 

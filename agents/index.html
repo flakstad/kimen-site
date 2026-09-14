@@ -3,121 +3,228 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen for agents — deploy without sharing the credential</title>
-    <meta name="description" content="Let a coding agent deploy staging without giving it your deployment credential or general provider access." />
+    <title>Kimen Actions — operations for coding agents, without shared credentials</title>
+    <meta name="description" content="Let coding agents deploy staging, inspect logs and invoke approved workflows without receiving general-purpose infrastructure credentials." />
     <link rel="canonical" href="https://kimen.systems/agents/" />
-    <meta property="og:title" content="Kimen for agents and teams" />
-    <meta property="og:description" content="Give agents the operation, not the credential." />
+    <meta property="og:title" content="Give the agent the operation, not the credential." />
+    <meta property="og:description" content="Kimen keeps infrastructure credentials and exposes only the operations you unlock." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/agents/" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../site.css" />
+    <link rel="stylesheet" href="./agents.css" />
   </head>
-  <body class="authority-page">
-    <header class="topbar dark-topbar">
+  <body class="agents-page">
+    <header class="topbar agents-topbar">
       <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#uses">Examples</a><a href="#teams">For teams</a><a href="../docs/">Core ↗</a></nav>
+      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#examples">Examples</a><a href="#teams">For teams</a><a href="../">Kimen Core ↗</a></nav>
     </header>
 
     <main>
-      <section class="authority-hero">
-        <div class="authority-hero-copy">
-          <h1>Your agent finishes the code. You still deploy staging yourself.</h1>
-          <p class="lede">Not because deployment is difficult. Because the agent would need a credential that can do far more than deploy one revision to staging. So the autonomous work ends and you take over.</p>
-          <div class="hero-actions"><a class="button orange" href="#how">Remove the handoff</a><a href="#uses">Other jobs agents stop at ↓</a></div>
+      <section class="agents-hero">
+        <div class="agents-hero-copy">
+          <h1>Give the agent the operation, not the credential.</h1>
+          <p class="agents-lede">Let coding agents deploy staging, inspect logs or invoke an approved workflow without handing them general-purpose infrastructure credentials. Kimen keeps the credential and exposes only the operations you unlock.</p>
+          <div class="agents-actions"><a class="button" href="#early-access">Join early access</a><a href="#how">See how it works ↓</a></div>
+          <p class="product-status"><i aria-hidden="true"></i><strong>Kimen Actions</strong> is a planned extension to Kimen Core.</p>
         </div>
-        <figure class="handoff-map">
-          <div class="handoff-agent">
-            <span class="handoff-label">CODING AGENT</span>
-            <strong>Work complete</strong>
-            <ul><li>Code changed</li><li>Tests passing</li><li>Revision ready</li></ul>
+
+        <figure class="authority-contrast" aria-labelledby="contrast-caption">
+          <div class="contrast-side broad-side">
+            <h2>Without Kimen</h2>
+            <div class="contrast-flow">
+              <div class="flow-node agent-node">Coding agent</div>
+              <span class="flow-line" aria-hidden="true"></span>
+              <code class="credential-node">GITHUB_TOKEN</code>
+              <span class="branch-line" aria-hidden="true"></span>
+              <div class="broad-access"><span>repository write</span><span>workflow access</span><span>releases</span></div>
+            </div>
+            <p>One credential gives the agent every permission it carries.</p>
           </div>
-          <div class="credential-wall">
-            <span>NEEDS</span>
-            <code>DEPLOY_TOKEN</code>
-            <small>grants more than staging deploy</small>
+          <div class="contrast-side narrow-side">
+            <h2>With Kimen</h2>
+            <div class="contrast-flow">
+              <div class="flow-node agent-node">Coding agent</div>
+              <span class="flow-line active" aria-hidden="true"></span>
+              <code class="operation-node">deploy-staging("abc123")</code>
+              <span class="flow-line active" aria-hidden="true"></span>
+              <div class="kimen-node"><i aria-hidden="true"></i><strong>Kimen</strong><small>fixed operation<br />credential stays here</small></div>
+              <span class="flow-line active" aria-hidden="true"></span>
+              <div class="flow-node result-node">Staging deployment</div>
+            </div>
+            <p>One request produces one configured effect.</p>
           </div>
-          <div class="handoff-human">
-            <span class="handoff-label">MANUAL HANDOFF</span>
-            <strong>You take over</strong>
-            <p>Find the credential.<br />Run the deployment.<br />Return to the agent.</p>
-          </div>
-          <figcaption>The agent could finish the job, but the available credential gives it much more access than the job requires.</figcaption>
+          <figcaption id="contrast-caption">Kimen narrows what the agent can do. It does not merely hide the text of the credential.</figcaption>
         </figure>
       </section>
 
-      <section class="session-example" id="how">
-        <header class="section-head"><h2>Give the agent <code>deploy-staging(revision)</code>. Keep <code>DEPLOY_TOKEN</code> in Kimen.</h2><p>Kimen performs the configured deployment and returns the result. The agent gets the job it needs, not the credential behind it.</p></header>
-        <div class="solution-pair" aria-label="What the agent receives and does not receive">
-          <div><span>agent gets</span><code>deploy-staging(revision: "8d2f74a")</code></div>
-          <div><span>agent never gets</span><code>DEPLOY_TOKEN</code></div>
-        </div>
-        <h3 class="session-heading">Open only the Actions it needs, for only as long as it needs them.</h3>
-        <figure class="session-terminal">
-          <figcaption>terminal</figcaption>
-          <pre><code><span class="prompt">$</span> kimen session start --allow deploy-staging,inspect-logs --ttl 2h
-Password: ********
+      <section class="agent-scenario" id="how">
+        <header class="agents-section-head">
+          <h2>Let the agent work. Keep the keys.</h2>
+          <p>The agent has changed the code and passed the tests. It should be able to finish by deploying that revision to staging—but a deployment token may allow much more than that single job.</p>
+        </header>
 
-Action session active for 2h
-  allowed  deploy-staging(revision)
-  allowed  inspect-logs(filter, since)</code></pre>
-        </figure>
-        <div class="session-permissions">
-          <article><h3>The agent can call</h3><code>deploy-staging(revision: "8d2f74a")</code><code>inspect-logs(filter: "errors", since: "30m")</code></article>
-          <article><h3>The agent still cannot call</h3><code>secret get DEPLOY_TOKEN</code><code>run / render / envfile with DEPLOY_TOKEN</code><code>action edit / action create</code></article>
+        <div class="scenario-sequence" aria-label="A proposed Kimen Action session">
+          <article>
+            <span>Open</span>
+            <p>Choose one operation and a time limit.</p>
+            <pre><code>kimen session start \
+  --allow deploy-staging \
+  --ttl 2h</code></pre>
+          </article>
+          <i aria-hidden="true"></i>
+          <article class="active-step">
+            <span>Agent requests</span>
+            <p>Supply only the input the operation accepts.</p>
+            <pre><code>deploy-staging(
+  revision: "abc123"
+)</code></pre>
+          </article>
+          <i aria-hidden="true"></i>
+          <article>
+            <span>Kimen returns</span>
+            <p>Perform the fixed deployment and return its result.</p>
+            <pre><code>deployment: started
+revision: abc123</code></pre>
+          </article>
+        </div>
+        <p class="illustrative-note">Illustrative interface—not final CLI or API design. Action sessions are a planned model and are distinct from today's Kimen sessions, which unlock vault use for the user's Kimen operations.</p>
+
+        <div class="agent-boundaries">
+          <article>
+            <h3>The agent can</h3>
+            <code>deploy-staging(revision: "abc123")</code>
+          </article>
+          <article>
+            <h3>The agent cannot</h3>
+            <ul><li>read <code>DEPLOY_TOKEN</code></li><li>project it into another process</li><li>change <code>deploy-staging</code></li><li>invoke arbitrary provider operations</li></ul>
+          </article>
         </div>
       </section>
 
-      <section class="capability-how">
-        <header class="section-head"><h2>You configure <code>deploy-staging</code>. The agent can call it, but cannot redefine it.</h2><p>The application, deployment job, environment and credential stay in trusted Kimen configuration outside the agent-editable project.</p></header>
-        <div class="contract-grid">
-          <article><h3>The agent calls</h3><p><strong><code>deploy-staging(revision: "8d2f74a")</code></strong></p><p>It can choose the revision. It cannot choose another application, deployment job or environment.</p></article>
-          <div class="contract-seed" aria-hidden="true"><span></span></div>
-          <article><h3>Kimen checks and runs</h3><p><strong>Application: acme/app. Job: deploy-staging. Environment: staging.</strong></p><p>Kimen verifies the revision, adds the deployment credential and makes the fixed provider request.</p></article>
-        </div>
-        <p class="contract-result">The agent gets “deployment started.” It never gets <code>DEPLOY_TOKEN</code> or general provider access.</p>
-      </section>
-
-      <section class="use-cases" id="uses">
-        <header class="section-head"><h2>Use the same pattern for other jobs you still do manually.</h2><p>Kimen must know the exact service and request it is allowed to perform. It does not run an arbitrary shell command with a secret attached.</p></header>
-        <div class="use-case-grid">
-          <article><h3><code>deploy-staging(revision)</code></h3><p>One application. One deployment job. One allowed revision.</p><dl><dt>Agent receives</dt><dd>Deployment status and reference</dd><dt>Agent never receives</dt><dd>Deployment credential</dd></dl></article>
-          <article><h3><code>read-service-logs(service, since)</code></h3><p>Known services. A limited time window. Filtered, size-limited output.</p><dl><dt>Agent receives</dt><dd>The permitted log result</dd><dt>Agent never receives</dt><dd>Observability API key</dd></dl></article>
-          <article><h3><code>restart-staging-service(service)</code></h3><p>Known services only. Staging only. Rate-limited and recorded.</p><dl><dt>Agent receives</dt><dd>Restart status and receipt</dd><dt>Agent never receives</dt><dd>Cloud or SSH credential</dd></dl></article>
-        </div>
-      </section>
-
-      <section class="surfaces">
-        <header class="section-head"><h2>Do not build a different secret-powered wrapper for every tool.</h2><p>Configure <code>deploy-staging</code> once. Coding agents, CI and workflows can all call the same action without each receiving the deployment credential.</p></header>
-        <div class="surface-map" aria-label="Execution surfaces using Kimen">
-          <div class="surface-callers"><span>coding agents</span><span>CI jobs</span><span>workflows</span><span>local workers</span></div>
-          <div class="surface-kimen"><i aria-hidden="true"></i><strong>Kimen</strong><small>allowed jobs · credentials · receipts</small></div>
-          <div class="surface-targets"><span>deployment API</span><span>cloud</span><span>observability</span><span>internal systems</span></div>
-        </div>
-      </section>
-
-      <section class="teams" id="teams">
-        <header class="section-head"><h2>Control which Actions agents can unlock across the company.</h2><p>Kimen Teams gives the company one list of Actions and rules. Credentials and provider calls can still stay on developer machines or inside company infrastructure.</p></header>
-        <div class="team-features">
-          <article><h3>One set of rules</h3><p>Decide who may deploy staging, read production logs or restart a service.</p></article>
-          <article><h3>One list of allowed jobs</h3><p>See the operations available across repositories, agents and environments.</p></article>
-          <article><h3>Approval when needed</h3><p>Allow staging automatically while requiring a person to approve production.</p></article>
-          <article><h3>A record of every run</h3><p>See who requested the job, which agent ran it, its target and the result.</p></article>
-        </div>
-        <div class="plans" aria-label="Kimen plans">
-          <article><h3>Kimen Core</h3><p class="price">Free</p><p>Open source and local</p><ul><li>Local vault and <code>kimen run</code></li><li>Local Action definitions</li><li>Action-only sessions and receipts</li></ul><a href="../docs/#start">Install Core →</a></article>
-          <article class="featured-plan"><h3>Kimen Teams</h3><p class="price">$24 <small>/ developer / month</small></p><p>One setup across the team</p><ul><li>Shared Action policies and inventory</li><li>Approvals and team-wide revocation</li><li>Identity and central audit</li></ul><a href="#team-access">Start with a team ↓</a></article>
-          <article><h3>Kimen Enterprise</h3><p class="price">Custom</p><p>Organization controls</p><ul><li>SSO and SCIM</li><li>SIEM and extended retention</li><li>Self-hosting and support</li></ul><a href="#team-access">Enterprise access ↓</a></article>
+      <section class="action-examples" id="examples">
+        <header class="agents-section-head compact-head">
+          <h2>Three jobs. No general-purpose credentials.</h2>
+          <p>Each Action exposes a small input surface. The service, environment, credentials and permitted request remain fixed by local configuration.</p>
+        </header>
+        <div class="example-grid">
+          <article>
+            <h3>Deploy staging</h3>
+            <pre><code>deploy-staging(
+  revision: "abc123"
+)</code></pre>
+            <p>Trigger one known deployment for one revision. The agent never receives the deployment credential.</p>
+          </article>
+          <article>
+            <h3>Inspect logs</h3>
+            <pre><code>inspect-logs(
+  service: "api",
+  since: "30m",
+  filter: "error"
+)</code></pre>
+            <p>Read a limited window from known services. Kimen can bind it to the observability system you use.</p>
+          </article>
+          <article>
+            <h3>Restart a known service</h3>
+            <pre><code>restart-staging(
+  service: "worker"
+)</code></pre>
+            <p>Restart an allowed staging service without giving the agent SSH or general cloud credentials.</p>
+          </article>
         </div>
       </section>
 
-      <section class="team-access" id="team-access">
-        <h2>Which job do you take over from the agent today?</h2>
-        <p>Start with the exact moment you reach for a deployment, cloud or observability credential yourself: deploying staging, reading logs or restarting a service. Kimen should let the agent finish that job without receiving the credential.</p>
-        <div class="access-prompts"><span>Which agent or workflow?</span><span>Which operation?</span><span>Which credential is too broad?</span><span>Which environments and people?</span></div>
+      <section class="one-model">
+        <header class="agents-section-head">
+          <h2>The need belongs to the project. The authority belongs to the environment.</h2>
+          <p>Actions extend the model Kimen already uses for runtime configuration. The project names what it needs; each local environment decides how that need is fulfilled.</p>
+        </header>
+
+        <div class="binding-model" role="img" aria-label="A project declares a value and an Action. The local environment binds each to protected authority. The application receives the value while the agent only invokes the Action.">
+          <div class="model-heading"><span>Project declares</span><span>Local environment binds</span><span>Runtime</span></div>
+          <div class="model-row value-row">
+            <div><small>Value</small><code>DATABASE_URL</code></div>
+            <i aria-hidden="true"></i>
+            <div><small>Kimen Core</small><code>local vault value</code></div>
+            <i aria-hidden="true"></i>
+            <div><small>Trusted process</small><strong>Application receives the value</strong></div>
+          </div>
+          <div class="model-row action-row">
+            <div><small>Action</small><code>deploy-staging(revision)</code></div>
+            <i aria-hidden="true"></i>
+            <div><small>Kimen Actions</small><strong>fixed deployment job<br />local credential<br />staging only</strong></div>
+            <i aria-hidden="true"></i>
+            <div><small>Coding agent</small><strong>Agent receives the deployment result</strong></div>
+          </div>
+        </div>
+        <p class="model-summary"><strong>Values</strong> can be projected into trusted processes. <strong>Actions</strong> can use a credential without revealing it to the caller.</p>
+      </section>
+
+      <section class="temporal-authority">
+        <header class="agents-section-head compact-head">
+          <h2>Quiet by default. Active only when invoked.</h2>
+          <p>An Action session would open only the named operations, for a period you choose. When the session expires, they become unavailable again.</p>
+        </header>
+        <div class="time-window" aria-label="Actions are locked, temporarily active while the agent works, and locked again when the session expires">
+          <div><i aria-hidden="true"></i><strong>Locked</strong><span>No Action session</span></div>
+          <b aria-hidden="true"></b>
+          <div class="time-active"><i aria-hidden="true"></i><strong>Selected Actions unlocked</strong><span><code>deploy-staging</code> · 2h</span></div>
+          <b class="active-time" aria-hidden="true"></b>
+          <div class="time-active"><i aria-hidden="true"></i><strong>Agent works</strong><span>Only allowed calls</span></div>
+          <b aria-hidden="true"></b>
+          <div><i aria-hidden="true"></i><strong>Locked</strong><span>Session expired</span></div>
+        </div>
+      </section>
+
+      <section class="honest-boundary">
+        <div>
+          <h2>A narrower boundary—not magic isolation.</h2>
+          <p>Kimen Actions are intended to prevent secret disclosure through Kimen and limit a caller to selected operations. They do not promise that a fully compromised operating-system account can never steal credentials.</p>
+        </div>
+        <p>For stronger threat models, use the same narrow Actions across a sandbox, separate identity, container or remote broker. Kimen can provide the controlled bridge without pretending to be the isolation layer.</p>
+      </section>
+
+      <section class="teams-story" id="teams">
+        <header class="agents-section-head">
+          <h2>One developer can define an Action. A team needs to govern them.</h2>
+          <p>Let agents and workflows do useful work without every developer inventing separate credentials, wrappers and security rules.</p>
+        </header>
+
+        <div class="team-transition">
+          <article class="local-product">
+            <h3>Kimen Core</h3>
+            <p class="product-tier">Free / Open Source</p>
+            <ul><li>Local vault and runtime config</li><li>Local Action definitions</li><li>Local Action sessions</li><li>Local execution records</li></ul>
+          </article>
+          <i aria-hidden="true"></i>
+          <article class="team-product">
+            <h3>Kimen Teams</h3>
+            <p class="product-tier">Early access</p>
+            <ul><li>Shared Action policies</li><li>Organization-wide inventory</li><li>Approvals and revocation</li><li>Environment rules</li><li>Agent and developer identity</li><li>Central audit</li></ul>
+          </article>
+        </div>
+        <p class="team-note">Credentials and provider calls can remain local or inside company infrastructure. The team layer coordinates which Actions exist, who may use them and what happened.</p>
+      </section>
+
+      <section class="early-access" id="early-access">
+        <div class="early-access-copy">
+          <h2>Do you let coding agents touch real infrastructure?</h2>
+          <p>Tell us what access they need today, how you control it and where the current model breaks down.</p>
+          <p class="privacy-note">Do not include credentials or sensitive infrastructure details.</p>
+        </div>
+        <!-- Connect this presentation form to a private endpoint before publication. -->
+        <form class="interest-form" aria-label="Kimen Actions early access form">
+          <label>Which coding agent do you use?<input name="agent" autocomplete="off" placeholder="e.g. Codex, Claude Code, another agent" /></label>
+          <label>Which systems and operations should it access?<textarea name="operations" rows="3" placeholder="e.g. deploy staging and inspect recent service logs"></textarea></label>
+          <label>How do you handle credentials today?<textarea name="credentials" rows="3" placeholder="e.g. manual handoff, environment variables, a secret manager"></textarea></label>
+          <fieldset><legend>Would shared Actions, approvals and audit be useful for your team?</legend><label><input type="radio" name="team_interest" value="yes" /> Yes</label><label><input type="radio" name="team_interest" value="maybe" /> Maybe</label><label><input type="radio" name="team_interest" value="no" /> No</label></fieldset>
+          <label>Email<input type="email" name="email" autocomplete="email" placeholder="you@company.com" /></label>
+          <button class="button" type="button">Join the design partner list</button>
+          <small>Private response. No public issue will be created.</small>
+        </form>
       </section>
     </main>
 
-    <footer class="dark-footer"><a class="brand" href="../"><span aria-hidden="true"></span>kimen</a><p>Secrets stay with Kimen. Agents get only the jobs you allow.</p><nav><a href="../">Kimen Core</a><a href="../docs/">Manual</a><a href="https://github.com/flakstad/kimen">Source</a></nav></footer>
+    <footer class="agents-footer"><a class="brand" href="../"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="../">Kimen Core</a><a href="../docs/">Manual</a><a href="https://github.com/flakstad/kimen">Source</a></nav></footer>
   </body>
 </html>
