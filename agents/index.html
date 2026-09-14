@@ -22,8 +22,8 @@
     <main>
       <section class="authority-hero">
         <div class="authority-hero-copy">
-          <h1>Let agents deploy staging without deployment credentials.</h1>
-          <p class="lede">Give the agent one action with one input. Kimen checks the application and environment, performs the deployment with the protected credential, and returns the result.</p>
+          <h1>Unlock <code>deploy-staging(revision)</code>. Keep <code>DEPLOY_TOKEN</code> locked.</h1>
+          <p class="lede">Open an Action session for the jobs the agent needs and the time it needs them. Kimen uses the protected credentials itself. Reading secrets, projecting them into arbitrary processes and changing Actions remain locked.</p>
           <div class="hero-action-example" aria-label="What the agent receives and does not receive">
             <div><span>agent gets</span><code>deploy-staging(revision: "8d2f74a")</code></div>
             <div><span>agent never gets</span><code>DEPLOY_TOKEN</code></div>
@@ -41,8 +41,8 @@
             <text class="authority-heading" x="48" y="158">Calls</text><text class="authority-code" x="48" y="190">deploy-staging(</text><text class="authority-code subtle" x="48" y="216">revision: 8d2f74a)</text>
             <line class="authority-rule" x1="48" y1="246" x2="196" y2="246" /><text class="authority-note" x="48" y="276">No deploy credential</text><text class="authority-note" x="48" y="298">No vault access</text>
             <circle class="authority-halo outer" cx="360" cy="202" r="98" /><circle class="authority-halo inner" cx="360" cy="202" r="75" /><circle class="authority-core" cx="360" cy="202" r="55" />
-            <rect class="seed" x="354" y="158" width="12" height="12" /><text class="authority-kimen" x="360" y="202">kimen</text><text class="authority-check" x="360" y="226">checks action</text><text class="authority-check" x="360" y="244">uses credential</text>
-            <rect class="binding-card" x="279" y="314" width="162" height="82" /><text class="authority-label" x="298" y="341">YOUR KIMEN SETUP</text><text class="binding-text" x="298" y="366">app · deploy job · staging</text><text class="binding-text" x="298" y="385">DEPLOY_TOKEN ••••••••</text>
+            <rect class="seed" x="354" y="158" width="12" height="12" /><text class="authority-kimen" x="360" y="202">kimen</text><text class="authority-check" x="360" y="226">Action session</text><text class="authority-check" x="360" y="244">uses credential</text>
+            <rect class="binding-card" x="279" y="314" width="162" height="82" /><text class="authority-label" x="298" y="341">UNLOCKED FOR 2 HOURS</text><text class="binding-text" x="298" y="366">deploy-staging · inspect-logs</text><text class="binding-text" x="298" y="385">vault access remains locked</text>
             <rect class="authority-card provider" x="500" y="82" width="196" height="240" />
             <circle class="provider-dot" cx="525" cy="112" r="7" /><text class="authority-label" x="544" y="117">DEPLOYMENT PROVIDER</text>
             <text class="authority-heading" x="524" y="158">Deploys</text><text class="authority-code" x="524" y="190">application</text><text class="authority-code subtle" x="524" y="216">revision 8d2f74a · staging</text>
@@ -53,6 +53,23 @@
         </figure>
       </section>
 
+      <section class="session-example" id="how">
+        <header class="section-head"><h2>Open two Actions for two hours. Keep vault access locked.</h2><p>You enter the vault password once and choose exactly what the agent may call during this session.</p></header>
+        <figure class="session-terminal">
+          <figcaption>terminal</figcaption>
+          <pre><code><span class="prompt">$</span> kimen session start --allow deploy-staging,inspect-logs --ttl 2h
+Password: ********
+
+Action session active for 2h
+  allowed  deploy-staging(revision)
+  allowed  inspect-logs(filter, since)</code></pre>
+        </figure>
+        <div class="session-permissions">
+          <article><h3>The agent can call</h3><code>deploy-staging(revision: "8d2f74a")</code><code>inspect-logs(filter: "errors", since: "30m")</code></article>
+          <article><h3>The agent still cannot call</h3><code>secret get DEPLOY_TOKEN</code><code>run / render / envfile with DEPLOY_TOKEN</code><code>action edit / action create</code></article>
+        </div>
+      </section>
+
       <section class="agent-problem">
         <header class="section-head"><h2>A deployment credential gives the agent more than <code>deploy-staging(…)</code>.</h2><p>Even when the secret text is hidden from the model, a process using it may perform every operation that credential permits. Kimen gives the agent only the action you chose.</p></header>
         <div class="comparison">
@@ -61,7 +78,7 @@
         </div>
       </section>
 
-      <section class="capability-how" id="how">
+      <section class="capability-how">
         <header class="section-head"><h2>You configure <code>deploy-staging</code>. The agent can call it, but cannot redefine it.</h2><p>The application, deployment job, environment and credential stay in trusted Kimen configuration outside the agent-editable project.</p></header>
         <div class="contract-grid">
           <article><h3>The agent calls</h3><p><strong><code>deploy-staging(revision: "8d2f74a")</code></strong></p><p>It can choose the revision. It cannot choose another application, deployment job or environment.</p></article>
@@ -90,7 +107,7 @@
       </section>
 
       <section class="teams" id="teams">
-        <header class="section-head"><h2>Forty developers should not maintain forty versions of “deploy staging safely.”</h2><p>Kimen Teams gives the company one list of allowed jobs and rules. Credentials and provider calls can still stay on developer machines or inside company infrastructure.</p></header>
+        <header class="section-head"><h2>Control which Actions agents can unlock across the company.</h2><p>Kimen Teams gives the company one list of Actions and rules. Credentials and provider calls can still stay on developer machines or inside company infrastructure.</p></header>
         <div class="team-features">
           <article><h3>One set of rules</h3><p>Decide who may deploy staging, read production logs or restart a service.</p></article>
           <article><h3>One list of allowed jobs</h3><p>See the operations available across repositories, agents and environments.</p></article>
@@ -98,8 +115,8 @@
           <article><h3>A record of every run</h3><p>See who requested the job, which agent ran it, its target and the result.</p></article>
         </div>
         <div class="plans" aria-label="Kimen plans">
-          <article><h3>Kimen Core</h3><p class="price">Free</p><p>Open source and local</p><ul><li>Encrypted vault and <code>kimen run</code></li><li>Locally allowed jobs</li><li>Local run history</li></ul><a href="../docs/#start">Install Core →</a></article>
-          <article class="featured-plan"><h3>Kimen Teams</h3><p class="price">$24 <small>/ developer / month</small></p><p>One setup across the team</p><ul><li>Shared rules and job list</li><li>Approvals and immediate access removal</li><li>Company-wide run history</li></ul><a href="#team-access">Start with a team ↓</a></article>
+          <article><h3>Kimen Core</h3><p class="price">Free</p><p>Open source and local</p><ul><li>Local vault and <code>kimen run</code></li><li>Local Action definitions</li><li>Action-only sessions and receipts</li></ul><a href="../docs/#start">Install Core →</a></article>
+          <article class="featured-plan"><h3>Kimen Teams</h3><p class="price">$24 <small>/ developer / month</small></p><p>One setup across the team</p><ul><li>Shared Action policies and inventory</li><li>Approvals and team-wide revocation</li><li>Identity and central audit</li></ul><a href="#team-access">Start with a team ↓</a></article>
           <article><h3>Kimen Enterprise</h3><p class="price">Custom</p><p>Organization controls</p><ul><li>SSO and SCIM</li><li>SIEM and extended retention</li><li>Self-hosting and support</li></ul><a href="#team-access">Enterprise access ↓</a></article>
         </div>
       </section>

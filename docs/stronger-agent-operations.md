@@ -94,6 +94,33 @@ A portable first adapter could be a deliberately narrow HTTPS request:
 Provider-specific adapters may be safer and easier to explain where a generic
 HTTP template would expose too much freedom.
 
+## Session model
+
+Today's `kimen session start` is a convenience unlock: it stores a reusable
+base64-encoded vault passphrase in a same-user-readable `0600` file. It gives
+all normal Kimen commands the ability to decrypt the vault and is not suitable
+as the agent authorization mechanism.
+
+An Action session must instead be broker-held and operation-scoped:
+
+```text
+kimen session start --allow deploy-staging,inspect-logs --ttl 2h
+```
+
+The broker retains the decrypted key in memory and exposes only the selected
+invocations. The session does not authorize raw disclosure, arbitrary
+projection through `run`/`render`/`envfile`, binding changes or Action
+administration. Credentials backing Actions must be adapter-usable without
+becoming revealable or projectable through that session.
+
+This gives three useful modes:
+
+- locked vault: password required;
+- trusted human session: ordinary projection and administration;
+- Action session: selected invocations only, for a bounded time.
+
+Whether the two session types share a command family is a later CLI decision.
+
 ## Required security properties
 
 - Agent-readable repository files may request an operation but cannot define

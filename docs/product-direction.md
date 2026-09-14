@@ -118,6 +118,63 @@ Do not reduce this risk to “training data.” Once an agent reads a secret it 
 enter model context, command output, logs, caches or a provider system. Whether
 a specific provider trains on it is only one possible downstream question.
 
+### Today's session is a convenience unlock
+
+The current `kimen session start` writes the vault passphrase, base64-encoded,
+to a `0600` session file. This protects it from other Unix users, but a process
+running as the same user can read it. All commands then reuse that passphrase.
+
+Therefore today's open session is not an agent boundary. A same-user agent can
+use `secret get`, or more simply project a secret into a process it controls
+through `run`, `render` or `envfile`.
+
+Preserve the current session semantics for trusted human use if they remain
+useful, but do not describe them as scoped agent access.
+
+### An Action session is a broker, not a scoped passphrase file
+
+The agent product requires a second meaning of session:
+
+```text
+human enters vault password
+    -> Kimen broker holds decrypted authority
+    -> session permits selected Actions for a limited time
+    -> agent may invoke those Actions
+    -> reveal, projection and administration remain locked
+```
+
+Conceptually:
+
+```text
+kimen session start --allow deploy-staging,inspect-logs --ttl 2h
+```
+
+must authorize only calls such as:
+
+```text
+deploy-staging(revision)
+inspect-logs(filter, since)
+```
+
+It must not expose a reusable vault passphrase or authorize any of these paths
+to the same credentials:
+
+```text
+secret get
+run
+render
+envfile
+action create / edit
+binding or credential changes
+```
+
+This is not best understood as “the vault is unlocked with scopes.” Kimen has
+the authority; the session may ask Kimen to use selected parts of it.
+
+Credential use therefore needs policy as well as storage semantics. A
+credential backing an Action may be usable by the trusted adapter while being
+neither revealable nor projectable through that Action session.
+
 ## Why bounded operations are needed
 
 Suppose a coding agent finishes a change and should deploy staging. Giving a
@@ -206,6 +263,9 @@ generic `run-with-token(command)` is not a Kimen security primitive.
 - Expiry, revocation and an explicit repeat/idempotency policy.
 - An attributable receipt without secret values.
 - Separate administration and invocation paths.
+- A broker-held key rather than a same-user-readable passphrase/session file.
+- Session enforcement across every disclosure path, including `run`, `render`
+  and `envfile`, not only `secret get`.
 
 Protection from an arbitrary host process additionally requires the caller to
 run in a sandbox, container, VM or different OS identity, or for each sensitive
@@ -214,6 +274,34 @@ request to cross a separate human/identity boundary.
 The implementation concepts currently worth preserving are requirement,
 binding, grant, invocation, adapter and receipt. Their wire formats, command
 names and serialization are intentionally undecided.
+
+The working public term is `Action`. The final name remains open.
+
+## Practical YOLO threat model
+
+For the product story, “YOLO” should mean that the agent can run arbitrary
+commands and change files in its working project without per-command human
+approval. Kimen should let this agent use selected Actions without automatically
+gaining secret-disclosure or secret-projection authority.
+
+An Action-only broker session can be a meaningful boundary under that model,
+even when the agent and developer share a machine. The password remains a form
+of user authorization which the agent does not know.
+
+Do not silently expand the promise to a fully compromised user account. An
+agent which can persistently replace the Kimen binary, alter shell startup,
+capture later password entry, debug the broker or modify trusted executables is
+operating as malware for the logged-in user. Strong protection against that
+requires additional OS identity, sandbox, root-owned installation, code
+integrity or external user-presence mechanisms.
+
+The concrete public promise is:
+
+> Let the agent work freely in the project. Unlock only the Actions it needs.
+
+The stronger deployment option is to combine Action-only sessions with a
+sandbox, container, VM, separate OS identity or remote broker. Kimen need not
+build the sandbox itself; it can own the narrow bridge out of it.
 
 ## Why not just use 1Password, Vault or a cloud secret manager?
 

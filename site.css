@@ -38,7 +38,7 @@ code, pre { font-family: var(--mono); }
 
 .hero, .problem, .how, .runtimes, .authority-callout, .closing,
 .authority-hero, .agent-problem, .capability-how, .use-cases, .surfaces,
-.teams, .team-access {
+.teams, .team-access, .session-example {
   padding-left: var(--page-pad);
   padding-right: var(--page-pad);
 }
@@ -146,6 +146,8 @@ footer nav { justify-content: flex-end; }
 .authority-page { background: var(--dark); color: white; }
 .authority-hero { min-height: 700px; padding-top: 86px; padding-bottom: 92px; display: grid; grid-template-columns: minmax(0, .86fr) minmax(520px, 1.14fr); gap: 6vw; align-items: center; }
 .authority-hero .lede { color: var(--dark-muted); }
+.authority-hero h1 code { color: white; font-size: .68em; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.authority-hero h1 code:first-of-type { display: block; margin: .16em 0; font-size: .48em; line-height: 1.4; white-space: nowrap; }
 .hero-action-example { max-width: 510px; margin: 30px 0; border-top: 1px solid #465047; border-bottom: 1px solid #465047; }
 .hero-action-example > div { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 16px; padding: 13px 0; align-items: baseline; }
 .hero-action-example > div + div { border-top: 1px solid #303b32; }
@@ -177,7 +179,16 @@ footer nav { justify-content: flex-end; }
 .authority-arrow-head { fill: var(--orange); }
 .binding-line { stroke: #78947e; stroke-width: 1.5; stroke-dasharray: 4 4; }
 
-.agent-problem, .capability-how, .use-cases, .surfaces, .teams, .team-access { color: var(--ink); }
+.agent-problem, .capability-how, .use-cases, .surfaces, .teams, .team-access, .session-example { color: var(--ink); }
+.session-example { padding-top: 88px; padding-bottom: 94px; background: var(--surface); }
+.session-terminal { max-width: 800px; margin: 0; background: var(--dark); color: white; }
+.session-terminal figcaption { padding: 14px 18px 0; color: #91a495; font: 9px/1.4 var(--mono); text-transform: uppercase; }
+.session-terminal pre { margin: 0; padding: 12px 18px 20px; overflow-x: auto; font-size: 12px; line-height: 1.75; }
+.session-terminal .prompt { color: var(--orange); }
+.session-permissions { display: grid; grid-template-columns: repeat(2, 1fr); max-width: 1000px; margin-top: 28px; border: 1px solid var(--line); }
+.session-permissions article { padding: 28px; background: #f4f7f1; box-shadow: inset 4px 0 0 var(--green); }
+.session-permissions article + article { border-left: 1px solid var(--line); background: #f6f2ec; box-shadow: inset 4px 0 0 var(--orange); }
+.session-permissions code { display: block; margin-top: 15px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
 .comparison { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid #94a196; }
 .comparison article { padding: 36px; }
 .comparison article + article { border-left: 1px solid #94a196; }
@@ -265,7 +276,7 @@ footer nav { justify-content: flex-end; }
   .topbar { padding-left: 20px; padding-right: 20px; }
   .hero, .problem, .how, .runtimes, .authority-callout, .closing,
   .authority-hero, .agent-problem, .capability-how, .use-cases, .surfaces,
-  .teams, .team-access { padding-left: 20px; padding-right: 20px; }
+  .teams, .team-access, .session-example { padding-left: 20px; padding-right: 20px; }
   .hero, .authority-hero { min-height: 0; padding-top: 65px; padding-bottom: 72px; }
   h1 { font-size: clamp(36px, 10vw, 44px); }
   h2 { font-size: clamp(29px, 8vw, 38px); }
@@ -274,11 +285,12 @@ footer nav { justify-content: flex-end; }
   .hero-action-example > div { grid-template-columns: 1fr; gap: 5px; }
   .runtime-map, .authority-map { width: calc(100vw - 40px); overflow-x: auto; }
   .runtime-map svg, .authority-map svg { min-width: 650px; }
-  .plain-flow, .runtime-examples, .comparison, .contract-grid, .use-case-grid, .team-features { grid-template-columns: 1fr; }
+  .plain-flow, .runtime-examples, .comparison, .contract-grid, .use-case-grid, .team-features, .session-permissions { grid-template-columns: 1fr; }
   .plain-flow article, .plain-flow article + span + article { padding: 25px 0; }
   .plain-flow > span { transform: rotate(90deg); }
   .runtime-examples article, .runtime-examples article:nth-child(even), .comparison article, .comparison article + article, .contract-grid article, .use-case-grid article, .use-case-grid article + article, .team-features article, .team-features article + article { padding-left: 0; padding-right: 0; border-left: 0; }
   .runtime-examples article:nth-child(even), .comparison article + article, .use-case-grid article + article { border-top: 1px solid var(--line); }
+  .session-permissions article + article { border-left: 0; border-top: 1px solid var(--line); }
   .contract-seed { min-height: 80px; }
   .contract-seed::before, .contract-seed::after { left: 50%; right: auto; top: 0; bottom: 0; border-left: 1px solid var(--green); border-top: 0; }
   .use-case-grid p { min-height: 0; }
