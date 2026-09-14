@@ -5,124 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Kimen — authority for agent-driven development</title>
-    <meta name="description" content="Let coding agents use approved secrets and actions without receiving your long-lived credentials." />
+    <meta name="description" content="Keep credentials under local control while coding agents work." />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Study navigation"><a href="#model">Model</a><a href="#workflows">Workflows</a><a href="#boundary">Boundary</a><a href="../../docs/">Core manual ↗</a></nav>
+      <nav><a href="#model">How it works</a><a href="#boundary">Boundary</a><a href="../../docs/">Core manual ↗</a></nav>
     </header>
 
     <main>
       <section class="hero">
-        <div class="hero-copy">
-          <h1>Let agents use what they need, without giving them your credentials.</h1>
-          <p class="lede">A project declares the secrets and actions it needs. You bind the real authority locally. Kimen provides values to trusted programs and constrained capabilities to agents.</p>
-          <div class="hero-actions">
-            <a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Agent%20workflow%20I%20want%20to%20secure&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%20today%3A%0A%0ACredential%20or%20permission%20I%20want%20Kimen%20to%20hold%3A%0A%0AWould%20I%20try%20a%2030-minute%20design-partner%20setup%3F%3A">Secure one real agent workflow</a>
-            <a href="#model">See how Kimen divides authority ↓</a>
-          </div>
-          <p class="status"><strong>Design-partner preview.</strong> The local vault and runtime projection exist today. Agent controls and constrained Actions are the product being tested.</p>
+        <h1>Let coding agents do the work. Keep credentials under your control.</h1>
+        <p class="lede">Kimen gives a project a way to state what it needs while values and permissions remain local. A trusted program can receive a secret. An agent can be allowed to perform a specific operation without receiving the underlying credential.</p>
+        <div class="hero-actions">
+          <a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Agent%20workflow%20I%20want%20to%20secure&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%20today%3A%0A%0ACredential%20or%20permission%20I%20want%20Kimen%20to%20hold%3A%0A%0AWould%20I%20try%20a%2030-minute%20design-partner%20setup%3F%3A">Bring one agent workflow</a>
+          <a href="#model">See the model ↓</a>
         </div>
+        <p class="status"><strong>Design-partner preview.</strong> Kimen's local vault and runtime projection exist today. Controlled agent access is the product being tested.</p>
+      </section>
 
-        <div class="hero-example" aria-label="Proposed Kimen action workflow">
-          <div class="panel-head"><span>Project requirement</span><span>safe to commit</span></div>
-          <pre><code><b>action</b> deploy-staging@1 {
-  revision: git-sha
-}</code></pre>
-          <div class="command"><span>$</span><code>kimen permit deploy-staging --for codex --ttl 10m</code></div>
-          <div class="command"><span>$</span><code>kimen invoke deploy-staging --revision 8d2f74a</code></div>
-          <p>Staging deployed · receipt <code>kmr_01J…</code></p>
+      <section class="scenario">
+        <header class="section-head">
+          <h2>The agent has finished the code. Deployment still needs your credential.</h2>
+          <p>Kimen would turn that broad credential into one locally approved operation.</p>
+        </header>
+        <div class="flow" aria-label="Example of a constrained deployment">
+          <article><h3>Coding agent</h3><p>“Deploy the current revision to staging.”</p></article>
+          <span aria-hidden="true">→</span>
+          <article class="kimen"><h3>Local Kimen</h3><p>Checks that this operation, target and revision are allowed. Keeps the credential.</p></article>
+          <span aria-hidden="true">→</span>
+          <article><h3>Deployment system</h3><p>Performs the approved operation. The agent receives the outcome.</p></article>
         </div>
       </section>
 
       <section class="model" id="model">
         <header class="section-head">
-          <h2>The project describes the need. The environment grants the authority.</h2>
-          <p>Requirements remain portable and readable. Values, targets, credentials and policy remain under local control.</p>
+          <h2>Projects describe needs. Environments grant authority.</h2>
+          <p>The same division works for configuration values and external operations.</p>
         </header>
 
-        <div class="model-grid">
+        <div class="model-table" role="table" aria-label="Kimen authority model">
+          <div class="model-row model-head" role="row"><span role="columnheader"></span><span role="columnheader">The project states</span><span role="columnheader">Local Kimen controls</span><span role="columnheader">The caller receives</span></div>
+          <div class="model-row" role="row"><strong role="rowheader">Secret</strong><span role="cell"><code>DATABASE_URL</code> is required</span><span role="cell">The encrypted value and its environment binding</span><span role="cell">A chosen program receives the value at runtime</span></div>
+          <div class="model-row" role="row"><strong role="rowheader">Action</strong><span role="cell">A staging deployment is required</span><span role="cell">The provider, target, credential and allowed inputs</span><span role="cell">The agent receives an outcome, never the credential</span></div>
+        </div>
+
+        <div class="product-pair">
           <article>
-            <div class="panel-head"><span>Project</span><span>agent-editable</span></div>
-            <pre><code>secret DATABASE_URL
-
-action deploy-staging@1
-  revision: git-sha</code></pre>
-            <p>Names, schemas and intent travel with the code. The project contains no credential or executable.</p>
+            <h3>The open-source core projects secrets into trusted programs.</h3>
+            <p>A committed <code>.kmap</code> contains names and mappings. The actual values live in the local encrypted vault.</p>
+            <div class="real-code"><pre><code>env DATABASE_URL=secret:database_url</code></pre><pre><code>kimen run --profile dev -- ./app</code></pre></div>
+            <p class="note">These are current Kimen commands. The receiving process can read the projected value.</p>
           </article>
-          <div class="model-arrow" aria-hidden="true">→</div>
-          <article class="local-binding">
-            <div class="panel-head"><span>Local Kimen</span><span>owner-controlled</span></div>
-            <pre><code>DATABASE_URL → vault/database_url
-
-deploy-staging → GitHub / staging
-  revision: approved SHA only</code></pre>
-            <p>The binding fixes the value, provider operation, destination, allowed inputs and approval policy.</p>
+          <article>
+            <h3>The commercial probe adds controlled operations for agents.</h3>
+            <p>The owner defines what an operation means, where it may run and which inputs are accepted. Kimen uses the credential and returns the result.</p>
+            <p>The exact action contract and interface will be designed with real workflows. No new CLI or API is implied by this page.</p>
           </article>
         </div>
       </section>
 
-      <section class="modes">
+      <section class="workflows">
         <header class="section-head">
-          <h2>Kimen fulfills the requirement in one of two ways.</h2>
-          <p>The right boundary depends on whether the caller needs the credential itself or only the result of using it.</p>
+          <h2>Start with something you still do manually.</h2>
+          <p>A useful workflow is repeated and specific, with a credential that grants more power than the task requires.</p>
         </header>
-
-        <div class="mode-grid">
-          <article>
-            <h3>Project to a trusted runtime</h3>
-            <p>An application needs <code>DATABASE_URL</code> to connect. Kimen supplies the value through env, file or stdin when that process starts.</p>
-            <pre><code><span>$</span> kimen run --profile dev -- ./app</code></pre>
-            <p class="limit">The receiving process can read the value.</p>
-          </article>
-          <article class="action-mode">
-            <h3>Invoke an action for an agent</h3>
-            <p>An agent needs to deploy one revision. Kimen uses the credential inside a trusted adapter and returns the outcome.</p>
-            <pre><code><span>$</span> kimen invoke deploy-staging \
-    --revision 8d2f74a</code></pre>
-            <p class="limit">The agent receives a result and receipt, not the credential.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="workflows" id="workflows">
-        <header class="section-head">
-          <h2>Start with a job you still take over to do manually.</h2>
-          <p>The useful cases are specific and repeated. The available credential grants much more power than the task requires.</p>
-        </header>
-
         <div class="workflow-list">
-          <article><h3>Deploy one revision to staging</h3><p>Fix the environment and accept only an approved git SHA.</p></article>
-          <article><h3>Publish one package version</h3><p>Bind one package and keep the registry token inside the adapter.</p></article>
-          <article><h3>Run a production backup</h3><p>Expose one known database operation and record what was attempted.</p></article>
-        </div>
-
-        <div class="action-example" aria-label="Example action contract">
-          <div><span>Project requests</span><code>deploy-staging(8d2f74a)</code></div>
-          <b aria-hidden="true">→</b>
-          <div><span>Local binding permits</span><code>GitHub · staging · approved SHA</code></div>
-          <b aria-hidden="true">→</b>
-          <div><span>Agent receives</span><code>deployed · receipt kmr_01J…</code></div>
+          <article><h3>Deploy one revision to staging</h3><p>The target is fixed and only an approved revision may be deployed.</p></article>
+          <article><h3>Publish one package version</h3><p>The registry credential remains local while the package and version are constrained.</p></article>
+          <article><h3>Run a production backup</h3><p>The agent can request one known operation against one known database.</p></article>
         </div>
       </section>
 
       <section class="boundary" id="boundary">
-        <h2>The project may request authority. It cannot define or enlarge it.</h2>
-        <div class="boundary-copy">
-          <p>The protected local binding fixes the operation, destination and permitted inputs. Editing the repository cannot replace an approved action with an arbitrary script.</p>
-          <p>Actions keep the underlying credential inside Kimen's adapter. Grants can be tied to a caller and time window, and every attempt produces a receipt.</p>
-          <p>Projection remains a deliberate trust decision. A process that receives a secret is inside the boundary and can read the value.</p>
-          <p class="status dark-status"><strong>Product status.</strong> Vault, profiles and runtime projection form the open-source core. Caller controls, grants, receipts and constrained Actions shown here are the product direction under test.</p>
+        <h2>The local binding is the authority.</h2>
+        <div>
+          <p>A repository may request a secret or operation. Editing that request cannot create a credential, change the deployment target or replace an approved operation with arbitrary code.</p>
+          <p>Projection and controlled operations have different boundaries. A program receiving a projected secret can read it. An agent invoking an operation should receive only its result.</p>
+          <p class="status dark"><strong>Product status.</strong> Vault, profiles and runtime projection form the current open-source core. Agent identity, approval, constrained operations and receipts are the commercial direction under test.</p>
         </div>
       </section>
 
       <section class="closing">
-        <header class="section-head"><h2>Bring one real workflow.</h2><p>The strongest signal is a credential or operation you already keep away from your coding agent.</p></header>
+        <header class="section-head"><h2>Bring the access decision you do not trust your agent to make.</h2><p>A real repository or a real withheld operation is enough to start.</p></header>
         <div class="routes">
-          <article><h3>Your agent works beside a plaintext <code>.env</code></h3><p>Try the existing local vault and projection flow on one repository.</p><a href="../../docs/#start">Move one project to Kimen ↗</a></article>
-          <article><h3>You stop the agent before deploy or publish</h3><p>Show us the exact capability you want to delegate without exposing its credential.</p><a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Agent%20workflow%20I%20want%20to%20secure&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%20today%3A%0A%0ACredential%20or%20permission%20I%20want%20Kimen%20to%20hold%3A%0A%0AWould%20I%20try%20a%2030-minute%20design-partner%20setup%3F%3A">Secure this action together ↗</a></article>
+          <article><h3>Move plaintext secrets out of one workspace</h3><p>Use the existing Kimen core with a test or staging credential.</p><a href="../../docs/#start">Follow the current setup ↗</a></article>
+          <article><h3>Delegate one operation without sharing its credential</h3><p>Describe what the agent should do, where it should happen and what you currently keep from it.</p><a class="button" href="https://github.com/flakstad/kimen/issues/new?title=Agent%20workflow%20I%20want%20to%20secure&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AWorkflow%3A%0A%0ATarget%20or%20system%3A%0A%0AWhat%20the%20agent%20can%20access%20today%3A%0A%0ACredential%20or%20permission%20I%20want%20Kimen%20to%20hold%3A%0A%0AWould%20I%20try%20a%2030-minute%20design-partner%20setup%3F%3A">Describe the workflow ↗</a></article>
         </div>
       </section>
     </main>
