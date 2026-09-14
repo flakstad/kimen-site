@@ -1,11 +1,11 @@
 # Stronger bounded agent operations
 
-Status: product and architecture exploration, deliberately separate from the
-current website story.
+Status: product direction presented on the website; implementation deliberately
+deferred until the market test produces external signal.
 
 Date: 2026-09-14
 
-## Decision for the current product story
+## One product model
 
 Kimen's immediate agent value is workspace and context hygiene:
 
@@ -23,8 +23,9 @@ the current OS user, the Kimen session and arbitrary commands. The child
 process receives the projected values. An agent which may choose or modify that
 process can make it print, store or transmit them.
 
-The public product story should explain this useful behavior directly. It
-should not depend on a speculative Actions architecture.
+The public product story begins with this useful behavior, then extends the
+same requirement-to-binding model to bounded operations. Values and operations
+are two runtime realizations of one Kimen idea; they are not separate products.
 
 ## The stronger problem
 
@@ -128,6 +129,34 @@ standalone Kimen user could create the same kind of grant locally without Ro.
 Potential shared code is limited to neutral mechanics such as capability
 envelopes, bounded local IPC and receipts. Ro's domain commands, Task model and
 Workspace authority do not belong in Kimen.
+
+## Relationship to Breyta and other workflow engines
+
+Breyta already owns deterministic orchestration, agent loops, retries, waits,
+approvals and durable run state. Kimen must not duplicate those concerns. A
+Breyta integration would invoke Kimen through a narrow packaged step: Breyta
+decides when the operation belongs in the flow; Kimen decides whether this
+specific external effect is allowed and performs it without releasing the
+credential.
+
+This integration is only meaningful as a general Kimen product if the same
+capability also needs to work from other execution surfaces such as coding
+agents, CI, local workers or another workflow engine. If a capability exists
+only inside one Breyta flow, the engine's own connections and packaged steps
+may already provide the simpler boundary.
+
+## Validation order
+
+The website and directed conversations come before a protocol RFC or broker
+implementation. The market test must establish whether developers and teams
+recognize both of these needs:
+
+- one operation should be usable across several agents, workflows or runtimes;
+- an organization wants shared policy, revocation and audit without moving its
+  credentials into a Kimen-hosted control plane.
+
+Only credible external intent justifies specifying grant formats, canonical
+serialization, client libraries or a general adapter API.
 
 ## Questions to answer before productizing
 

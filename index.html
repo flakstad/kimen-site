@@ -3,231 +3,134 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen — local-first secrets for code and coding agents</title>
-    <meta
-      name="description"
-      content="Keep plaintext secrets out of your repository. Kimen stores values in an encrypted local vault and projects them only when a runtime needs them."
-    />
+    <title>Kimen — local secrets and runtime configuration</title>
+    <meta name="description" content="Keep secrets out of your workspace. Kimen stores them in a local encrypted vault and supplies them only to the runtime that needs them." />
     <link rel="canonical" href="https://kimen.systems/" />
     <meta property="og:title" content="Kimen" />
-    <meta
-      property="og:description"
-      content="Keep secrets out of your code — and away from your coding agents."
-    />
+    <meta property="og:description" content="Local secrets and runtime configuration for applications, tools and coding agents." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./site.css" />
   </head>
   <body>
-    <main class="site">
-      <header class="site-header">
-        <div class="brand-row">
-          <a class="brand" href="./index.html">Kimen</a>
-          <nav class="site-nav" aria-label="Primary">
-            <a href="#try">try it</a>
-            <span aria-hidden="true">|</span>
-            <a href="#model">model</a>
-            <span aria-hidden="true">|</span>
-            <a href="#actions">actions</a>
-            <span aria-hidden="true">|</span>
-            <a href="./docs/">docs</a>
-            <span aria-hidden="true">|</span>
-            <a href="https://github.com/flakstad/kimen">source</a>
-          </nav>
-        </div>
-        <p class="tagline">local-first secrets for code and coding agents</p>
-      </header>
+    <header class="topbar">
+      <a class="brand" href="./"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#runtimes">Runtimes</a><a href="./agents/">For agents &amp; teams</a><a href="./docs/#start">Install ↗</a></nav>
+    </header>
 
-      <hr class="rule" />
-
+    <main>
       <section class="hero">
-        <h1>Keep secrets out of your code — and away from your coding agents.</h1>
-        <p class="lede">
-          Your project can still declare exactly what it needs. Kimen keeps the
-          actual values in an encrypted local vault and provides them only when
-          a runtime needs them.
-        </p>
-        <p class="actions-row">
-          <a class="primary-action" href="#try">Try Kimen on one repo</a>
-          <a href="#boundary">Understand the boundary</a>
-        </p>
-        <p class="availability">
-          Available today: encrypted local vault · env, file and stdin
-          projection · native CLI · offline use · MIT licensed
-        </p>
-      </section>
-
-      <hr class="rule" />
-
-      <section id="model">
-        <h2>Requirements stay visible. Authority stays local.</h2>
-        <p class="body-copy">
-          A committed <code>.kmap</code> tells applications, people and agents
-          which runtime values exist. It contains names and mappings, not the
-          plaintext values.
-        </p>
-
-        <div class="before-after" aria-label="Plaintext env compared with Kimen">
-          <article>
-            <p class="panel-label">before · .env in the workspace</p>
-            <pre><code>DATABASE_URL=postgres://...
-STRIPE_API_KEY=sk_live_...</code></pre>
-          </article>
-          <article>
-            <p class="panel-label">after · .kimen/profiles/dev.kmap</p>
-            <pre><code>env DATABASE_URL=secret:database_url
-env STRIPE_API_KEY=secret:stripe_api_key</code></pre>
-          </article>
+        <div class="hero-copy">
+          <h1>Secrets don't belong in the project your agent can read.</h1>
+          <p class="lede">Your application still needs database passwords, API keys and service credentials. Kimen keeps the values in a local encrypted vault, outside the workspace, and supplies them only when a runtime needs them.</p>
+          <div class="hero-actions"><a class="button" href="./docs/#start">Install Kimen</a><a href="#how">See how it works ↓</a></div>
         </div>
 
-        <div class="flow" aria-label="Kimen runtime flow">
-          <div>
-            <span>01</span>
-            <strong>Project requirement</strong>
-            <p><code>DATABASE_URL</code> remains visible and reviewable.</p>
-          </div>
-          <div aria-hidden="true" class="flow-arrow">→</div>
-          <div>
-            <span>02</span>
-            <strong>Local binding</strong>
-            <p>The encrypted vault holds the actual value outside the repo.</p>
-          </div>
-          <div aria-hidden="true" class="flow-arrow">→</div>
-          <div>
-            <span>03</span>
-            <strong>Trusted runtime</strong>
-            <p><code>kimen run</code> projects it only when the app starts.</p>
-          </div>
+        <figure class="runtime-map">
+          <svg viewBox="0 0 760 480" role="img" aria-labelledby="runtime-title runtime-desc">
+            <title id="runtime-title">Kimen prepares an application runtime without storing secrets in its workspace</title>
+            <desc id="runtime-desc">The workspace contains application code and names of required values. Kimen reads the map, resolves encrypted values from its vault and prepares a runtime environment containing the application and its environment variables.</desc>
+            <defs><pattern id="paper-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="grid-line" /></pattern></defs>
+            <rect class="map-field" width="760" height="480" />
+
+            <rect class="workspace-box" x="24" y="48" width="242" height="280" />
+            <text class="map-label" x="48" y="82">PROJECT WORKSPACE</text>
+            <text class="map-heading" x="48" y="119">Application code</text>
+            <text class="map-copy" x="48" y="145">reads DATABASE_URL</text>
+            <line class="map-rule" x1="48" y1="169" x2="242" y2="169" />
+            <text class="map-label" x="48" y="199">COMMITTED KIMEN MAP</text>
+            <text class="map-code" x="48" y="232">DATABASE_URL</text>
+            <text class="map-code muted" x="48" y="256">→ dev.database_url</text>
+            <text class="safe-label" x="48" y="300">NAMES, NOT VALUES</text>
+
+            <rect class="agent-box" x="24" y="352" width="242" height="80" />
+            <circle class="agent-dot" cx="49" cy="380" r="7" />
+            <text class="map-heading small" x="69" y="386">Coding agent</text>
+            <text class="map-copy" x="48" y="413">works in the project</text>
+
+            <circle class="kimen-halo outer" cx="354" cy="240" r="69" />
+            <circle class="kimen-halo inner" cx="354" cy="240" r="52" />
+            <circle class="kimen-core" cx="354" cy="240" r="39" />
+            <rect class="seed" x="348" y="208" width="12" height="12" />
+            <text class="kimen-name" x="354" y="244">kimen</text>
+            <text class="kimen-action" x="354" y="266">prepares</text>
+            <rect class="vault-box" x="300" y="62" width="108" height="82" />
+            <text class="vault-label" x="318" y="88">LOCAL VAULT</text>
+            <text class="vault-value" x="318" y="119">••••••••</text>
+            <path class="vault-line" d="M354 144V171" />
+
+            <rect class="environment-box" x="446" y="32" width="290" height="416" rx="34" />
+            <text class="environment-label" x="474" y="70">RUNTIME ENVIRONMENT</text>
+            <text class="environment-copy" x="474" y="95">prepared for this invocation</text>
+            <rect class="application-box" x="474" y="122" width="234" height="82" />
+            <circle class="app-dot" cx="496" cy="150" r="7" />
+            <text class="map-heading small" x="516" y="156">Your application</text>
+            <text class="map-copy" x="496" y="184">runs normally</text>
+            <rect class="environment-values" x="474" y="226" width="234" height="176" />
+            <text class="map-label" x="496" y="258">AVAILABLE IN THIS ENVIRONMENT</text>
+            <text class="runtime-key" x="496" y="293">DATABASE_URL</text>
+            <text class="runtime-value" x="496" y="317">postgres://…8f2</text>
+            <text class="runtime-key" x="496" y="352">STRIPE_API_KEY</text>
+            <text class="runtime-value" x="496" y="376">sk_live_…A7</text>
+
+            <path class="map-arrow" d="M266 240H302" /><polygon class="arrow-head" points="302,240 292,234 292,246" />
+            <path class="map-arrow" d="M406 240H446" /><polygon class="arrow-head" points="446,240 436,234 436,246" />
+          </svg>
+          <figcaption>The workspace contains code and a readable map. The values exist only in Kimen's vault and in the runtime environment prepared for the application.</figcaption>
+        </figure>
+      </section>
+
+      <section class="problem">
+        <header class="section-head">
+          <h2><code>.gitignore</code> keeps a secret out of Git. Not out of your workspace.</h2>
+          <p>A coding agent with file access can read an ignored <code>.env</code>, private key or service-account file just as easily as your editor can.</p>
+        </header>
+        <div class="plain-flow">
+          <article><h3>The value sits beside the code</h3><p>A plaintext file contains a reusable credential with no runtime boundary.</p></article><span aria-hidden="true">→</span>
+          <article><h3>Tools can read the workspace</h3><p>Local agents, scripts and commands inherit access to the same files.</p></article><span aria-hidden="true">→</span>
+          <article><h3>A read secret cannot be unread</h3><p>It may enter context, output or logs and must be treated as exposed.</p></article>
         </div>
       </section>
 
-      <hr class="rule" />
-
-      <section id="try">
-        <h2>Move one <code>.env</code> out of your workspace.</h2>
-        <p class="body-copy">
-          Install Kimen, create a vault and move one non-production secret into
-          it. You can keep using ordinary environment variables inside the
-          application.
-        </p>
-
-        <div class="split">
-          <div>
-            <h3>Install</h3>
-            <pre><code>brew install flakstad/kimen/kimen</code></pre>
-            <p class="link-line">
-              Or download the
-              <a href="https://github.com/flakstad/kimen/releases/latest"
-                >latest release</a
-              >.
-            </p>
-          </div>
-          <div>
-            <h3>Store and run</h3>
-            <pre><code>kimen vault init
-kimen secret set stripe_api_key
-kimen run --profile dev -- ./your-app</code></pre>
-          </div>
+      <section class="how" id="how">
+        <header class="section-head">
+          <h2>Move the values out. Leave a readable map behind.</h2>
+          <p>Kimen is a local vault and a runtime preparation step. Your application keeps using ordinary environment variables and files.</p>
+        </header>
+        <div class="code-story">
+          <article><h3>Store the value locally</h3><p>Kimen prompts for the value without putting it in shell history or a plaintext file.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen secret set dev.database_url</code></pre></figure></article>
+          <article><h3>Describe what the app needs</h3><p>The map is safe to commit. It exposes the runtime contract, not the credential.</p><figure class="terminal"><figcaption>.kimen/profiles/dev.kmap</figcaption><pre><code>env DATABASE_URL=dev.database_url</code></pre></figure></article>
+          <article><h3>Prepare the runtime</h3><p>Kimen resolves the selected map and supplies its values to this invocation.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen run --profile dev -- ./app</code></pre></figure></article>
         </div>
-
-        <p class="note">
-          Use a test or staging credential while evaluating the workflow. Read
-          the <a href="./docs/#start">five-minute setup</a> for the profile file
-          and the exact boundary.
-        </p>
+        <div class="session-line"><div><strong>Several runs ahead?</strong><span>Open the vault for a short session, then lock it again.</span></div><code>kimen session start --ttl 15m</code><code>kimen session lock</code></div>
       </section>
 
-      <hr class="rule" />
-
-      <section id="boundary">
-        <h2>What this boundary does — and does not do.</h2>
-        <p class="body-copy">
-          Kimen removes plaintext values from the repository and materializes
-          them at runtime. A process that receives a projected secret can read
-          it. If a coding agent controls that process, the process is not a
-          trusted runtime merely because Kimen launched it.
-        </p>
-        <p class="body-copy">
-          An unrestricted agent running as your Unix user may also be able to
-          read or invoke an active Kimen session. Keep the vault locked while an
-          untrusted agent has broad shell access. Stronger agent-aware unlock,
-          client controls and bypass diagnostics are being explored; they are
-          not claims of the current release.
-        </p>
-        <p class="link-line">
-          <a href="./docs/#security">Read the current security model</a>
-        </p>
-      </section>
-
-      <hr class="rule" />
-
-      <section id="actions" class="exploration">
-        <div class="section-heading">
-          <h2>Your coding agent finishes the code. Then you take over.</h2>
-          <span class="status">exploration</span>
+      <section class="runtimes" id="runtimes">
+        <header class="section-head">
+          <h2>One project map. More than one kind of runtime.</h2>
+          <p>Kimen is not tied to deployment. It prepares values for the local application, a test, a build tool, a one-off command or a runtime file.</p>
+        </header>
+        <div class="runtime-examples">
+          <article><h3>Run an application</h3><code>kimen run --profile dev -- ./app</code></article>
+          <article><h3>Run a test suite</h3><code>kimen run --profile test -- ./test</code></article>
+          <article><h3>Render a required file</h3><code>kimen render --dir ./runtime --profile staging</code></article>
+          <article><h3>Prepare an envfile</h3><code>kimen envfile --out .env.runtime --profile worker</code></article>
         </div>
-        <p class="lede compact">
-          You deploy manually because the credential can do far more than this
-          one task requires.
-        </p>
-        <p class="body-copy">
-          Kimen is exploring a way to let the agent invoke one approved action
-          — such as deploying one revision to staging — without receiving the
-          underlying credential.
-        </p>
-
-        <div class="action-contract" aria-label="Proposed action contract">
-          <div>
-            <p class="panel-label">agent-editable project</p>
-            <pre><code>requires deploy-staging@1
-input revision: git-sha</code></pre>
-          </div>
-          <div aria-hidden="true" class="contract-arrow">→</div>
-          <div>
-            <p class="panel-label">protected local binding</p>
-            <pre><code>target staging only
-exact provider operation
-approval + limits + receipt</code></pre>
-          </div>
-        </div>
-
-        <p class="actions-row">
-          <a
-            class="primary-action"
-            href="https://github.com/flakstad/kimen/issues/new?title=Agent%20workflow%3A%20action%20I%20still%20do%20manually&amp;body=Please%20do%20not%20include%20secret%20values.%0A%0AAgent%3A%0A%0AAction%20I%20still%20do%20manually%3A%0A%0ATarget%20or%20system%3A%0A%0AHow%20I%20do%20it%20today%3A%0A%0ACredential%20or%20permission%20I%20do%20not%20want%20to%20expose%3A%0A%0AWould%20I%20try%20a%20test%20or%20staging%20prototype%3F%3A"
-            >Show me the action you still do manually</a
-          >
-        </p>
-        <p class="note">
-          This opens a public GitHub issue. Describe the workflow, but never
-          paste credentials, customer data or other sensitive values.
-        </p>
+        <p class="boundary-note" id="boundary">The selected process receives projected values. Use <code>kimen run</code> for software you trust with those values—not as a sandbox for arbitrary code.</p>
       </section>
 
-      <hr class="rule" />
-
-      <section id="source">
-        <h2>Use the product that exists today.</h2>
-        <p class="body-copy">
-          Kimen's local vault, profiles and runtime projections are open source
-          and available now. Constrained actions are a product exploration, not
-          a shipped feature.
-        </p>
-        <ul class="plain-links">
-          <li><a href="./docs/">documentation</a></li>
-          <li><a href="https://github.com/flakstad/kimen">source code</a></li>
-          <li>
-            <a href="https://github.com/flakstad/kimen/releases">releases</a>
-          </li>
-          <li><a href="https://github.com/flakstad/kimen/issues">issues</a></li>
-        </ul>
+      <section class="authority-callout">
+        <div><h2>Sometimes the agent needs an outcome, not the credential behind it.</h2><p>Starting your application is one case. Deploying staging, reading scoped logs or restarting a known service is different: the agent should be able to request the operation without receiving a general GitHub, cloud or infrastructure credential.</p></div>
+        <a class="button light" href="./agents/">See Kimen for agents &amp; teams →</a>
       </section>
 
-      <footer class="site-footer">
-        <p>Kimen Systems · local-first · MIT licensed</p>
-        <p><a href="./docs/">Read the docs</a></p>
-      </footer>
+      <section class="closing">
+        <h2>Start with one secret.</h2><p>Move it out of the workspace. Keep the application unchanged. Let Kimen provide it only to the runtime that needs it.</p>
+        <div class="hero-actions"><a class="button" href="./docs/#start">Install Kimen</a><a href="https://github.com/flakstad/kimen">View source ↗</a></div>
+      </section>
     </main>
+
+    <footer><a class="brand" href="./"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="./docs/">Manual</a><a href="./agents/">Agents &amp; teams</a><a href="https://github.com/flakstad/kimen">Source</a></nav></footer>
   </body>
 </html>

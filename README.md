@@ -7,15 +7,17 @@ separate from the CLI/runtime repository.
 
 - Product homepage
 - One-page manual at `/docs/`
-- A direct agent story based on keeping plaintext values out of the workspace
-  and projecting them only when a process starts
+- A direct developer story based on keeping plaintext values out of the
+  workspace and projecting them only when a runtime starts
+- A separate `/agents/` product path for bounded operations and team governance
 - Production pages have no JavaScript, build system, analytics or runtime service
 - Three deliberately different design studies live at `/studies/`
 
-Stronger credential-backed agent operations remain a separate product and
-architecture exploration in
-[`docs/stronger-agent-operations.md`](docs/stronger-agent-operations.md). They
-are not required to explain or use Kimen's current vault and projection model.
+The agent product path extends the same model from project-declared values to
+project-declared operations. The implementation boundary and security questions
+are recorded in
+[`docs/stronger-agent-operations.md`](docs/stronger-agent-operations.md), but
+protocol design and broker implementation wait for external product signal.
 
 The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
 domain mapping.
@@ -30,6 +32,7 @@ Then open:
 
 - <http://localhost:8080/>
 - <http://localhost:8080/docs/>
+- <http://localhost:8080/agents/>
 - <http://localhost:8080/404.html>
 - <http://localhost:8080/studies/> — three alternative composition studies
 - <http://localhost:8080/studies/synthesis/> — complete product-story study

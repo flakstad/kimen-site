@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kimen for agents and teams — operations, not credentials</title>
+    <meta name="description" content="Let coding agents, CI and workflows perform approved operations without giving them general-purpose credentials." />
+    <link rel="canonical" href="https://kimen.systems/agents/" />
+    <meta property="og:title" content="Kimen for agents and teams" />
+    <meta property="og:description" content="Give agents the operation, not the credential." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kimen.systems/agents/" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body class="authority-page">
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#uses">Examples</a><a href="#teams">For teams</a><a href="../docs/">Core ↗</a></nav>
+    </header>
+
+    <main>
+      <section class="authority-hero">
+        <div class="authority-hero-copy">
+          <h1>Give agents the operation. Not the credential.</h1>
+          <p class="lede">Let a coding agent deploy one commit to staging, inspect logs for one service or restart one known worker—without giving it a token that can do far more.</p>
+          <div class="hero-actions"><a class="button orange" href="#how">See the boundary</a><a href="#teams">Kimen for teams ↓</a></div>
+        </div>
+        <figure class="authority-map">
+          <svg viewBox="0 0 720 430" role="img" aria-labelledby="authority-title authority-desc">
+            <title id="authority-title">An agent requests one constrained operation through Kimen</title>
+            <desc id="authority-desc">The agent requests a staging deployment for one commit. Kimen checks the local binding and uses the protected GitHub credential to invoke only the approved workflow. The agent receives a deployment result, not the credential.</desc>
+            <defs><pattern id="dark-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="dark-grid-line" /></pattern></defs>
+            <rect class="authority-field" width="720" height="430" />
+            <rect class="authority-card caller" x="24" y="82" width="196" height="240" />
+            <circle class="agent-dot" cx="49" cy="112" r="7" /><text class="authority-label" x="68" y="117">CODING AGENT</text>
+            <text class="authority-heading" x="48" y="158">Requests</text><text class="authority-code" x="48" y="190">Deploy staging</text><text class="authority-code subtle" x="48" y="216">commit 8d2f74a</text>
+            <line class="authority-rule" x1="48" y1="246" x2="196" y2="246" /><text class="authority-note" x="48" y="276">No GitHub token</text><text class="authority-note" x="48" y="298">No vault access</text>
+            <circle class="authority-halo outer" cx="360" cy="202" r="98" /><circle class="authority-halo inner" cx="360" cy="202" r="75" /><circle class="authority-core" cx="360" cy="202" r="55" />
+            <rect class="seed" x="354" y="158" width="12" height="12" /><text class="authority-kimen" x="360" y="202">kimen</text><text class="authority-check" x="360" y="226">checks binding</text><text class="authority-check" x="360" y="244">uses credential</text>
+            <rect class="binding-card" x="279" y="314" width="162" height="82" /><text class="authority-label" x="298" y="341">LOCAL BINDING</text><text class="binding-text" x="298" y="366">repo · workflow · staging</text><text class="binding-text" x="298" y="385">credential ••••••••</text>
+            <rect class="authority-card provider" x="500" y="82" width="196" height="240" />
+            <circle class="provider-dot" cx="525" cy="112" r="7" /><text class="authority-label" x="544" y="117">GITHUB</text>
+            <text class="authority-heading" x="524" y="158">Runs</text><text class="authority-code" x="524" y="190">deploy-staging</text><text class="authority-code subtle" x="524" y="216">for 8d2f74a</text>
+            <line class="authority-rule" x1="524" y1="246" x2="672" y2="246" /><text class="authority-note success" x="524" y="277">Deployment started</text><text class="authority-note" x="524" y="299">receipt returned</text>
+            <path class="authority-arrow" d="M220 202H305" /><polygon class="authority-arrow-head" points="305,202 295,196 295,208" /><path class="authority-arrow" d="M415 202H500" /><polygon class="authority-arrow-head" points="500,202 490,196 490,208" /><path class="binding-line" d="M360 314V257" />
+          </svg>
+          <figcaption>The agent asks for a named result. Kimen owns the credential, target and exact provider operation.</figcaption>
+        </figure>
+      </section>
+
+      <section class="agent-problem">
+        <header class="section-head"><h2>The code is finished. The agent stops where authority begins.</h2><p>A general-purpose credential often grants access to an entire API, account or infrastructure environment. The task usually needs one much smaller effect.</p></header>
+        <div class="comparison">
+          <article class="comparison-broad"><h3>Give the process a credential</h3><p>The process can use every permission attached to that token.</p><ul><li>Credential enters the execution environment</li><li>Caller may choose other API operations</li><li>Blast radius follows the token's scope</li></ul></article>
+          <article class="comparison-bounded"><h3>Give the agent an operation</h3><p>Kimen performs one locally bound operation and returns its result.</p><ul><li>Credential remains behind the boundary</li><li>Target and input are constrained</li><li>Every invocation produces a receipt</li></ul></article>
+        </div>
+      </section>
+
+      <section class="capability-how" id="how">
+        <header class="section-head"><h2>The project names the need. The environment defines the power behind it.</h2><p>Agent-editable code can request a known capability. It cannot replace the protected implementation, target or credential binding.</p></header>
+        <div class="contract-grid">
+          <article><h3>Declared with the workload</h3><p><strong>Deploy staging</strong> accepts one immutable revision.</p><p>The name and expected input can travel with the project and remain visible to agents.</p></article>
+          <div class="contract-seed" aria-hidden="true"><span></span></div>
+          <article><h3>Bound in each trusted environment</h3><p><strong>GitHub workflow</strong> for one repository and staging environment.</p><p>Kimen holds the credential, validates the request and constructs the provider call.</p></article>
+        </div>
+        <p class="contract-result">The agent can cause the approved effect. It cannot turn that permission into arbitrary credential-powered execution.</p>
+      </section>
+
+      <section class="use-cases" id="uses">
+        <header class="section-head"><h2>Useful operations are small enough to understand.</h2><p>A good capability has a fixed purpose, a narrow target and a small input space. It is not a shell command with a secret attached.</p></header>
+        <div class="use-case-grid">
+          <article><h3>Deploy one staging revision</h3><p>One repository. One workflow. A commit allowed by the local policy.</p><dl><dt>Agent receives</dt><dd>Deployment status and reference</dd><dt>Agent never receives</dt><dd>GitHub credential</dd></dl></article>
+          <article><h3>Read recent service logs</h3><p>One service. A bounded time window. Filtered, size-limited output.</p><dl><dt>Agent receives</dt><dd>The permitted log result</dd><dt>Agent never receives</dt><dd>Observability API key</dd></dl></article>
+          <article><h3>Restart a staging worker</h3><p>Known services only. Staging only. Rate-limited and attributable.</p><dl><dt>Agent receives</dt><dd>Operation outcome and receipt</dd><dt>Agent never receives</dt><dd>Cloud or SSH credential</dd></dl></article>
+        </div>
+      </section>
+
+      <section class="surfaces">
+        <header class="section-head"><h2>Define the capability once. Use it wherever work runs.</h2><p>The same operation can be requested by a coding agent, CI job, deterministic workflow or local worker. Its trusted binding remains in the environment where authority belongs.</p></header>
+        <div class="surface-map" aria-label="Execution surfaces using Kimen">
+          <div class="surface-callers"><span>Codex / Claude Code</span><span>CI</span><span>workflows</span><span>local workers</span></div>
+          <div class="surface-kimen"><i aria-hidden="true"></i><strong>Kimen</strong><small>policy · bindings · receipts</small></div>
+          <div class="surface-targets"><span>GitHub</span><span>cloud</span><span>observability</span><span>internal systems</span></div>
+        </div>
+      </section>
+
+      <section class="teams" id="teams">
+        <header class="section-head"><h2>Let agents do more without letting every team invent its own boundary.</h2><p>Credentials and execution stay local. Kimen Teams coordinates the policies, identities and evidence that should be consistent across developers, repositories and execution surfaces.</p></header>
+        <div class="team-features">
+          <article><h3>Shared policies</h3><p>Define which agents and developers may use each capability in each environment.</p></article>
+          <article><h3>Capability inventory</h3><p>See which privileged operations exist across repositories and teams.</p></article>
+          <article><h3>Approvals and revocation</h3><p>Require approval for sensitive operations and withdraw authority centrally.</p></article>
+          <article><h3>Central audit</h3><p>Trace the human, agent, workflow, target and outcome without collecting secret values.</p></article>
+        </div>
+        <div class="plans" aria-label="Kimen plans">
+          <article><h3>Kimen Core</h3><p class="price">Free</p><p>Open source and local</p><ul><li>Vault and runtime projection</li><li>Local capabilities and bindings</li><li>Local receipts</li></ul><a href="../docs/#start">Install Core →</a></article>
+          <article class="featured-plan"><h3>Kimen Teams</h3><p class="price">$24 <small>/ developer / month</small></p><p>Governance across the team</p><ul><li>Shared policies and inventory</li><li>Approvals and revocation</li><li>Central audit</li></ul><a href="#team-access">Start with a team ↓</a></article>
+          <article><h3>Kimen Enterprise</h3><p class="price">Custom</p><p>Organization controls</p><ul><li>SSO and SCIM</li><li>SIEM and extended retention</li><li>Self-hosting and support</li></ul><a href="#team-access">Enterprise access ↓</a></article>
+        </div>
+      </section>
+
+      <section class="team-access" id="team-access">
+        <h2>Start with the operation your agents cannot perform today.</h2>
+        <p>Identify one real handoff: the staging deploy, log query or service operation that still needs a human because its credential grants too much access. That is the first Kimen capability.</p>
+        <div class="access-prompts"><span>Which agent or workflow?</span><span>Which operation?</span><span>Which credential is too broad?</span><span>Which environments and people?</span></div>
+      </section>
+    </main>
+
+    <footer class="dark-footer"><a class="brand" href="../"><span aria-hidden="true"></span>kimen</a><p>Project-declared authority, bound where the work runs.</p><nav><a href="../">Kimen Core</a><a href="../docs/">Manual</a><a href="https://github.com/flakstad/kimen">Source</a></nav></footer>
+  </body>
+</html>
