@@ -26,8 +26,6 @@ h1 { max-width: 940px; margin: 0; font-size: clamp(42px, 4.4vw, 64px); font-weig
 .lede { max-width: 790px; margin: 30px 0; color: var(--muted); font: 20px/1.58 Charter, Georgia, serif; }
 .hero-actions { display: flex; align-items: center; gap: 26px; font-size: 13px; }
 .button { display: inline-block; padding: 14px 17px; background: var(--green); color: white; font-size: 13px; font-weight: 700; text-decoration: none; }
-.status { max-width: 760px; margin: 32px 0 0; padding-left: 14px; border-left: 2px solid var(--orange); color: var(--muted); font-size: 12px; line-height: 1.55; }
-.status strong { color: var(--ink); }
 
 .scenario, .model, .workflows, .boundary, .closing { padding-top: 95px; padding-bottom: 100px; }
 .scenario { background: var(--green-soft); }
@@ -68,8 +66,6 @@ h3 { margin: 0; font-size: 20px; line-height: 1.3; letter-spacing: -.02em; }
 .boundary > div { color: #cbd2ca; font: 16px/1.65 Charter, Georgia, serif; }
 .boundary > div > p { margin: 0; padding-bottom: 20px; }
 .boundary > div > p + p { padding-top: 20px; border-top: 1px solid #465047; }
-.status.dark { margin-top: 18px; padding: 18px; border: 1px solid #536054; color: #cbd2ca; font: 12px/1.55 "Avenir Next", Arial, sans-serif; }
-.status.dark strong { color: white; }
 
 .closing .section-head { margin-bottom: 50px; }
 .routes { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
