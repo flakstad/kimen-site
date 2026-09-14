@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen for agents — deploy without sharing the token</title>
-    <meta name="description" content="Let a coding agent deploy staging without giving it your GitHub token or access to the rest of your account." />
+    <title>Kimen for agents — deploy without sharing the credential</title>
+    <meta name="description" content="Let a coding agent deploy staging without giving it your deployment credential or general provider access." />
     <link rel="canonical" href="https://kimen.systems/agents/" />
     <meta property="og:title" content="Kimen for agents and teams" />
     <meta property="og:description" content="Give agents the operation, not the credential." />
@@ -22,66 +22,70 @@
     <main>
       <section class="authority-hero">
         <div class="authority-hero-copy">
-          <h1>Let Codex deploy staging without giving it your GitHub token.</h1>
-          <p class="lede">Codex sends Kimen the commit it wants to deploy. Kimen checks that the repository, workflow and environment are allowed, calls GitHub with the protected token, and returns the deployment status.</p>
+          <h1>Let agents deploy staging without deployment credentials.</h1>
+          <p class="lede">Give the agent one action with one input. Kimen checks the application and environment, performs the deployment with the protected credential, and returns the result.</p>
+          <div class="hero-action-example" aria-label="What the agent receives and does not receive">
+            <div><span>agent gets</span><code>deploy-staging(revision: "8d2f74a")</code></div>
+            <div><span>agent never gets</span><code>DEPLOY_TOKEN</code></div>
+          </div>
           <div class="hero-actions"><a class="button orange" href="#how">See exactly what happens</a><a href="#teams">Using this in a team ↓</a></div>
         </div>
         <figure class="authority-map">
           <svg viewBox="0 0 720 430" role="img" aria-labelledby="authority-title authority-desc">
-            <title id="authority-title">An agent requests one constrained operation through Kimen</title>
-            <desc id="authority-desc">The agent requests a staging deployment for one commit. Kimen checks the local binding and uses the protected GitHub credential to invoke only the approved workflow. The agent receives a deployment result, not the credential.</desc>
+            <title id="authority-title">An agent requests one staging deployment through Kimen</title>
+            <desc id="authority-desc">The agent calls deploy-staging with one revision. Kimen checks the configured application and environment, then uses the protected credential to call the deployment provider. The agent receives a deployment result, not the credential.</desc>
             <defs><pattern id="dark-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="dark-grid-line" /></pattern></defs>
             <rect class="authority-field" width="720" height="430" />
             <rect class="authority-card caller" x="24" y="82" width="196" height="240" />
             <circle class="agent-dot" cx="49" cy="112" r="7" /><text class="authority-label" x="68" y="117">CODING AGENT</text>
-            <text class="authority-heading" x="48" y="158">Requests</text><text class="authority-code" x="48" y="190">Deploy staging</text><text class="authority-code subtle" x="48" y="216">commit 8d2f74a</text>
-            <line class="authority-rule" x1="48" y1="246" x2="196" y2="246" /><text class="authority-note" x="48" y="276">No GitHub token</text><text class="authority-note" x="48" y="298">No vault access</text>
+            <text class="authority-heading" x="48" y="158">Calls</text><text class="authority-code" x="48" y="190">deploy-staging(</text><text class="authority-code subtle" x="48" y="216">revision: 8d2f74a)</text>
+            <line class="authority-rule" x1="48" y1="246" x2="196" y2="246" /><text class="authority-note" x="48" y="276">No deploy credential</text><text class="authority-note" x="48" y="298">No vault access</text>
             <circle class="authority-halo outer" cx="360" cy="202" r="98" /><circle class="authority-halo inner" cx="360" cy="202" r="75" /><circle class="authority-core" cx="360" cy="202" r="55" />
-            <rect class="seed" x="354" y="158" width="12" height="12" /><text class="authority-kimen" x="360" y="202">kimen</text><text class="authority-check" x="360" y="226">checks binding</text><text class="authority-check" x="360" y="244">uses credential</text>
-            <rect class="binding-card" x="279" y="314" width="162" height="82" /><text class="authority-label" x="298" y="341">YOUR KIMEN SETUP</text><text class="binding-text" x="298" y="366">repo · workflow · staging</text><text class="binding-text" x="298" y="385">GitHub token ••••••••</text>
+            <rect class="seed" x="354" y="158" width="12" height="12" /><text class="authority-kimen" x="360" y="202">kimen</text><text class="authority-check" x="360" y="226">checks action</text><text class="authority-check" x="360" y="244">uses credential</text>
+            <rect class="binding-card" x="279" y="314" width="162" height="82" /><text class="authority-label" x="298" y="341">YOUR KIMEN SETUP</text><text class="binding-text" x="298" y="366">app · deploy job · staging</text><text class="binding-text" x="298" y="385">DEPLOY_TOKEN ••••••••</text>
             <rect class="authority-card provider" x="500" y="82" width="196" height="240" />
-            <circle class="provider-dot" cx="525" cy="112" r="7" /><text class="authority-label" x="544" y="117">GITHUB</text>
-            <text class="authority-heading" x="524" y="158">Runs</text><text class="authority-code" x="524" y="190">deploy-staging</text><text class="authority-code subtle" x="524" y="216">for 8d2f74a</text>
+            <circle class="provider-dot" cx="525" cy="112" r="7" /><text class="authority-label" x="544" y="117">DEPLOYMENT PROVIDER</text>
+            <text class="authority-heading" x="524" y="158">Deploys</text><text class="authority-code" x="524" y="190">application</text><text class="authority-code subtle" x="524" y="216">revision 8d2f74a · staging</text>
             <line class="authority-rule" x1="524" y1="246" x2="672" y2="246" /><text class="authority-note success" x="524" y="277">Deployment started</text><text class="authority-note" x="524" y="299">receipt returned</text>
             <path class="authority-arrow" d="M220 202H305" /><polygon class="authority-arrow-head" points="305,202 295,196 295,208" /><path class="authority-arrow" d="M415 202H500" /><polygon class="authority-arrow-head" points="500,202 490,196 490,208" /><path class="binding-line" d="M360 314V257" />
           </svg>
-          <figcaption>The agent asks for a staging deploy. Kimen owns the token and constructs the exact GitHub request.</figcaption>
+          <figcaption>The agent calls one action. Kimen owns the credential and constructs the exact request to the deployment provider.</figcaption>
         </figure>
       </section>
 
       <section class="agent-problem">
-        <header class="section-head"><h2>A GitHub token gives the agent more than one staging deploy.</h2><p>Even when the token is hidden from the model, a process using it may be able to perform every operation the token permits. Kimen exposes only the job you chose.</p></header>
+        <header class="section-head"><h2>A deployment credential gives the agent more than <code>deploy-staging(…)</code>.</h2><p>Even when the secret text is hidden from the model, a process using it may perform every operation that credential permits. Kimen gives the agent only the action you chose.</p></header>
         <div class="comparison">
-          <article class="comparison-broad"><h3>Pass the GitHub token to a process</h3><p>That process can attempt anything the token allows.</p><ul><li>The token is present in the process</li><li>The process chooses which GitHub API call to make</li><li>A mistake can affect more than staging</li></ul></article>
-          <article class="comparison-bounded"><h3>Let Kimen call GitHub</h3><p>Kimen accepts only a commit for the configured staging workflow.</p><ul><li>The agent never receives the token</li><li>Repository, workflow and environment are fixed</li><li>The agent gets status and a receipt</li></ul></article>
+          <article class="comparison-broad"><h3>Pass the deployment credential to a process</h3><p>That process can attempt anything the credential allows.</p><ul><li>The credential is present in the process</li><li>The process chooses which provider request to make</li><li>A mistake can affect more than staging</li></ul></article>
+          <article class="comparison-bounded"><h3>Let Kimen perform <code>deploy-staging(…)</code></h3><p>Kimen accepts only a revision for the configured application and staging environment.</p><ul><li>The agent never receives the credential</li><li>Application, deployment job and environment are fixed</li><li>The agent gets status and a receipt</li></ul></article>
         </div>
       </section>
 
       <section class="capability-how" id="how">
-        <header class="section-head"><h2>You configure the allowed job. The agent can only ask Kimen to run it.</h2><p>The configuration that contains the repository, workflow and credential stays outside the agent-editable project.</p></header>
+        <header class="section-head"><h2>You configure <code>deploy-staging</code>. The agent can call it, but cannot redefine it.</h2><p>The application, deployment job, environment and credential stay in trusted Kimen configuration outside the agent-editable project.</p></header>
         <div class="contract-grid">
-          <article><h3>The agent sends</h3><p><strong>Deploy commit 8d2f74a to staging.</strong></p><p>It can choose the commit. It cannot choose another repository, workflow or environment.</p></article>
+          <article><h3>The agent calls</h3><p><strong><code>deploy-staging(revision: "8d2f74a")</code></strong></p><p>It can choose the revision. It cannot choose another application, deployment job or environment.</p></article>
           <div class="contract-seed" aria-hidden="true"><span></span></div>
-          <article><h3>Kimen checks and runs</h3><p><strong>Repository: acme/app. Workflow: deploy-staging. Environment: staging.</strong></p><p>Kimen verifies the input, adds the GitHub token and makes the fixed request.</p></article>
+          <article><h3>Kimen checks and runs</h3><p><strong>Application: acme/app. Job: deploy-staging. Environment: staging.</strong></p><p>Kimen verifies the revision, adds the deployment credential and makes the fixed provider request.</p></article>
         </div>
-        <p class="contract-result">Codex gets “deployment started.” It never gets the token or a general GitHub client.</p>
+        <p class="contract-result">The agent gets “deployment started.” It never gets <code>DEPLOY_TOKEN</code> or general provider access.</p>
       </section>
 
       <section class="use-cases" id="uses">
         <header class="section-head"><h2>Use the same pattern for other jobs you still do manually.</h2><p>Kimen must know the exact service and request it is allowed to perform. It does not run an arbitrary shell command with a secret attached.</p></header>
         <div class="use-case-grid">
-          <article><h3>Deploy one staging revision</h3><p>One repository. One workflow. A commit allowed by the local policy.</p><dl><dt>Agent receives</dt><dd>Deployment status and reference</dd><dt>Agent never receives</dt><dd>GitHub credential</dd></dl></article>
-          <article><h3>Read recent service logs</h3><p>One service. A bounded time window. Filtered, size-limited output.</p><dl><dt>Agent receives</dt><dd>The permitted log result</dd><dt>Agent never receives</dt><dd>Observability API key</dd></dl></article>
-          <article><h3>Restart a staging worker</h3><p>Known services only. Staging only. Rate-limited and attributable.</p><dl><dt>Agent receives</dt><dd>Operation outcome and receipt</dd><dt>Agent never receives</dt><dd>Cloud or SSH credential</dd></dl></article>
+          <article><h3><code>deploy-staging(revision)</code></h3><p>One application. One deployment job. One allowed revision.</p><dl><dt>Agent receives</dt><dd>Deployment status and reference</dd><dt>Agent never receives</dt><dd>Deployment credential</dd></dl></article>
+          <article><h3><code>read-service-logs(service, since)</code></h3><p>Known services. A limited time window. Filtered, size-limited output.</p><dl><dt>Agent receives</dt><dd>The permitted log result</dd><dt>Agent never receives</dt><dd>Observability API key</dd></dl></article>
+          <article><h3><code>restart-staging-service(service)</code></h3><p>Known services only. Staging only. Rate-limited and recorded.</p><dl><dt>Agent receives</dt><dd>Restart status and receipt</dd><dt>Agent never receives</dt><dd>Cloud or SSH credential</dd></dl></article>
         </div>
       </section>
 
       <section class="surfaces">
-        <header class="section-head"><h2>Do not build a different secret-powered wrapper for every tool.</h2><p>Configure the staging deploy once. Codex, Claude Code, CI and a workflow can all request that same job without each receiving the GitHub token.</p></header>
+        <header class="section-head"><h2>Do not build a different secret-powered wrapper for every tool.</h2><p>Configure <code>deploy-staging</code> once. Coding agents, CI and workflows can all call the same action without each receiving the deployment credential.</p></header>
         <div class="surface-map" aria-label="Execution surfaces using Kimen">
-          <div class="surface-callers"><span>Codex / Claude Code</span><span>CI</span><span>workflows</span><span>local workers</span></div>
+          <div class="surface-callers"><span>coding agents</span><span>CI jobs</span><span>workflows</span><span>local workers</span></div>
           <div class="surface-kimen"><i aria-hidden="true"></i><strong>Kimen</strong><small>allowed jobs · credentials · receipts</small></div>
-          <div class="surface-targets"><span>GitHub</span><span>cloud</span><span>observability</span><span>internal systems</span></div>
+          <div class="surface-targets"><span>deployment API</span><span>cloud</span><span>observability</span><span>internal systems</span></div>
         </div>
       </section>
 
@@ -102,7 +106,7 @@
 
       <section class="team-access" id="team-access">
         <h2>Which job do you take over from the agent today?</h2>
-        <p>Start with the exact moment you reach for a GitHub, cloud or observability credential yourself: deploying staging, reading logs or restarting a service. Kimen should let the agent finish that job without receiving the credential.</p>
+        <p>Start with the exact moment you reach for a deployment, cloud or observability credential yourself: deploying staging, reading logs or restarting a service. Kimen should let the agent finish that job without receiving the credential.</p>
         <div class="access-prompts"><span>Which agent or workflow?</span><span>Which operation?</span><span>Which credential is too broad?</span><span>Which environments and people?</span></div>
       </section>
     </main>

@@ -121,8 +121,8 @@
       </section>
 
       <section class="authority-callout">
-        <div><h2>Do not give an agent a GitHub token just to deploy staging once.</h2><p>Kimen can keep the token and perform the one allowed deployment itself. The agent provides the commit and gets the deployment status—not the credential or general GitHub access.</p></div>
-        <a class="button light" href="./agents/">See the staging example →</a>
+        <div><h2>The agent needs <code>deploy-staging(…)</code>. It does not need your deployment secret.</h2><p>Kimen keeps the credential and performs that one action itself. The agent supplies the revision and receives the deployment status—never <code>DEPLOY_TOKEN</code> or general access to the deployment provider.</p></div>
+        <a class="button light" href="./agents/">See how actions work →</a>
       </section>
 
       <section class="closing">

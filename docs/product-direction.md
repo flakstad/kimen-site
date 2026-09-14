@@ -120,8 +120,8 @@ a specific provider trains on it is only one possible downstream question.
 
 ## Why bounded operations are needed
 
-Suppose Codex finishes a change and should deploy staging. Giving a child
-process a GitHub token may keep the literal token outside the model context,
+Suppose a coding agent finishes a change and should deploy staging. Giving a
+child process a deployment credential may keep the literal secret outside the model context,
 but the process can still attempt everything that token permits. The task only
 needs one result: deploy one allowed commit through one staging workflow.
 
@@ -141,11 +141,11 @@ Kimen controls:
 
 agent receives:
   deployment started
-  provider reference
+  deployment reference
   receipt
 ```
 
-The agent does not receive a GitHub token, a generic GitHub client or a command
+The agent does not receive a deployment credential, a generic provider client or a command
 which runs arbitrary code with the token present.
 
 Pre-registering or binding the operation is necessary because the trusted part
@@ -171,7 +171,7 @@ The clearest use-case line is:
 - Agent supplies one immutable commit.
 - Binding may require the commit to be reachable from an allowed branch.
 - Agent receives deployment status and reference.
-- Agent never receives the GitHub credential.
+- Agent never receives the deployment credential.
 
 ### Read recent logs for one service
 
@@ -272,7 +272,7 @@ operation, expiry and authority epoch. Kimen should validate generic claims; it
 should not import Tasks, Responsibilities or Ro domain commands.
 
 Ros own run capabilities protect commands inside Ro. They do not by themselves
-constrain GitHub, AWS, Datadog or SSH. That external side-effect boundary is the
+constrain deployment, cloud, observability or remote-access providers. That external side-effect boundary is the
 specific gap Kimen may fill.
 
 Ro's assigned-agent vertical is architecture and planned work, not current
@@ -419,7 +419,8 @@ managers are use cases; this is not only deployment.
 
 Start with one concrete handoff:
 
-> Let Codex deploy staging without giving it your GitHub token.
+> Let your agent call `deploy-staging(revision)` without giving it deployment
+> credentials.
 
 Show exactly what the agent supplies, what Kimen fixes and checks, what provider
 call happens, and what result comes back. Only then generalize to logs, service
@@ -427,8 +428,24 @@ restart, CI, workflows and team governance.
 
 Avoid public-first abstractions such as authority boundary, execution surface,
 workload contract, capability architecture and delegated authority. They are
-useful internally but force a visitor to translate the product. Prefer GitHub
-token, staging workflow, commit, log window, service and receipt.
+useful internally but force a visitor to translate the product. Prefer
+deployment credential, `deploy-staging(revision)`, application, environment,
+log window, service and result.
+
+Use `Action` as the temporary public name because it is immediately
+understandable, but keep the final product terminology open. Show concrete
+action calls near the top of the agent page:
+
+```text
+deploy-staging(revision)
+read-service-logs(service, since)
+restart-staging-service(service)
+```
+
+The provider is deliberately generic in the primary story. Kimen may call a
+deployment platform, CI system, cloud provider or internal service. Vendor
+names can appear in integrations and documentation later, but the product must
+not read as an add-on for one agent or source-control vendor.
 
 Do not use numbered `01 / 02 / 03` decoration, oversized headings in narrow
 columns, unexplained code boxes, fake CLI commands, eyebrows above headings or

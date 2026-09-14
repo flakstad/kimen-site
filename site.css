@@ -146,6 +146,12 @@ footer nav { justify-content: flex-end; }
 .authority-page { background: var(--dark); color: white; }
 .authority-hero { min-height: 700px; padding-top: 86px; padding-bottom: 92px; display: grid; grid-template-columns: minmax(0, .86fr) minmax(520px, 1.14fr); gap: 6vw; align-items: center; }
 .authority-hero .lede { color: var(--dark-muted); }
+.hero-action-example { max-width: 510px; margin: 30px 0; border-top: 1px solid #465047; border-bottom: 1px solid #465047; }
+.hero-action-example > div { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 16px; padding: 13px 0; align-items: baseline; }
+.hero-action-example > div + div { border-top: 1px solid #303b32; }
+.hero-action-example span { color: #9eafa1; font: 700 9px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+.hero-action-example code { color: white; font: 12px var(--mono); overflow-wrap: anywhere; }
+.hero-action-example > div:last-child code { color: #e88a6c; }
 .authority-map svg { border-color: #465047; }
 .authority-map figcaption { color: #aeb9af; }
 .authority-field { fill: url(#dark-grid); }
@@ -198,6 +204,7 @@ footer nav { justify-content: flex-end; }
 .use-case-grid dl { margin: 24px 0 0; }
 .use-case-grid dt { margin-top: 15px; color: var(--green); font: 700 9px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
 .use-case-grid dd { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+.use-case-grid h3 code { font-size: .82em; overflow-wrap: anywhere; }
 
 .surface-map { display: grid; grid-template-columns: 1fr 220px 1fr; gap: 70px; align-items: stretch; }
 .surface-callers, .surface-targets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -264,6 +271,7 @@ footer nav { justify-content: flex-end; }
   h2 { font-size: clamp(29px, 8vw, 38px); }
   .lede { font-size: 17px; }
   .hero-actions { flex-direction: column; align-items: flex-start; }
+  .hero-action-example > div { grid-template-columns: 1fr; gap: 5px; }
   .runtime-map, .authority-map { width: calc(100vw - 40px); overflow-x: auto; }
   .runtime-map svg, .authority-map svg { min-width: 650px; }
   .plain-flow, .runtime-examples, .comparison, .contract-grid, .use-case-grid, .team-features { grid-template-columns: 1fr; }
