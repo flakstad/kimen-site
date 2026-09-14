@@ -22,7 +22,8 @@ DATABASE_URL
     -> value in one application environment
 ```
 
-For an agent or workflow, Kimen can instead perform an operation:
+For a developer, CI job, workflow or agent, Kimen can instead perform an
+operation:
 
 ```text
 deploy staging for this commit
@@ -74,8 +75,9 @@ are better references than illustrated plant growth.
 
 The immediate problem is simple. Developers keep database URLs, API keys and
 private files in `.env` or similar files beside the code. `.gitignore` keeps
-those files out of Git, but not out of the workspace. A coding agent with broad
-file access can read them just as an editor or local script can.
+those files out of Git, but not out of the workspace. Developers must keep them
+safe on every machine, and any permitted editor, script, tool or coding agent
+can read them.
 
 Kimen moves the values into a local encrypted vault. A committed `.kmap` keeps
 the names and mappings visible, so people, programs and agents can understand
@@ -177,15 +179,21 @@ neither revealable nor projectable through that Action session.
 
 ## Why bounded operations are needed
 
-Suppose a coding agent finishes a change and should deploy staging. Giving a
-child process a deployment credential may keep the literal secret outside the model context,
-but the process can still attempt everything that token permits. The task only
-needs one result: deploy one allowed commit through one staging workflow.
+Credentials are often a poor interface to the work people actually want to
+authorize. A developer, CI job, workflow or coding agent may only need to deploy
+one staging revision, but a deployment credential gives its holder every
+operation that token permits. It must then be distributed, stored, kept out of
+Git, protected from other processes, rotated and revoked.
+
+The real need is often one result: deploy one allowed commit through one staging
+workflow. A coding agent makes the mismatch especially visible because it can
+use the credential autonomously, but it is not the only caller with this
+problem.
 
 Kimen should therefore support a stronger path in addition to projection:
 
 ```text
-agent asks:
+caller asks:
   deploy commit 8d2f74a to staging
 
 Kimen controls:
@@ -196,14 +204,14 @@ Kimen controls:
   credential
   provider request
 
-agent receives:
+caller receives:
   deployment started
   deployment reference
   receipt
 ```
 
-The agent does not receive a deployment credential, a generic provider client or a command
-which runs arbitrary code with the token present.
+The caller does not receive a deployment credential, a generic provider client
+or a command which runs arbitrary code with the token present.
 
 Pre-registering or binding the operation is necessary because the trusted part
 must constrain what receives and uses the credential. If the agent can choose
@@ -218,7 +226,7 @@ the actual job rather than teach either term first.
 
 The clearest use-case line is:
 
-> Give the agent the operation, not the credential.
+> Give access to actions, not credentials.
 
 ## Concrete operation examples
 
@@ -450,9 +458,10 @@ account or subscription.
 - Local receipts.
 - External secret backends where useful.
 
-The paid problem appears when an organization has many developers, agents,
-repositories and execution surfaces. It does not want every developer to build
-a different wrapper, credential strategy and safety model for deploys, log
+The paid problem appears when an organization has many developers, CI jobs,
+workflows, agents, repositories and environments. It does not want every
+developer or automation surface to receive broad credentials or invent a
+different wrapper, credential strategy and safety model for deploys, log
 queries, restarts and backups.
 
 ### Kimen Teams
@@ -476,14 +485,15 @@ approval and audit rather than a vault which receives all secret values.
 - Self-hosted control plane.
 - Support, SLA and custom integrations.
 
-The current `$24 per developer per month` website price is a market hypothesis,
-not a pricing decision. Per-human/team pricing is preferable to per-invocation
-pricing because usage should not penalize successful agent autonomy.
+Do not show a price on the first market surface. The category and buyer are not
+yet established well enough for a number to be informative. If the team model
+validates, per-human/team pricing is preferable to per-invocation pricing
+because usage should not penalize successful automation.
 
 The possible B2B buying argument is:
 
-> Let many agents and workflows do more autonomous work without every developer
-> improvising credentials, wrappers and security rules.
+> Let developers, CI, workflows and agents do useful work without every person
+> or system receiving broad credentials or inventing separate security rules.
 
 If only solo developers care, Kimen may remain a good free OSS tool without a
 strong business. That is an acceptable fallback.
@@ -496,37 +506,43 @@ The website has two clear paths within one product:
 
 Start with the concrete existing problem:
 
-> Move secrets out of the folder your coding agent can read.
+> Move secrets out of your project.
 
 Show `.env`, the vault, the committed map, `kimen run`, and an environment box
 which visibly contains both the application and its truncated environment
-values. Make clear that local development, tests, tools, files and process
-managers are use cases; this is not only deployment.
+values. Show editors, scripts and coding agents as peers which can work in the
+project without plaintext values being stored there. Make clear that local
+development, tests, tools, files and process managers are use cases; this is not
+only deployment and not primarily an agent product.
 
-### Kimen for agents and teams
+### Kimen Actions and team access
+
+Actions are not primarily an agent product. Coding agents are one especially
+urgent caller alongside developers, CI and deterministic workflows. The public
+path lives at `/access/`; `/agents/` is only a compatibility redirect.
 
 Lead with the concrete product promise:
 
-> Give the agent the operation, not the credential.
+> Give access to actions, not credentials.
 
-The opening visual must sell the problem and the change without requiring
-architecture vocabulary. Contrast a coding agent receiving `GITHUB_TOKEN` and
-therefore every permission it carries with the agent receiving only
-`deploy-staging("abc123")`. Show the first path branching into broad access and
-the second narrowing through Kimen into one staging deployment.
+Use one illustration on the page. Contrast distributing
+`GITHUB_TOKEN=••••••••` with granting `deploy-staging(revision)`. The visual
+must show that access becomes narrower, not merely that the credential text is
+hidden. Do not add broker, session, lifecycle or team diagrams elsewhere.
 
-The first scenario then starts where autonomous work currently stops: the agent
-has finished the code and tests, but the developer takes over because the
-available credential can do far more than the next job requires. Present the
-concrete replacement immediately:
+Sell the credential-distribution problem before explaining the implementation:
+a token grants more than one job and must be copied, stored, kept out of Git,
+rotated and revoked everywhere it is held. The first scenario is a developer
+who may deploy staging but should not need the deployment token on the laptop.
+Present the concrete replacement immediately:
 
-> Let the agent call `deploy-staging(revision)`. Keep the deployment credential
-> in Kimen.
+> Let the developer call `deploy-staging(revision)`. Keep the deployment
+> credential in Kimen.
 
-Then show exactly what the agent supplies, what Kimen fixes and checks, what
-provider call happens, and what result comes back. Only after the visitor has
-understood this single job should the page explain Action-only sessions and
-generalize to logs, service restart, CI, workflows and team governance.
+Then explain only the minimum model needed: the project declares the Action and
+the environment binds its provider, restrictions and credential locally. Show
+developers, CI and coding agents as peer callers. Agent autonomy is a reason the
+problem is becoming more urgent, not the definition of the category.
 
 Avoid public-first abstractions such as authority boundary, execution surface,
 workload contract, capability architecture and delegated authority. They are
@@ -535,8 +551,8 @@ deployment credential, `deploy-staging(revision)`, application, environment,
 log window, service and result.
 
 Use `Action` as the temporary public name because it is immediately
-understandable, but keep the final product terminology open. Show concrete
-action calls near the top of the agent page:
+understandable, but keep the final product terminology open. Show only a few
+concrete calls:
 
 ```text
 deploy-staging(revision)
@@ -556,20 +572,19 @@ Planned Action syntax may be shown when it materially explains the model, but it
 must be explicitly labelled illustrative rather than presented as settled API
 design.
 
-The agent product should be presented as a coherent Kimen product promise, not
-as an apologetic internal “commercial probe.” Discreetly identify Kimen Actions
-as a planned extension. Explicitly distinguish the proposed Action-only session
-from today's convenience session, which unlocks the vault for the user's Kimen
-operations. Do not claim that unimplemented commands can be installed and run
-today.
+The Actions product should be presented as a coherent Kimen product promise,
+not as an apologetic internal “commercial probe.” Discreetly identify Kimen
+Actions as a planned extension. Explicitly distinguish any proposed Action-only
+session from today's convenience session, which unlocks the vault for the
+user's Kimen operations. Do not claim that unimplemented commands can be
+installed and run today.
 
 The site should not send sensitive infrastructure descriptions into public
 GitHub issues or use an email link as its primary CTA. A private form or another
 intent-capture mechanism must be chosen before the public market test depends
-on conversion data. The form should ask which agent the visitor uses, which
-external jobs it should perform, how credentials are handled today, whether
-team governance matters and for an email address. Never ask for credentials or
-sensitive infrastructure details.
+on conversion data. The form should ask which person or system needs access,
+which operation it should perform, how access is provided today and for an
+email address. Never ask for credentials or sensitive infrastructure details.
 
 ## Validation order
 
@@ -579,11 +594,10 @@ or implement a team control plane before external signal.
 The order is:
 
 1. Present the complete product story on `kimen.systems`.
-2. Send qualified developers and engineering/platform leaders to the relevant
-   page.
+2. Send qualified developers and engineering/platform leaders to `/access/`.
 3. Observe which problem produces intent: `.env` hygiene, a withheld operation,
    or team governance.
-4. Ask for the exact agent, operation, provider, current workaround and overly
+4. Ask for the exact caller, operation, provider, current workaround and overly
    broad credential.
 5. Design one operation with the first credible design partner.
 6. Build the smallest bounded adapter only after that demand remains concrete.
@@ -597,10 +611,11 @@ The most important disconfirmation questions are:
 
 - Would the user simply choose 1Password, Vault, Infisical or a provider-native
   workflow instead?
-- Does the same operation actually need to work across more than one agent,
-  workflow engine or runtime?
+- Does the same operation actually need to work across more than one developer,
+  CI job, agent, workflow engine or runtime?
 - Will a team pay for common policy and audit, or are local wrappers sufficient?
-- Does the boundary let agents complete work which humans currently take over?
+- Does the boundary reduce real credential distribution or let automation
+  complete work which humans currently take over?
 - Can the desired operation be implemented without running agent-controlled code
   with a credential present?
 
@@ -624,9 +639,9 @@ The OSS fallback is good: the vault, map and projection workflow remains useful
 even if the agent/team market does not respond. A small bounded-operation layer
 may also remain useful for the owner's own agents and workflows.
 
-The upside is a provider-independent authority layer shared by coding agents,
-CI, deterministic workflows and organizational workers, with a natural paid
-control plane for team policy, approvals and audit.
+The upside is a provider-independent operation layer shared by developers, CI,
+coding agents, deterministic workflows and organizational workers, with a
+natural paid control plane for team rules, approvals and audit.
 
 Nothing in Ro or Breyta counts as external market evidence. Their value here is
 to prove that the boundaries are coherent and to reveal what Kimen must not

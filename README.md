@@ -9,18 +9,18 @@ separate from the CLI/runtime repository.
 - One-page manual at `/docs/`
 - A direct developer story based on keeping plaintext values out of the
   workspace and projecting them only when a runtime starts
-- A separate `/agents/` product path for bounded operations and team governance
+- A separate `/access/` product path for bounded operations and team governance
 - Production pages have no JavaScript, build system, analytics or runtime service
 - Three deliberately different design studies live at `/studies/`
 
-The `/agents/` page includes the early-access form presentation, but no private
+The `/access/` page includes the early-access form presentation, but no private
 submission service is configured in this repository. Connect that form to a
 private endpoint before publication; do not replace it with email or a public
 issue tracker.
 
-The agent product path extends the same model from project-declared values to
-project-declared operations. The implementation boundary and security questions
-are recorded in
+The access product path extends the same model from project-declared values to
+project-declared operations for developers, CI, workflows and agents. The
+implementation boundary and security questions are recorded in
 [`docs/stronger-agent-operations.md`](docs/stronger-agent-operations.md), but
 protocol design and broker implementation wait for external product signal.
 
@@ -42,7 +42,7 @@ Then open:
 
 - <http://localhost:8080/>
 - <http://localhost:8080/docs/>
-- <http://localhost:8080/agents/>
+- <http://localhost:8080/access/>
 - <http://localhost:8080/404.html>
 - <http://localhost:8080/studies/> — three alternative composition studies
 - <http://localhost:8080/studies/synthesis/> — complete product-story study

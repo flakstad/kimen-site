@@ -1,14 +1,14 @@
 :root {
-  --paper: oklch(0.97 0.008 85);
-  --paper-raised: oklch(0.985 0.005 85);
-  --ink: oklch(0.24 0.014 85);
-  --muted: oklch(0.45 0.018 85);
-  --line: oklch(0.83 0.012 85);
-  --accent: oklch(0.5 0.07 246);
-  --accent-dark: oklch(0.36 0.06 246);
-  --accent-soft: oklch(0.93 0.025 246);
-  --code-bg: oklch(0.94 0.008 240);
-  --warning-bg: oklch(0.95 0.022 72);
+  --paper: #f3f2ec;
+  --paper-raised: #fbfaf6;
+  --ink: #182019;
+  --muted: #5e675e;
+  --line: #bdc4ba;
+  --accent: #dc5833;
+  --accent-dark: #285f35;
+  --accent-soft: #e2eadf;
+  --code-bg: #e9ebe5;
+  --warning-bg: #f7f1eb;
   --max-width: 64rem;
   --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;

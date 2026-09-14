@@ -13,24 +13,24 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./site.css" />
   </head>
-  <body>
-    <header class="topbar">
+  <body class="home-page">
+    <header class="topbar dark-topbar">
       <a class="brand" href="./"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#runtimes">Runtimes</a><a href="./agents/">For agents &amp; teams</a><a href="./docs/#start">Install ↗</a></nav>
+      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#runtimes">Runtimes</a><a href="./access/">Actions</a><a href="./docs/#start">Install ↗</a></nav>
     </header>
 
     <main>
-      <section class="hero">
+      <section class="hero home-hero">
         <div class="hero-copy">
-          <h1>Move secrets out of the folder your coding agent can read.</h1>
-          <p class="lede">Store database URLs, API keys and private files in Kimen instead of <code>.env</code>. Start your application with <code>kimen run</code>. The app gets the values it needs without keeping them beside the code.</p>
+          <h1>Move secrets out of your project.</h1>
+          <p class="lede">Store database URLs, API keys and private files in Kimen instead of <code>.env</code>. Start your application with <code>kimen run</code>. The app gets the values it needs; developers, tools and agents do not need them sitting beside the code.</p>
           <div class="hero-actions"><a class="button" href="./docs/#start">Install Kimen</a><a href="#how">See how it works ↓</a></div>
         </div>
 
         <figure class="runtime-map">
           <svg viewBox="0 0 760 480" role="img" aria-labelledby="runtime-title runtime-desc">
-            <title id="runtime-title">Kimen prepares an application runtime without storing secrets in its workspace</title>
-            <desc id="runtime-desc">The workspace contains application code and names of required values. Kimen reads the map, resolves encrypted values from its vault and prepares a runtime environment containing the application and its environment variables.</desc>
+            <title id="runtime-title">Kimen prepares an application runtime without storing secrets in its project</title>
+            <desc id="runtime-desc">The project contains application code and names of required values. Editors, scripts and coding agents can work there without plaintext secrets. Kimen reads the map, resolves encrypted values from its vault and prepares a runtime environment containing the application and its environment variables.</desc>
             <defs><pattern id="paper-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="grid-line" /></pattern></defs>
             <rect class="map-field" width="760" height="480" />
 
@@ -46,8 +46,8 @@
 
             <rect class="agent-box" x="24" y="352" width="242" height="80" />
             <circle class="agent-dot" cx="49" cy="380" r="7" />
-            <text class="map-heading small" x="69" y="386">Coding agent</text>
-            <text class="map-copy" x="48" y="413">works in the project</text>
+            <text class="map-heading small" x="69" y="386">Workspace tools</text>
+            <text class="map-copy" x="48" y="413">editors · scripts · agents</text>
 
             <circle class="kimen-halo outer" cx="354" cy="240" r="69" />
             <circle class="kimen-halo inner" cx="354" cy="240" r="52" />
@@ -84,7 +84,7 @@
       <section class="problem">
         <header class="section-head">
           <h2><code>.gitignore</code> keeps a secret out of Git. Not out of your workspace.</h2>
-          <p>A coding agent with file access can read an ignored <code>.env</code>, private key or service-account file just as easily as your editor can.</p>
+          <p>Any editor, script, tool or coding agent with file access can read an ignored <code>.env</code>, private key or service-account file.</p>
         </header>
         <div class="plain-flow">
           <article><h3>The value sits beside the code</h3><p>A plaintext file contains a reusable credential that any permitted local process can read.</p></article><span aria-hidden="true">→</span>
@@ -121,8 +121,8 @@
       </section>
 
       <section class="authority-callout">
-        <div><h2>The agent needs <code>deploy-staging(…)</code>. It does not need your deployment secret.</h2><p>Kimen keeps the credential and performs that one action itself. The agent supplies the revision and receives the deployment status—never <code>DEPLOY_TOKEN</code> or general access to the deployment provider.</p></div>
-        <a class="button light" href="./agents/">See how actions work →</a>
+        <div><h2>Most people need an action—not the credential behind it.</h2><p>Let a developer, CI job or coding agent call <code>deploy-staging(revision)</code>. Kimen keeps the deployment credential and performs only the operation you defined.</p></div>
+        <a class="button light" href="./access/">See Kimen Actions →</a>
       </section>
 
       <section class="closing">
@@ -131,6 +131,6 @@
       </section>
     </main>
 
-    <footer><a class="brand" href="./"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="./docs/">Manual</a><a href="./agents/">Agents &amp; teams</a><a href="https://github.com/flakstad/kimen">Source</a></nav></footer>
+    <footer class="dark-footer"><a class="brand" href="./"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="./docs/">Manual</a><a href="./access/">Actions</a><a href="https://github.com/flakstad/kimen">Source</a></nav></footer>
   </body>
 </html>
