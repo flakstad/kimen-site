@@ -22,39 +22,37 @@
     <main>
       <section class="authority-hero">
         <div class="authority-hero-copy">
-          <h1>Let agents deploy staging without giving them deployment credentials.</h1>
-          <p class="lede">Open an Action session for the jobs the agent needs and the time it needs them. Kimen uses the protected credentials itself. Reading secrets, projecting them into arbitrary processes and changing Actions remain locked.</p>
-          <div class="hero-action-example" aria-label="What the agent receives and does not receive">
-            <div><span>agent gets</span><code>deploy-staging(revision: "8d2f74a")</code></div>
-            <div><span>agent never gets</span><code>DEPLOY_TOKEN</code></div>
-          </div>
-          <div class="hero-actions"><a class="button orange" href="#how">See exactly what happens</a><a href="#teams">Using this in a team ↓</a></div>
+          <h1>Your agent finishes the code. You still deploy staging yourself.</h1>
+          <p class="lede">Not because deployment is difficult. Because the agent would need a credential that can do far more than deploy one revision to staging. So the autonomous work ends and you take over.</p>
+          <div class="hero-actions"><a class="button orange" href="#how">Remove the handoff</a><a href="#uses">Other jobs agents stop at ↓</a></div>
         </div>
-        <figure class="authority-map">
-          <svg viewBox="0 0 720 430" role="img" aria-labelledby="authority-title authority-desc">
-            <title id="authority-title">An agent requests one staging deployment through Kimen</title>
-            <desc id="authority-desc">The agent calls deploy-staging with one revision. Kimen checks the configured application and environment, then uses the protected credential to call the deployment provider. The agent receives a deployment result, not the credential.</desc>
-            <defs><pattern id="dark-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="dark-grid-line" /></pattern></defs>
-            <rect class="authority-field" width="720" height="430" />
-            <rect class="authority-card caller" x="24" y="82" width="196" height="240" />
-            <circle class="agent-dot" cx="49" cy="112" r="7" /><text class="authority-label" x="68" y="117">CODING AGENT</text>
-            <text class="authority-heading" x="48" y="158">Calls</text><text class="authority-code" x="48" y="190">deploy-staging(</text><text class="authority-code subtle" x="48" y="216">revision: 8d2f74a)</text>
-            <line class="authority-rule" x1="48" y1="246" x2="196" y2="246" /><text class="authority-note" x="48" y="276">No deploy credential</text><text class="authority-note" x="48" y="298">No vault access</text>
-            <circle class="authority-halo outer" cx="360" cy="202" r="98" /><circle class="authority-halo inner" cx="360" cy="202" r="75" /><circle class="authority-core" cx="360" cy="202" r="55" />
-            <rect class="seed" x="354" y="158" width="12" height="12" /><text class="authority-kimen" x="360" y="202">kimen</text><text class="authority-check" x="360" y="226">Action session</text><text class="authority-check" x="360" y="244">uses credential</text>
-            <rect class="binding-card" x="279" y="314" width="162" height="82" /><text class="authority-label" x="298" y="341">UNLOCKED FOR 2 HOURS</text><text class="binding-text" x="298" y="366">deploy-staging · inspect-logs</text><text class="binding-text" x="298" y="385">vault access remains locked</text>
-            <rect class="authority-card provider" x="500" y="82" width="196" height="240" />
-            <circle class="provider-dot" cx="525" cy="112" r="7" /><text class="authority-label" x="544" y="117">DEPLOYMENT PROVIDER</text>
-            <text class="authority-heading" x="524" y="158">Deploys</text><text class="authority-code" x="524" y="190">application</text><text class="authority-code subtle" x="524" y="216">revision 8d2f74a · staging</text>
-            <line class="authority-rule" x1="524" y1="246" x2="672" y2="246" /><text class="authority-note success" x="524" y="277">Deployment started</text><text class="authority-note" x="524" y="299">receipt returned</text>
-            <path class="authority-arrow" d="M220 202H305" /><polygon class="authority-arrow-head" points="305,202 295,196 295,208" /><path class="authority-arrow" d="M415 202H500" /><polygon class="authority-arrow-head" points="500,202 490,196 490,208" /><path class="binding-line" d="M360 314V257" />
-          </svg>
-          <figcaption>The agent calls one action. Kimen owns the credential and constructs the exact request to the deployment provider.</figcaption>
+        <figure class="handoff-map">
+          <div class="handoff-agent">
+            <span class="handoff-label">CODING AGENT</span>
+            <strong>Work complete</strong>
+            <ul><li>Code changed</li><li>Tests passing</li><li>Revision ready</li></ul>
+          </div>
+          <div class="credential-wall">
+            <span>NEEDS</span>
+            <code>DEPLOY_TOKEN</code>
+            <small>grants more than staging deploy</small>
+          </div>
+          <div class="handoff-human">
+            <span class="handoff-label">MANUAL HANDOFF</span>
+            <strong>You take over</strong>
+            <p>Find the credential.<br />Run the deployment.<br />Return to the agent.</p>
+          </div>
+          <figcaption>The agent could finish the job, but the available credential gives it much more access than the job requires.</figcaption>
         </figure>
       </section>
 
       <section class="session-example" id="how">
-        <header class="section-head"><h2>Open two Actions for two hours. Keep vault access locked.</h2><p>You enter the vault password once and choose exactly what the agent may call during this session.</p></header>
+        <header class="section-head"><h2>Give the agent <code>deploy-staging(revision)</code>. Keep <code>DEPLOY_TOKEN</code> in Kimen.</h2><p>Kimen performs the configured deployment and returns the result. The agent gets the job it needs, not the credential behind it.</p></header>
+        <div class="solution-pair" aria-label="What the agent receives and does not receive">
+          <div><span>agent gets</span><code>deploy-staging(revision: "8d2f74a")</code></div>
+          <div><span>agent never gets</span><code>DEPLOY_TOKEN</code></div>
+        </div>
+        <h3 class="session-heading">Open only the Actions it needs, for only as long as it needs them.</h3>
         <figure class="session-terminal">
           <figcaption>terminal</figcaption>
           <pre><code><span class="prompt">$</span> kimen session start --allow deploy-staging,inspect-logs --ttl 2h
@@ -67,14 +65,6 @@ Action session active for 2h
         <div class="session-permissions">
           <article><h3>The agent can call</h3><code>deploy-staging(revision: "8d2f74a")</code><code>inspect-logs(filter: "errors", since: "30m")</code></article>
           <article><h3>The agent still cannot call</h3><code>secret get DEPLOY_TOKEN</code><code>run / render / envfile with DEPLOY_TOKEN</code><code>action edit / action create</code></article>
-        </div>
-      </section>
-
-      <section class="agent-problem">
-        <header class="section-head"><h2>A deployment credential gives the agent more than <code>deploy-staging(…)</code>.</h2><p>Even when the secret text is hidden from the model, a process using it may perform every operation that credential permits. Kimen gives the agent only the action you chose.</p></header>
-        <div class="comparison">
-          <article class="comparison-broad"><h3>Pass the deployment credential to a process</h3><p>That process can attempt anything the credential allows.</p><ul><li>The credential is present in the process</li><li>The process chooses which provider request to make</li><li>A mistake can affect more than staging</li></ul></article>
-          <article class="comparison-bounded"><h3>Let Kimen perform <code>deploy-staging(…)</code></h3><p>Kimen accepts only a revision for the configured application and staging environment.</p><ul><li>The agent never receives the credential</li><li>Application, deployment job and environment are fixed</li><li>The agent gets status and a receipt</li></ul></article>
         </div>
       </section>
 

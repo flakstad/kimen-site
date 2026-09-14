@@ -505,14 +505,25 @@ managers are use cases; this is not only deployment.
 
 ### Kimen for agents and teams
 
-Start with one concrete handoff:
+Sell the problem before explaining the mechanism. Start where autonomous work
+actually stops:
 
-> Let your agent call `deploy-staging(revision)` without giving it deployment
-> credentials.
+> Your agent finishes the code and the tests. You still deploy staging yourself,
+> because the available deployment credential can do far more than deploy one
+> revision.
 
-Show exactly what the agent supplies, what Kimen fixes and checks, what provider
-call happens, and what result comes back. Only then generalize to logs, service
-restart, CI, workflows and team governance.
+The opening visual should show completed agent work, the too-powerful credential
+which stops it, and the resulting manual handoff. It should not begin with a
+broker diagram, session model or configuration internals.
+
+Immediately afterwards, present the concrete replacement:
+
+> Give the agent `deploy-staging(revision)`. Keep `DEPLOY_TOKEN` in Kimen.
+
+Then show exactly what the agent supplies, what Kimen fixes and checks, what
+provider call happens, and what result comes back. Only after the visitor has
+understood this single job should the page explain Action-only sessions and
+generalize to logs, service restart, CI, workflows and team governance.
 
 Avoid public-first abstractions such as authority boundary, execution surface,
 workload contract, capability architecture and delegated authority. They are
