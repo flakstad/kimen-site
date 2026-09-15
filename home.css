@@ -1,0 +1,370 @@
+.home-page {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.home-topbar {
+  border-color: #3e4940;
+}
+
+.core-hero,
+.core-story,
+.core-operations,
+.core-closing {
+  padding-left: var(--page-pad);
+  padding-right: var(--page-pad);
+}
+
+.core-hero {
+  min-height: 690px;
+  padding-top: 96px;
+  padding-bottom: 104px;
+  background: var(--dark);
+  color: white;
+}
+
+.core-hero h1 {
+  max-width: 930px;
+  font-size: clamp(43px, 5vw, 66px);
+  line-height: 1.01;
+}
+
+.core-hero > p {
+  max-width: 750px;
+  margin: 28px 0 0;
+  color: var(--dark-muted);
+  font: 19px/1.65 var(--serif);
+}
+
+.core-hero > p + p {
+  margin-top: 14px;
+}
+
+.core-hero p code {
+  color: #f2b49f;
+  font-size: .82em;
+  font-weight: 700;
+}
+
+.core-hero-example {
+  max-width: 760px;
+  margin-top: 54px;
+  padding: 25px 0 27px 28px;
+  border-top: 1px solid #4b594d;
+  border-bottom: 1px solid #4b594d;
+  border-left: 4px solid var(--orange);
+}
+
+.core-hero-example span,
+.core-hero-example small {
+  display: block;
+}
+
+.core-hero-example span {
+  margin-bottom: 13px;
+  color: #9cad9e;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.core-hero-example code {
+  color: white;
+  font: 700 clamp(18px, 2.6vw, 29px)/1.4 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.core-hero-example small {
+  margin-top: 13px;
+  color: #f2b49f;
+  font-size: 11px;
+}
+
+.core-hero .hero-actions {
+  margin-top: 38px;
+}
+
+.core-story {
+  background: var(--surface);
+}
+
+.core-section {
+  max-width: 800px;
+  padding-top: 103px;
+  padding-bottom: 108px;
+  border-bottom: 1px solid var(--line);
+}
+
+.core-section > p {
+  max-width: 730px;
+  margin: 25px 0 0;
+  color: var(--muted);
+  font: 18px/1.72 var(--serif);
+}
+
+.core-section > p + p {
+  margin-top: 18px;
+}
+
+.core-section p code {
+  color: var(--green);
+  font-size: .8em;
+  font-weight: 700;
+}
+
+.core-costs {
+  max-width: 730px;
+  margin: 43px 0 39px;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+  list-style: none;
+}
+
+.core-costs li {
+  position: relative;
+  padding: 18px 0 19px 27px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font: 15px/1.55 var(--serif);
+}
+
+.core-costs li::before {
+  content: "";
+  position: absolute;
+  top: 25px;
+  left: 1px;
+  width: 7px;
+  height: 7px;
+  background: var(--orange);
+}
+
+.core-answer {
+  padding-top: 112px;
+  padding-bottom: 116px;
+}
+
+.core-steps {
+  max-width: 740px;
+  margin: 52px 0 44px 5px;
+  border-left: 1px solid var(--line);
+}
+
+.core-steps article {
+  position: relative;
+  padding: 0 0 49px 34px;
+}
+
+.core-steps article:last-child {
+  padding-bottom: 0;
+}
+
+.core-steps article::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: -5px;
+  width: 9px;
+  height: 9px;
+  background: var(--green);
+}
+
+.core-steps article:last-child::before {
+  background: var(--orange);
+}
+
+.core-steps h3 {
+  margin-bottom: 9px;
+}
+
+.core-steps p {
+  max-width: 650px;
+  margin: 0 0 16px;
+  color: var(--muted);
+  font: 15px/1.65 var(--serif);
+}
+
+.core-steps code {
+  display: block;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.core-steps small {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.product-line {
+  margin-top: 43px !important;
+  color: var(--green) !important;
+  font-weight: 700 !important;
+}
+
+.runtime-section {
+  max-width: 900px;
+}
+
+.runtime-section .runtime-map {
+  max-width: 820px;
+  margin-top: 49px;
+}
+
+.runtime-section .runtime-map svg {
+  border-color: var(--line);
+}
+
+.runtime-list {
+  max-width: 740px;
+  margin: 47px 0 42px;
+  border-top: 1px solid var(--ink);
+}
+
+.runtime-list div {
+  display: grid;
+  grid-template-columns: 185px minmax(0, 1fr);
+  gap: 24px;
+  padding: 19px 0 21px;
+  border-bottom: 1px solid var(--line);
+}
+
+.runtime-list dt,
+.runtime-list dd {
+  margin: 0;
+}
+
+.runtime-list dt {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.runtime-list dd code {
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.core-boundary {
+  max-width: 730px;
+  margin-top: 46px;
+  padding: 25px 0 0 20px;
+  border-top: 1px solid var(--line);
+  border-left: 4px solid var(--orange);
+  color: var(--muted);
+  font: 12px/1.65 var(--sans);
+}
+
+.core-boundary strong {
+  color: var(--ink);
+}
+
+.core-operations {
+  padding-top: 87px;
+  padding-bottom: 92px;
+  background: var(--green);
+  color: white;
+}
+
+.core-operations h2 {
+  max-width: 820px;
+}
+
+.core-operations p {
+  max-width: 730px;
+  margin: 24px 0 30px;
+  color: #d4e0d5;
+  font: 17px/1.65 var(--serif);
+}
+
+.core-operations code {
+  color: white;
+  font-size: .8em;
+  font-weight: 700;
+}
+
+.core-closing {
+  padding-top: 100px;
+  padding-bottom: 106px;
+  background: var(--surface);
+}
+
+.core-closing > p {
+  max-width: 680px;
+  margin: 25px 0 30px;
+  color: var(--muted);
+  font: 18px/1.65 var(--serif);
+}
+
+@media (max-width: 760px) {
+  .core-hero,
+  .core-story,
+  .core-operations,
+  .core-closing {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .home-topbar nav a:not(:last-child) {
+    display: none;
+  }
+
+  .core-hero {
+    min-height: 0;
+    padding-top: 70px;
+    padding-bottom: 79px;
+  }
+
+  .core-hero h1 {
+    font-size: clamp(38px, 12vw, 52px);
+  }
+
+  .core-hero > p,
+  .core-section > p,
+  .core-closing > p {
+    font-size: 17px;
+  }
+
+  .core-hero .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .core-section {
+    padding-top: 77px;
+    padding-bottom: 82px;
+  }
+
+  .core-steps {
+    margin-left: 4px;
+  }
+
+  .core-steps article {
+    padding-left: 27px;
+  }
+
+  .runtime-section .runtime-map {
+    width: calc(100vw - 40px);
+  }
+
+  .runtime-section .runtime-map svg {
+    overflow: hidden;
+  }
+
+  .runtime-list div {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .core-operations {
+    padding-top: 73px;
+    padding-bottom: 78px;
+  }
+
+  .core-closing {
+    padding-top: 77px;
+    padding-bottom: 82px;
+  }
+}

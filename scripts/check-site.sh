@@ -108,6 +108,7 @@ if 'data-private-form' not in access_page or 'type="submit"' not in access_page:
     raise SystemExit("access page is missing the private submission form")
 
 for required_file in (
+    "home.css",
     "robots.txt",
     "sitemap.xml",
     "site-config.js",

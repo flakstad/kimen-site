@@ -620,6 +620,13 @@ project without plaintext values being stored there. Make clear that local
 development, tests, tools, files and process managers are use cases; this is not
 only deployment and not primarily an agent product.
 
+Use the same calm, single-column editorial rhythm as the Operations page. The
+hero should establish the ordinary `.env` problem and explain Kimen in direct
+language. Do not make the visitor decode a system diagram before understanding
+the product. Show the runtime illustration later, after the store, map and run
+sequence has made its purpose clear. Present runtime targets as simple rows,
+not a dashboard or grid of cards.
+
 ### Kimen Operations and team access
 
 Kimen Operations is not primarily an agent product. Coding agents are one especially

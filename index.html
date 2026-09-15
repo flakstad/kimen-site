@@ -3,134 +3,163 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen, move secrets out of your project</title>
-    <meta name="description" content="Store database URLs and API keys outside your project, then pass them to your application with kimen run." />
+    <title>Kimen, keep local secrets out of your project</title>
+    <meta name="description" content="Store database URLs, API keys and private files outside your project, then pass them directly to your application with kimen run." />
     <meta name="robots" content="index,follow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/" />
-    <meta property="og:title" content="Kimen" />
-    <meta property="og:description" content="Store secrets outside your project. Pass them to the application only when it starts." />
+    <meta property="og:title" content="Keep secrets out of your project." />
+    <meta property="og:description" content="Kimen keeps local secrets encrypted and supplies them directly to your application when it starts." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/" />
+    <meta name="theme-color" content="#182019" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./site.css" />
+    <link rel="stylesheet" href="./home.css" />
     <script src="./site-config.js" defer></script>
     <script src="./site.js" defer></script>
   </head>
   <body class="home-page" data-page="core">
-    <header class="topbar dark-topbar">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar home-topbar">
       <a class="brand" href="./"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#runtimes">Runtimes</a><a href="./access/" data-event="operations_clicked">Operations</a><a href="./docs/#start" data-event="install_clicked">Install ↗</a></nav>
+      <nav aria-label="Primary"><a href="#problem">The problem</a><a href="#how">How it works</a><a href="./access/" data-event="operations_clicked">Operations</a><a href="./docs/#start" data-event="install_clicked">Install ↗</a></nav>
     </header>
 
-    <main>
-      <section class="hero home-hero">
-        <div class="hero-copy">
-          <h1>Move secrets out of your project.</h1>
-          <p class="lede">Store database URLs, API keys and private files in Kimen instead of <code>.env</code>. Start your application with <code>kimen run</code>. The app gets the values it needs; developers, tools and agents do not need them sitting beside the code.</p>
-          <div class="hero-actions"><a class="button" href="./docs/#start" data-event="install_clicked">Install Kimen</a><a href="#how" data-event="core_explanation_clicked">See how it works ↓</a></div>
+    <main id="main">
+      <section class="core-hero">
+        <h1>Keep secrets out of your project.</h1>
+        <p>Your application needs database URLs, API keys and private files. That does not mean they should sit in <code>.env</code> beside the code.</p>
+        <p>Kimen stores the values in a local encrypted vault. Your project keeps only the names it needs. When the application starts, Kimen supplies the real values directly to that process.</p>
+        <div class="core-hero-example" aria-label="Example of a project without plaintext secret values">
+          <span>Safe to keep with the project</span>
+          <code>DATABASE_URL → dev.database_url</code>
+          <small>The name and mapping are visible. The database URL is not.</small>
         </div>
-
-        <figure class="runtime-map">
-          <svg viewBox="0 0 760 480" role="img" aria-labelledby="runtime-title runtime-desc">
-            <title id="runtime-title">Kimen prepares an application runtime without storing secrets in its project</title>
-            <desc id="runtime-desc">The project contains application code and names of required values. Editors, scripts and coding agents can work there without plaintext secrets. Kimen reads the map, resolves encrypted values from its vault and prepares a runtime environment containing the application and its environment variables.</desc>
-            <defs><pattern id="paper-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="grid-line" /></pattern></defs>
-            <rect class="map-field" width="760" height="480" />
-
-            <rect class="workspace-box" x="24" y="48" width="242" height="280" />
-            <text class="map-label" x="48" y="82">PROJECT WORKSPACE</text>
-            <text class="map-heading" x="48" y="119">Application code</text>
-            <text class="map-copy" x="48" y="145">reads DATABASE_URL</text>
-            <line class="map-rule" x1="48" y1="169" x2="242" y2="169" />
-            <text class="map-label" x="48" y="199">COMMITTED KIMEN MAP</text>
-            <text class="map-code" x="48" y="232">DATABASE_URL</text>
-            <text class="map-code muted" x="48" y="256">→ dev.database_url</text>
-            <text class="safe-label" x="48" y="300">NAMES, NOT VALUES</text>
-
-            <rect class="agent-box" x="24" y="352" width="242" height="80" />
-            <circle class="agent-dot" cx="49" cy="380" r="7" />
-            <text class="map-heading small" x="69" y="386">Workspace tools</text>
-            <text class="map-copy" x="48" y="413">editors · scripts · agents</text>
-
-            <circle class="kimen-halo outer" cx="354" cy="240" r="69" />
-            <circle class="kimen-halo inner" cx="354" cy="240" r="52" />
-            <circle class="kimen-core" cx="354" cy="240" r="39" />
-            <rect class="seed" x="348" y="208" width="12" height="12" />
-            <text class="kimen-name" x="354" y="244">kimen</text>
-            <text class="kimen-action" x="354" y="266">prepares</text>
-            <rect class="vault-box" x="300" y="62" width="108" height="82" />
-            <text class="vault-label" x="318" y="88">LOCAL VAULT</text>
-            <text class="vault-value" x="318" y="119">••••••••</text>
-            <path class="vault-line" d="M354 144V171" />
-
-            <rect class="environment-box" x="446" y="32" width="290" height="416" rx="34" />
-            <text class="environment-label" x="474" y="70">RUNTIME ENVIRONMENT</text>
-            <text class="environment-copy" x="474" y="95">prepared for this invocation</text>
-            <rect class="application-box" x="474" y="122" width="234" height="82" />
-            <circle class="app-dot" cx="496" cy="150" r="7" />
-            <text class="map-heading small" x="516" y="156">Your application</text>
-            <text class="map-copy" x="496" y="184">runs normally</text>
-            <rect class="environment-values" x="474" y="226" width="234" height="176" />
-            <text class="map-label" x="496" y="258">AVAILABLE IN THIS ENVIRONMENT</text>
-            <text class="runtime-key" x="496" y="293">DATABASE_URL</text>
-            <text class="runtime-value" x="496" y="317">postgres://…8f2</text>
-            <text class="runtime-key" x="496" y="352">STRIPE_API_KEY</text>
-            <text class="runtime-value" x="496" y="376">sk_live_…A7</text>
-
-            <path class="map-arrow" d="M266 240H302" /><polygon class="arrow-head" points="302,240 292,234 292,246" />
-            <path class="map-arrow" d="M406 240H446" /><polygon class="arrow-head" points="446,240 436,234 436,246" />
-          </svg>
-          <figcaption>The project contains secret names, not secret values. Kimen adds the real values to the application's environment when it starts.</figcaption>
-        </figure>
+        <div class="hero-actions"><a class="button orange" href="./docs/#start" data-event="install_clicked">Install Kimen</a><a href="#how" data-event="core_explanation_clicked">See how it works</a></div>
       </section>
 
-      <section class="problem">
-        <header class="section-head">
+      <article class="core-story">
+        <section class="core-section" id="problem">
           <h2><code>.gitignore</code> keeps a secret out of Git. Not out of your workspace.</h2>
-          <p>Any editor, script, tool or coding agent with file access can read an ignored <code>.env</code>, private key or service-account file.</p>
-        </header>
-        <div class="plain-flow">
-          <article><h3>The value sits beside the code</h3><p>A plaintext file contains a reusable credential that any permitted local process can read.</p></article><span aria-hidden="true">→</span>
-          <article><h3>Tools can read the workspace</h3><p>Local agents, scripts and commands inherit access to the same files.</p></article><span aria-hidden="true">→</span>
-          <article><h3>A read secret cannot be unread</h3><p>It may enter context, output or logs and must be treated as exposed.</p></article>
-        </div>
-      </section>
+          <p>The familiar setup is simple. Create <code>.env</code>, put production-like credentials in it and make sure nobody commits the file.</p>
+          <p>But the plaintext value is still there on every developer machine. Editors, local scripts and coding agents with workspace access can read it. Every copied file must be created, protected, updated and eventually removed.</p>
+          <ul class="core-costs">
+            <li>The project contains reusable credentials even when Git does not.</li>
+            <li>A tool which can read the code can often read the secrets beside it.</li>
+            <li>When a value changes, every local copy can become stale.</li>
+            <li>Once a secret has been read into output, logs or agent context, it cannot be unread.</li>
+          </ul>
+          <p>The application needs the value while it runs. The workspace does not need to store it.</p>
+        </section>
 
-      <section class="how" id="how">
-        <header class="section-head">
-          <h2>Keep using environment variables. Stop storing them in <code>.env</code>.</h2>
-          <p>Your application does not need a Kimen library. Kimen stores the values and supplies the same environment variables when you start the app.</p>
-        </header>
-        <div class="code-story">
-          <article><h3>Store the value locally</h3><p>Kimen prompts for the value without putting it in shell history or a plaintext file.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen secret set dev.database_url</code></pre></figure></article>
-          <article><h3>Map it to an environment variable</h3><p>This file contains only the environment-variable name and the Kimen secret name, so it can stay with the project.</p><figure class="terminal"><figcaption>.kimen/profiles/dev.kmap</figcaption><pre><code>env DATABASE_URL=dev.database_url</code></pre></figure></article>
-          <article><h3>Start the application</h3><p>Kimen reads the map and sets <code>DATABASE_URL</code> for <code>./app</code>. Nothing is exported to the rest of your shell.</p><figure class="terminal"><figcaption>terminal</figcaption><pre><code>kimen run --profile dev -- ./app</code></pre></figure></article>
-        </div>
-        <div class="session-line"><div><strong>Several runs ahead?</strong><span>Open the vault for a short session, then lock it again.</span></div><code>kimen session start --ttl 15m</code><code>kimen session lock</code></div>
-      </section>
+        <section class="core-section core-answer" id="how">
+          <h2>Keep the names with the code. Keep the values in Kimen.</h2>
+          <p>Kimen does not require an application library or a new configuration API. Your application continues to read normal environment variables and files.</p>
 
-      <section class="runtimes" id="runtimes">
-        <header class="section-head">
-          <h2>Use the same stored values without copying them into every tool.</h2>
-          <p>Pass secrets to a local application or test, render a file for a program that requires one, or generate an envfile for a process manager.</p>
-        </header>
-        <div class="runtime-examples">
-          <article><h3>Run an application</h3><code>kimen run --profile dev -- ./app</code></article>
-          <article><h3>Run a test suite</h3><code>kimen run --profile test -- ./test</code></article>
-          <article><h3>Render a required file</h3><code>kimen render --dir ./runtime --profile staging</code></article>
-          <article><h3>Prepare an envfile</h3><code>kimen envfile --out .env.runtime --profile worker</code></article>
-        </div>
-        <p class="boundary-note" id="boundary">The selected process receives projected values. Use <code>kimen run</code> for software you trust with those values. It is not a sandbox for arbitrary code.</p>
-      </section>
+          <div class="core-steps">
+            <article>
+              <h3>Store the value</h3>
+              <p>Kimen prompts without putting the value in shell history or a plaintext project file.</p>
+              <code>kimen secret set dev.database_url</code>
+            </article>
+            <article>
+              <h3>Declare what the project needs</h3>
+              <p>The committed map contains the environment-variable name and its Kimen reference, not the secret value.</p>
+              <code>env DATABASE_URL=dev.database_url</code>
+              <small>.kimen/profiles/dev.kmap</small>
+            </article>
+            <article>
+              <h3>Start the application</h3>
+              <p>Kimen resolves the map and gives <code>DATABASE_URL</code> only to the application process.</p>
+              <code>kimen run --profile dev -- ./app</code>
+            </article>
+          </div>
 
-      <section class="authority-callout">
-        <div><h2>Run one routine operation without handing out production access.</h2><p>Your team may already have the script or workflow. Kimen Operations can let a developer, CI job or agent call <code>restart_worker(queue)</code> without receiving the credential behind it.</p></div>
+          <p class="product-line">The project describes what it needs. The local environment supplies the values.</p>
+        </section>
+
+        <section class="core-section runtime-section">
+          <h2>The secret appears inside the application's runtime, not inside the project.</h2>
+          <p>The code and committed Kimen map remain useful to developers, scripts and agents without containing plaintext values. Kimen prepares a runtime environment containing the application and the selected configuration.</p>
+
+          <figure class="runtime-map">
+            <svg viewBox="0 0 760 480" role="img" aria-labelledby="runtime-title runtime-desc">
+              <title id="runtime-title">Kimen prepares an application runtime without storing secrets in its project</title>
+              <desc id="runtime-desc">The project contains application code and names of required values. Editors, scripts and coding agents can work there without plaintext secrets. Kimen reads the map, resolves encrypted values from its vault and prepares a runtime environment containing the application and its environment variables.</desc>
+              <defs><pattern id="paper-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" class="grid-line" /></pattern></defs>
+              <rect class="map-field" width="760" height="480" />
+
+              <rect class="workspace-box" x="24" y="48" width="242" height="280" />
+              <text class="map-label" x="48" y="82">PROJECT WORKSPACE</text>
+              <text class="map-heading" x="48" y="119">Application code</text>
+              <text class="map-copy" x="48" y="145">reads DATABASE_URL</text>
+              <line class="map-rule" x1="48" y1="169" x2="242" y2="169" />
+              <text class="map-label" x="48" y="199">COMMITTED KIMEN MAP</text>
+              <text class="map-code" x="48" y="232">DATABASE_URL</text>
+              <text class="map-code muted" x="48" y="256">→ dev.database_url</text>
+              <text class="safe-label" x="48" y="300">NAMES, NOT VALUES</text>
+
+              <rect class="agent-box" x="24" y="352" width="242" height="80" />
+              <circle class="agent-dot" cx="49" cy="380" r="7" />
+              <text class="map-heading small" x="69" y="386">Workspace tools</text>
+              <text class="map-copy" x="48" y="413">editors · scripts · agents</text>
+
+              <circle class="kimen-halo outer" cx="354" cy="240" r="69" />
+              <circle class="kimen-halo inner" cx="354" cy="240" r="52" />
+              <circle class="kimen-core" cx="354" cy="240" r="39" />
+              <rect class="seed" x="348" y="208" width="12" height="12" />
+              <text class="kimen-name" x="354" y="244">kimen</text>
+              <text class="kimen-action" x="354" y="266">prepares</text>
+              <rect class="vault-box" x="300" y="62" width="108" height="82" />
+              <text class="vault-label" x="318" y="88">LOCAL VAULT</text>
+              <text class="vault-value" x="318" y="119">••••••••</text>
+              <path class="vault-line" d="M354 144V171" />
+
+              <rect class="environment-box" x="446" y="32" width="290" height="416" rx="34" />
+              <text class="environment-label" x="474" y="70">RUNTIME ENVIRONMENT</text>
+              <text class="environment-copy" x="474" y="95">prepared for this invocation</text>
+              <rect class="application-box" x="474" y="122" width="234" height="82" />
+              <circle class="app-dot" cx="496" cy="150" r="7" />
+              <text class="map-heading small" x="516" y="156">Your application</text>
+              <text class="map-copy" x="496" y="184">runs normally</text>
+              <rect class="environment-values" x="474" y="226" width="234" height="176" />
+              <text class="map-label" x="496" y="258">AVAILABLE IN THIS ENVIRONMENT</text>
+              <text class="runtime-key" x="496" y="293">DATABASE_URL</text>
+              <text class="runtime-value" x="496" y="317">postgres://…8f2</text>
+              <text class="runtime-key" x="496" y="352">STRIPE_API_KEY</text>
+              <text class="runtime-value" x="496" y="376">sk_live_…A7</text>
+
+              <path class="map-arrow" d="M266 240H302" /><polygon class="arrow-head" points="302,240 292,234 292,246" />
+              <path class="map-arrow" d="M406 240H446" /><polygon class="arrow-head" points="446,240 436,234 436,246" />
+            </svg>
+            <figcaption>The application and its environment variables are inside the runtime prepared by Kimen. The project contains only names and references.</figcaption>
+          </figure>
+        </section>
+
+        <section class="core-section" id="runtimes">
+          <h2>Use the same stored values for the programs which need them.</h2>
+          <p>Run a local application or test. Render a private file for software which requires one. Prepare an envfile for a process manager.</p>
+          <dl class="runtime-list">
+            <div><dt>Run an application</dt><dd><code>kimen run --profile dev -- ./app</code></dd></div>
+            <div><dt>Run a test suite</dt><dd><code>kimen run --profile test -- ./test</code></dd></div>
+            <div><dt>Render required files</dt><dd><code>kimen render --dir ./runtime --profile staging</code></dd></div>
+            <div><dt>Prepare an envfile</dt><dd><code>kimen envfile --out .env.runtime --profile worker</code></dd></div>
+          </dl>
+          <p>Several runs ahead? Open the vault for a short session with <code>kimen session start --ttl 15m</code>, then close it with <code>kimen session lock</code>.</p>
+          <aside class="core-boundary" id="boundary"><strong>The receiving process gets the value.</strong> Use projection for software you trust with the selected secrets. <code>kimen run</code> is not a sandbox for arbitrary code.</aside>
+        </section>
+      </article>
+
+      <section class="core-operations">
+        <h2>Sometimes nobody needs the credential. They need one operation.</h2>
+        <p>Kimen Operations extends the same project-and-environment model to work such as <code>restart_worker(queue)</code>. A developer, CI job or agent receives the approved result without receiving the production credential behind it.</p>
         <a class="button light" href="./access/" data-event="operations_clicked">See Kimen Operations →</a>
       </section>
 
-      <section class="closing">
-        <h2>Start with one secret.</h2><p>Move it out of the workspace. Keep the application unchanged. Let Kimen provide it only to the runtime that needs it.</p>
+      <section class="core-closing">
+        <h2>Start with one secret.</h2>
+        <p>Move it out of the workspace. Keep the application unchanged. Let Kimen provide it only to the runtime which needs it.</p>
         <div class="hero-actions"><a class="button" href="./docs/#start" data-event="install_clicked">Install Kimen</a><a href="https://github.com/flakstad/kimen" data-event="source_clicked">View source ↗</a></div>
       </section>
     </main>
