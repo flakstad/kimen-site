@@ -49,7 +49,7 @@ Only Andreas publishes or changes DNS.
 
 ### Operations contact
 
-1. Confirm that `hello@andreasflakstad.no` can receive mail.
+1. Confirm that `hello@kimen.systems` can receive mail.
 2. Click the Operations CTA on desktop and mobile.
 3. Verify that the email draft contains prompts for the operation, callers,
    current access model and what is awkward or risky.

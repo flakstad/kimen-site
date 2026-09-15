@@ -16,7 +16,7 @@ separate from the CLI/runtime repository.
   optional privacy-conscious analytics
 - Three deliberately different design studies live at `/studies/`
 
-The `/access/` page uses a prefilled email to `hello@andreasflakstad.no` instead
+The `/access/` page uses a prefilled email to `hello@kimen.systems` instead
 of a form backend. PostHog can record the contact click, but it never receives
 the draft or sent email contents.
 
