@@ -630,8 +630,8 @@ of named people:
 > Developers, CI jobs, workflows and agents all need to deploy. Each becomes
 > another place where the same `DEPLOY_TOKEN` must be stored and protected.
 
-Use one main illustration on the page. Begin with the caller groups which grow
-with the organization:
+Use one restrained typographic contrast instead of an architecture diagram.
+Begin with the caller groups which grow with the organization:
 
 ```text
 developers -> one DEPLOY_TOKEN copy each
@@ -640,16 +640,18 @@ workflows  -> more copies
 agents     -> more copies
 ```
 
-Then show the same groups sharing `deploy_staging(revision)` while Kimen keeps
-the one credential and provider setup behind the operation. This is the
-strongest concrete expression of both the immediate problem and the
-cross-caller product hypothesis. The visual must show that access becomes
-narrower, not merely that the credential text is hidden. Do not add broker,
-session, lifecycle or team diagrams elsewhere.
+Then give `deploy_staging(revision)` one strong typographic moment while Kimen
+keeps the credential and provider setup behind the operation. Follow it with a
+real repository script and a quiet vertical sequence for project preparation,
+Kimen validation and trusted execution. Do not enclose this sequence in a
+system diagram.
 
-Keep the rest of the page single-column and left-aligned. Avoid repeated card
-grids, table-like comparisons and section headers whose columns do not align
-with the content below them.
+Keep the page single-column and left-aligned. After the dark opening, use one
+continuous light reading surface through the product and team story. Dark code
+may appear once for the repository script. Use green for product identity and
+code, and orange only where protected authority is crossed. Avoid repeated
+cards, chips, full-width color bands, table-like comparisons and section
+headers whose columns do not align with the content below them.
 
 The public page has one story:
 

@@ -23,153 +23,93 @@
     <main>
       <section class="access-hero">
         <h1>Your deployment credential ends up everywhere work happens.</h1>
-        <p>Developers, CI jobs, workflows and agents all need to deploy. Each becomes another place where the same credential must be stored and protected.</p>
-        <p>The usual answer is to give every caller <code>DEPLOY_TOKEN</code>. It works. Then access spreads across the organization, and nobody has a simple way to see, change or revoke it.</p>
+        <p>Twenty developers need to deploy staging. So do CI, workflows and agents. The usual answer is to give every caller <code>DEPLOY_TOKEN</code>.</p>
+        <p>Now the same reusable credential must be installed, protected and eventually revoked everywhere work happens.</p>
         <a class="text-link" href="#problem">There is a smaller way ↓</a>
       </section>
 
-      <section class="problem-story" id="problem">
-        <header>
-          <h2>Every new caller becomes another credential holder.</h2>
-          <p>The token spreads across developer laptops, CI settings, workflow connections and agent environments.</p>
-        </header>
+      <article class="access-story">
+        <section class="story-section problem-story" id="problem">
+          <h2>One deployment. More credential holders every time the team grows.</h2>
+          <p>The token starts on one laptop. Then another developer needs it. Soon it also lives in CI settings, workflow connections and agent environments.</p>
 
-        <figure class="credential-spread" aria-labelledby="spread-caption">
-          <div class="secret-source"><code>DEPLOY_TOKEN=••••••••</code></div>
-          <div class="spread-line" aria-hidden="true"></div>
-          <div class="secret-holders">
-            <div><strong>Developers</strong><code>one copy each</code></div>
-            <div><strong>CI jobs</strong><code>more copies</code></div>
-            <div><strong>Workflows</strong><code>more copies</code></div>
-            <div><strong>Agents</strong><code>more copies</code></div>
+          <div class="credential-ledger">
+            <p><strong>20 developers</strong><span>20 local places where the token can be read or copied</span></p>
+            <p><strong>CI and workflows</strong><span>more stored copies with their own setup and rotation</span></p>
+            <p><strong>Agents and tools</strong><span>more processes which inherit the token's full access</span></p>
           </div>
-          <figcaption id="spread-caption">Ten, twenty or one hundred developers, plus every new automation surface, expand the set of places where the credential can be read, copied or leaked.</figcaption>
-        </figure>
 
-        <div class="problem-copy">
-          <p>Each copy has to be installed safely and kept out of source control. Every local process that can read it effectively inherits its access.</p>
-          <p>If one copy leaks, the credential must be rotated everywhere. If someone leaves the team, you must know which keys and systems they carried.</p>
-          <p>And the token commonly permits much more than the one deployment everybody actually needed.</p>
-        </div>
-      </section>
+          <p>Every copy must be installed safely and kept out of source control. If the token leaks, it must be rotated everywhere. When someone leaves, the team must know which credentials they carried.</p>
+          <p>Yet everybody needed the same small result: deploy one allowed revision to staging.</p>
+        </section>
 
-      <section class="solution" id="solution">
-        <header>
-          <h2>They don’t need the token. They need the deployment.</h2>
-          <p>Give every caller the same small operation:</p>
-        </header>
+        <section class="story-section operation-answer" id="solution">
+          <h2>The job is smaller than the credential.</h2>
+          <p>Give developers, CI, workflows and agents one operation:</p>
+          <div class="operation-statement"><i aria-hidden="true"></i><code>deploy_staging(revision)</code></div>
+          <p>Kimen Operations keeps the deployment target, provider setup and credential behind that name. A caller can request the staging deployment and receive its result. It cannot reveal the token or turn it into another provider operation.</p>
+          <p class="product-line">Give access to the operation, not the credential behind it.</p>
+        </section>
 
-        <div class="operation-call"><code>deploy_staging(revision)</code></div>
-
-        <div class="callers-line" aria-label="Developers, CI jobs, workflows and agents can call deploy_staging">
-          <span>Developers</span>
-          <span>CI jobs</span>
-          <span>Workflows</span>
-          <span>Agents</span>
-        </div>
-
-        <p class="solution-copy">Kimen Operations keeps the credential, deployment target and provider setup. The callers can request a staging deployment and receive its result. They cannot reveal the token or turn it into another provider operation.</p>
-        <p class="product-line">Give access to the operation, not the credential behind it.</p>
-      </section>
-
-      <section class="walkthrough">
-        <header>
-          <h2>What happens when Developer A deploys?</h2>
-        </header>
-        <div class="walkthrough-copy">
-          <p><strong>Developer A requests a concrete result.</strong><br /><code>deploy_staging(revision: "abc123")</code></p>
-          <p><strong>Kimen checks the request.</strong><br />The operation is fixed to staging. The revision must be valid. Developer A must be allowed to invoke it.</p>
-          <p><strong>Kimen performs the deployment.</strong><br />It uses the protected credential with the deployment workflow configured for this environment.</p>
-          <p><strong>Developer A receives the outcome.</strong><br /><code>Deployment 8472 started for abc123</code></p>
-        </div>
-
-        <div class="consequences">
-          <p>Give Developer D access without copying a credential.</p>
-          <p>Remove Developer B without rotating the token everywhere.</p>
-          <p>Change the deployment provider without updating every caller.</p>
-          <p>Audit the deployment that happened, not merely that a token was used.</p>
-        </div>
-      </section>
-
-      <section class="operation-model" id="definition">
-        <header>
+        <section class="story-section deployment-story" id="definition">
           <h2>Keep the deployment script. Remove the credential from it.</h2>
           <p>The script in the repository can still build, test and choose what to deploy. Its sensitive step becomes a request to Kimen.</p>
-        </header>
 
-        <figure class="deploy-path" aria-labelledby="deploy-path-caption">
-          <div class="deploy-step project-step">
-            <h3>In the project</h3>
-            <strong><code>scripts/deploy_staging</code></strong>
-            <p>Build the application. Run tests. Calculate the artifact digest. Then request:</p>
-            <pre><code>deploy_staging(
-  revision="abc123",
-  artifact="sha256:84c…"
-)</code></pre>
-            <small>Developers, CI and agents may edit this script. It never receives the deployment credential.</small>
+          <figure class="script-sample">
+            <figcaption>scripts/deploy_staging</figcaption>
+            <pre><code>./scripts/build
+./scripts/test
+
+kimen invoke deploy_staging \
+  --revision "$REVISION" \
+  --artifact "$ARTIFACT_DIGEST"</code></pre>
+          </figure>
+
+          <div class="execution-sequence">
+            <div class="execution-step">
+              <h3>The project prepares the deployment</h3>
+              <p>The editable script builds and tests the application, then submits an allowed revision and artifact digest. It has no deployment credential.</p>
+            </div>
+            <div class="execution-step kimen-step">
+              <h3>Kimen checks the request</h3>
+              <p>Kimen verifies the caller, validates the revision and artifact, applies the team's staging rules and resolves the approved operation.</p>
+            </div>
+            <div class="execution-step">
+              <h3>Trusted execution performs it</h3>
+              <p>A pinned adapter or runner retrieves the credential from the Kimen vault, 1Password, Google Secret Manager or a workload identity. It invokes the deployment system and returns a limited result.</p>
+            </div>
           </div>
 
-          <div class="deploy-connector"><span>request one operation</span></div>
+          <p class="deployment-result"><strong>Staging deployment started.</strong> Revision <code>abc123</code>, deployment <code>8472</code>.</p>
 
-          <div class="deploy-step kimen-step">
-            <h3>In Kimen</h3>
-            <p>Check who is calling. Validate the revision and artifact. Apply the team's staging policy. Resolve the approved binding.</p>
-            <pre><code>target      staging
-adapter     deployment_workflow@3
-credential deploy_token</code></pre>
-            <small>The caller cannot change the target, adapter or credential.</small>
-          </div>
+          <aside class="plain-note">
+            <h3>Why this is not just a named script</h3>
+            <p>If Kimen injects <code>DEPLOY_TOKEN</code> into an editable repository script, that script can print or transmit it. A Kimen operation gives the script no credential. The credential-bearing adapter is installed and pinned by Kimen or an administrator, outside the project.</p>
+          </aside>
 
-          <div class="deploy-connector"><span>perform the approved deployment</span></div>
+          <aside class="security-note"><strong>One separate boundary remains.</strong> Kimen protects the deployment credential. Code deployed to an environment may still access that environment's runtime secrets. Staging should use limited staging credentials. Production can require a reviewed revision, verified artifact and approval.</aside>
+        </section>
 
-          <div class="deploy-step runner-step">
-            <h3>In trusted execution</h3>
-            <p>A verified adapter or runner retrieves the credential, invokes the deployment system and returns a limited result.</p>
-            <div class="credential-locations"><span>Kimen vault</span><span>1Password</span><span>Google Secret Manager</span><span>workload identity</span></div>
-            <small>The credential exists here. It is never sent back to the repository process.</small>
-          </div>
+        <section class="story-section other-operations">
+          <h2>Deployment is one example.</h2>
+          <p>The same mismatch appears whenever somebody needs one result but the available credential opens an entire system.</p>
+          <dl>
+            <div><dt><code>inspect_logs(service, since)</code></dt><dd>instead of an observability API key</dd></div>
+            <div><dt><code>restart_staging(service)</code></dt><dd>instead of SSH or a cloud credential</dd></div>
+            <div><dt><code>trigger_backup(database)</code></dt><dd>instead of database administration access</dd></div>
+          </dl>
+          <p class="core-connection">Kimen Core supplies values when a trusted program needs them. Kimen Operations handles the cases where a caller needs only a controlled result. <a href="../">See Kimen Core →</a></p>
+        </section>
 
-          <div class="deploy-result"><strong>Staging deployment started</strong><code>revision abc123 · deployment 8472</code></div>
-          <figcaption id="deploy-path-caption">The repository controls the workflow around deployment. Kimen controls the credential-bearing step.</figcaption>
-        </figure>
-
-        <div class="operation-explanation">
-          <h3>Why this is not just a named script</h3>
-          <p>If Kimen injects <code>DEPLOY_TOKEN</code> into a repository script, anyone who can edit the script can print or transmit the token. A Kimen operation gives the editable script no credential. It hands a validated request to a trusted adapter outside the project.</p>
-          <p>The adapter may itself be implemented as a script, but it must be installed and pinned by Kimen or an administrator. The caller cannot replace it.</p>
-        </div>
-
-        <div class="operation-explanation">
-          <h3>What Kimen Teams sends to developers</h3>
+        <section class="story-section operations-teams" id="teams">
+          <h2>Change access once, not on every laptop.</h2>
           <p>The operation name travels with the project through Git. Kimen Teams syncs the approved adapter version, access rules and environment policy. Credentials stay in the vault, secret manager or runner that performs the operation.</p>
-          <p>An administrator can update or revoke the operation once. Local Kimen verifies the new signed version before accepting another call. No deployment credential needs to be copied to developer machines.</p>
-        </div>
+          <p>An administrator can give a new developer access, require approval for production or revoke an operation once. Local Kimen verifies the signed change before accepting another call.</p>
+          <p class="team-capabilities">Shared access rules. Approvals. Revocation. Identity. Audit.</p>
+          <p>No deployment credential needs to be copied to developer machines. Kimen Teams coordinates access without becoming another hosted vault.</p>
+        </section>
 
-        <aside class="deployed-code-note"><strong>One separate boundary remains.</strong> Kimen protects the deployment credential. Code deployed to an environment may still access that environment's runtime secrets. Staging should use limited staging credentials. Production can require a reviewed revision, verified artifact and approval.</aside>
-      </section>
-
-      <section class="same-problem">
-        <header>
-          <h2>The same problem appears wherever credentials stand in for a job.</h2>
-        </header>
-        <div class="job-examples">
-          <p><code>inspect_logs(service, since)</code><br />instead of an observability API key</p>
-          <p><code>restart_staging(service)</code><br />instead of SSH or a cloud credential</p>
-          <p><code>trigger_backup(database)</code><br />instead of database administration access</p>
-        </div>
-
-        <div class="core-connection">
-          <p>Kimen already keeps runtime secrets out of the repository and supplies them only when a trusted application starts. Kimen Operations takes the next step. When someone only needs a result, Kimen can keep the credential to itself.</p>
-          <a href="../">See Kimen Core →</a>
-        </div>
-      </section>
-
-      <section class="teams" id="teams">
-        <h2>Adding another caller should not mean issuing another deploy key.</h2>
-        <p>Kimen Core remains local, useful and open source. Kimen Teams coordinates which developers, CI jobs, workflows and agents may invoke each operation, in which environment and for how long.</p>
-        <p class="team-capabilities">Shared access rules. Approvals. Revocation. Identity. Audit.</p>
-        <p>Credentials and execution can remain in the environment you already trust. The team layer coordinates access; it does not need to become another hosted vault.</p>
-      </section>
+      </article>
 
       <section class="access-interest" id="early-access">
         <div>

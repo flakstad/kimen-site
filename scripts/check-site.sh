@@ -95,7 +95,7 @@ access_required = [
     "Kimen Operations",
     "deploy_staging(revision)",
     "Keep the deployment script. Remove the credential from it.",
-    "What Kimen Teams sends to developers",
+    "Change access once, not on every laptop.",
 ]
 for text in access_required:
     if text not in access_page:
