@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen Actions — give access to actions, not credentials</title>
-    <meta name="description" content="Let developers, CI and coding agents perform approved operations without distributing the infrastructure credentials behind them." />
+    <title>Kimen — give access to operations, not credentials</title>
+    <meta name="description" content="Let developers, CI, workflows and agents perform named operations without distributing the infrastructure credentials behind them." />
     <link rel="canonical" href="https://kimen.systems/access/" />
-    <meta property="og:title" content="Give access to actions, not credentials." />
-    <meta property="og:description" content="Kimen lets developers, CI and agents perform approved operations without receiving the credentials behind them." />
+    <meta property="og:title" content="Give access to operations, not credentials." />
+    <meta property="og:description" content="Kimen keeps credentials behind named operations that work across developers, CI, workflows and agents." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/access/" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
@@ -17,135 +17,146 @@
   <body class="access-page">
     <header class="topbar dark-topbar access-topbar">
       <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="#problem">The problem</a><a href="#how">How it works</a><a href="#teams">For teams</a><a href="../">Kimen Core ↗</a></nav>
+      <nav aria-label="Primary"><a href="#problem">Why</a><a href="#how">How it works</a><a href="#teams">Teams</a><a href="../">Kimen Core ↗</a></nav>
     </header>
 
     <main>
       <section class="access-hero">
         <div class="access-hero-copy">
-          <h1>Give access to actions, not credentials.</h1>
-          <p class="access-lede">Kimen lets developers, CI and coding agents perform approved operations without distributing the infrastructure credentials behind them.</p>
+          <h1>Give access to operations, not credentials.</h1>
+          <p class="access-lede">A developer, CI job or agent usually needs to deploy, inspect or restart something. They do not need to hold the credential to your infrastructure. Kimen keeps that authority behind a small set of named operations.</p>
           <div class="access-actions"><a class="button orange" href="#early-access">Join early access</a><a href="#how">See how it works ↓</a></div>
-          <p class="access-status"><i aria-hidden="true"></i><strong>Kimen Actions</strong> is a planned extension to Kimen Core.</p>
+          <p class="access-status"><i aria-hidden="true"></i><span>Named operations are a planned extension to Kimen Core.</span></p>
         </div>
 
-        <figure class="credential-contrast" aria-labelledby="credential-contrast-caption">
-          <div class="contrast-before">
-            <span>Instead of distributing</span>
-            <code>GITHUB_TOKEN=••••••••</code>
-            <p>Broad, reusable access that must be stored and protected by every recipient.</p>
-          </div>
-          <div class="contrast-change" aria-hidden="true"><i></i><b>→</b></div>
-          <div class="contrast-after">
-            <span>Give access to</span>
+        <figure class="access-example" aria-labelledby="access-example-caption">
+          <div class="example-need">
+            <span>What the work requires</span>
             <code>deploy-staging(revision)</code>
-            <p>One named operation. The credential remains behind Kimen.</p>
           </div>
-          <figcaption id="credential-contrast-caption">The developer gets the deployment they need—not every permission carried by the deployment token.</figcaption>
+          <div class="example-credential">
+            <span>What we distribute today</span>
+            <code>DEPLOY_TOKEN=••••••••</code>
+            <p>Reusable access to a much larger system.</p>
+          </div>
+          <figcaption id="access-example-caption">Share the operation. Keep the credential, target and provider access behind Kimen.</figcaption>
         </figure>
       </section>
 
       <section class="credentials-problem" id="problem">
-        <div class="problem-copy">
-          <h2>Credentials are a poor interface.</h2>
-          <p>A credential is usually a bundle of permissions. Give it to someone who only needs to deploy staging, and they also receive every other operation that credential permits.</p>
-          <p>Now the credential must be copied to their machine, kept out of Git, hidden from local processes, rotated when it leaks and revoked when access changes.</p>
+        <div>
+          <h2>The credential is not the job.</h2>
+          <p>A deployment token is only the mechanism. The job is to deploy one revision to staging.</p>
         </div>
-        <blockquote>
-          <p>Often, nobody needed the credential itself.</p>
-          <strong>They needed permission to do one job.</strong>
-        </blockquote>
+        <div class="problem-detail">
+          <p>Give someone the token and they receive every operation it permits. You must copy it to another laptop or workflow, keep it out of Git, protect it from every process there, rotate it when it leaks and revoke it when access changes.</p>
+          <p><strong>Most of that disappears when you share the operation instead.</strong></p>
+        </div>
       </section>
 
-      <section class="deploy-example">
+      <section class="operation-story" id="how">
         <header class="access-section-head">
-          <h2>Alice may deploy staging. She does not need direct access to the deployment token.</h2>
-          <p>Her project can name the operation it needs. Alice chooses whether to unlock it. Kimen uses the stored credential to perform that fixed deployment and returns the result.</p>
+          <h2>Make the useful thing callable. Keep everything behind it private.</h2>
+          <p>Kimen separates the operation a project needs from the environment-specific authority that makes it work.</p>
         </header>
-        <div class="deploy-contract">
-          <article><h3>The access Alice needs</h3><code>deploy-staging(revision: "abc123")</code></article>
-          <article><h3>The access she does not need</h3><code>GITHUB_TOKEN=••••••••</code></article>
-        </div>
-        <p class="deploy-result">Alice can deploy a revision to staging. She cannot turn that permission into another provider operation, reveal the token or pass it to a different process.</p>
-      </section>
 
-      <section class="access-how" id="how">
-        <header class="access-section-head">
-          <h2>Define what may be done. Bind how it is done locally.</h2>
-          <p>The project carries portable names such as <code>deploy-staging</code>. Each environment keeps the provider details, restrictions and credential under local control.</p>
-        </header>
-        <div class="definition-pair">
+        <div class="operation-contract">
           <article>
-            <h3>The project declares</h3>
-            <pre><code>deploy-staging(revision)
-inspect-logs(service, since)</code></pre>
-            <p>Names and accepted inputs. Safe to share with the project.</p>
+            <h3>The project names the operation</h3>
+            <code>deploy-staging(revision)</code>
+            <p>The name and accepted input can live with the project. It contains no credential and no provider-specific implementation.</p>
           </article>
           <article>
-            <h3>The environment binds</h3>
-            <pre><code>deploy-staging
-  deployment: known workflow
-  environment: staging
-  credential: local</code></pre>
-            <p>The fixed operation and its authority. Kept outside the project.</p>
+            <h3>The environment controls the operation</h3>
+            <p>A local Kimen binding fixes the staging target, deployment workflow, accepted revisions and credential. The caller cannot replace them with another command.</p>
+          </article>
+          <article>
+            <h3>The caller receives the result</h3>
+            <code>Deployment 8472 started</code>
+            <p>Kimen performs the operation. The caller receives its status—not the token, SSH key or general provider access.</p>
           </article>
         </div>
-        <div class="same-kimen-model">
-          <h3>This extends the Kimen model already in use.</h3>
-          <p><code>DATABASE_URL</code> resolves to a value for a trusted process. <code>deploy-staging(revision)</code> resolves to an effect without revealing its credential.</p>
-          <p><strong>Some requirements resolve to values. Others resolve to actions.</strong></p>
-        </div>
-        <p class="illustrative-note">The Action names and syntax shown here are illustrative, not final CLI or API design. Actions and Action-only sessions are planned; today's Kimen sessions unlock vault use for the user's Kimen operations.</p>
+
+        <p class="ownership-line">The need belongs to the project. The authority belongs to the environment.</p>
       </section>
 
-      <section class="access-callers">
-        <header class="access-section-head compact-head">
-          <h2>One operation can serve people, automation and agents.</h2>
-          <p>The caller changes. The permitted job—and the credential kept behind it—does not.</p>
+      <section class="existing-model">
+        <header class="access-section-head">
+          <h2>This is the same Kimen model, extended beyond values.</h2>
+          <p>Kimen already lets a project name the runtime configuration it needs while each environment supplies the actual values locally.</p>
+        </header>
+        <div class="resolution-pair">
+          <article>
+            <code>DATABASE_URL</code>
+            <h3>Resolves to a value</h3>
+            <p><code>kimen run</code> gives the value to a trusted application that needs it.</p>
+          </article>
+          <article>
+            <code>deploy-staging(revision)</code>
+            <h3>Resolves to an operation</h3>
+            <p>Kimen uses the credential itself and returns the result without revealing it.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="caller-section">
+        <header class="access-section-head">
+          <h2>The operation stays the same, wherever the work starts.</h2>
+          <p>Developers, automation and autonomous tools can use the same project-level operation without learning how its authority is provided.</p>
         </header>
         <div class="caller-list">
-          <article><h3>Developer</h3><p>Alice deploys staging without receiving general access to the deployment token.</p></article>
-          <article><h3>CI</h3><p>A release job publishes one artifact without receiving a general-purpose provider token.</p></article>
-          <article><h3>Coding agent</h3><p>An agent inspects recent logs or restarts a known staging service without cloud or observability credentials.</p></article>
+          <article><h3>Developer</h3><code>deploy-staging(revision)</code><p>Deploy from a terminal without keeping the deployment credential on every laptop.</p></article>
+          <article><h3>CI or workflow</h3><code>publish-release(version)</code><p>Publish one known release without embedding broad provider access in every workflow.</p></article>
+          <article><h3>Agent</h3><code>inspect-logs(service, since)</code><p>Investigate a failure without receiving the observability credential or access to unrelated services.</p></article>
         </div>
+      </section>
+
+      <section class="more-operations">
+        <h2>Operations should be small enough to understand.</h2>
+        <div class="operation-list" aria-label="Examples of bounded operations">
+          <code>restart-staging(service)</code>
+          <code>trigger-backup(database)</code>
+          <code>deployment-status(id)</code>
+          <code>invalidate-cache(service)</code>
+        </div>
+        <p>Not an arbitrary shell with a secret. Each operation has a fixed implementation, a small input space and a result the caller can safely receive.</p>
       </section>
 
       <section class="access-teams" id="teams">
         <header class="access-section-head">
-          <h2>Define access once. Govern it across the team.</h2>
-          <p>Local Kimen can remain useful and open source. Teams pay for coordinating who can perform which operations across developers, CI, workflows and agents.</p>
+          <h2>One operation. Every caller. One place to govern it.</h2>
+          <p>Without a shared model, every developer and workflow accumulates its own credentials, wrappers and security rules.</p>
         </header>
         <div class="team-offer">
           <article>
             <h3>Kimen Core</h3>
-            <strong>Free / Open Source</strong>
-            <p>Local vault, runtime configuration and local Actions.</p>
+            <strong>Free and open source</strong>
+            <p>Local vault, runtime configuration, local operations and time-limited access.</p>
           </article>
           <article>
             <h3>Kimen Teams</h3>
             <strong>Early access</strong>
-            <p>Shared Action rules, environment access, approvals, revocation, identity and audit.</p>
+            <p>Shared operation rules, environment access, approvals, revocation, identity and audit—without moving infrastructure credentials into Kimen Cloud.</p>
           </article>
         </div>
-        <p class="team-thesis">Let useful work happen without every developer inventing separate credentials, wrappers and security rules.</p>
       </section>
 
-      <section class="access-boundary">
-        <h2>Narrower access, not magic isolation.</h2>
-        <p>Kimen Actions are intended to prevent secret disclosure through Kimen and restrict callers to selected operations. A fully compromised operating-system account is a stronger threat model; use sandboxing, separate identities or remote execution when that boundary is required.</p>
-      </section>
+      <aside class="access-boundary">
+        <h2>A narrower interface—not magic isolation.</h2>
+        <p>Kimen is intended to prevent credential disclosure through these operations and restrict callers to what you have unlocked. Stronger protection from a compromised operating-system account still requires sandboxing, separate identities or remote execution.</p>
+      </aside>
 
       <section class="access-interest" id="early-access">
         <div>
-          <h2>Where are you still distributing credentials?</h2>
-          <p>Tell us which operation a developer, CI job or agent actually needs—and what credential you hand out today to make it possible.</p>
+          <h2>Do you already have this credential problem?</h2>
+          <p>Tell us where developers, CI, workflows or agents receive a broad credential just to perform one narrow job.</p>
           <small>Do not include credentials or sensitive infrastructure details.</small>
         </div>
         <!-- Connect this presentation form to a private endpoint before publication. -->
-        <form class="access-form" aria-label="Kimen Actions early access form">
-          <label>Who or what needs access?<input name="caller" autocomplete="off" placeholder="Developer, CI job, workflow or coding agent" /></label>
-          <label>What operation should it perform?<textarea name="operation" rows="3" placeholder="e.g. deploy one revision to staging"></textarea></label>
-          <label>How do you provide access today?<textarea name="current_access" rows="3" placeholder="e.g. a token on every laptop or a secret in CI"></textarea></label>
+        <form class="access-form" aria-label="Kimen early access form">
+          <label>What needs access?<input name="caller" autocomplete="off" placeholder="Developer, CI job, workflow or agent" /></label>
+          <label>What job should it perform?<textarea name="operation" rows="3" placeholder="Deploy one revision to staging"></textarea></label>
+          <label>How do you provide access today?<textarea name="current_access" rows="3" placeholder="A token on every laptop, a secret in CI, separate wrappers…"></textarea></label>
           <label>Work email<input type="email" name="email" autocomplete="email" placeholder="you@company.com" /></label>
           <button class="button light" type="button">Join early access</button>
           <small>Private response. No public issue will be created.</small>

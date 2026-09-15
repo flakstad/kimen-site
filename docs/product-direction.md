@@ -41,6 +41,37 @@ declared need -> local binding -> temporary realization
 Kimen is one product. The existing vault and projection model is not a legacy
 edition which will be replaced by an agent product. It is the foundation.
 
+## Current commercial product hypothesis
+
+Actions are a coherent and falsifiable product hypothesis, not yet a validated
+product direction. There is no external demand evidence yet.
+
+The hypothesis is:
+
+> Kimen lets teams replace broad credentials with named operations that work
+> across developers, CI, agents and workflows.
+
+> The project declares what may be done. The environment controls how it is
+> done and which authority it uses.
+
+The possible differentiation is not secret storage, “secrets for agents” or a
+friendlier wrapper around one deploy script. It is one stable operation across
+several callers, with its provider implementation, credentials and restrictions
+bound outside those callers' control.
+
+Agents make the mismatch between a requested job and a broad credential more
+visible, but they are one caller rather than the product category. Developers,
+CI jobs, workflow engines and local workers have the same underlying problem.
+
+The strongest alternative is that provider-native IAM, OIDC, protected CI
+workflows and internal endpoints are already sufficient. If users do not care
+that an operation is portable across callers, Actions are likely a useful open
+source feature rather than a commercial product.
+
+The website must test for people who already have multiple wrappers,
+credentials and access rules for the same operational jobs. External intent,
+not further protocol design, determines whether the hypothesis advances.
+
 ## What the name means
 
 `Kimen` means a seed, germ, origin or the small beginning from which something
@@ -515,7 +546,7 @@ project without plaintext values being stored there. Make clear that local
 development, tests, tools, files and process managers are use cases; this is not
 only deployment and not primarily an agent product.
 
-### Kimen Actions and team access
+### Kimen operations and team access
 
 Actions are not primarily an agent product. Coding agents are one especially
 urgent caller alongside developers, CI and deterministic workflows. The public
@@ -523,10 +554,10 @@ path lives at `/access/`; `/agents/` is only a compatibility redirect.
 
 Lead with the concrete product promise:
 
-> Give access to actions, not credentials.
+> Give access to operations, not credentials.
 
 Use one illustration on the page. Contrast distributing
-`GITHUB_TOKEN=••••••••` with granting `deploy-staging(revision)`. The visual
+`DEPLOY_TOKEN=••••••••` with granting `deploy-staging(revision)`. The visual
 must show that access becomes narrower, not merely that the credential text is
 hidden. Do not add broker, session, lifecycle or team diagrams elsewhere.
 
@@ -539,7 +570,7 @@ Present the concrete replacement immediately:
 > Let the developer call `deploy-staging(revision)`. Keep the deployment
 > credential in Kimen.
 
-Then explain only the minimum model needed: the project declares the Action and
+Then explain only the minimum model needed: the project declares the operation and
 the environment binds its provider, restrictions and credential locally. Show
 developers, CI and coding agents as peer callers. Agent autonomy is a reason the
 problem is becoming more urgent, not the definition of the category.
@@ -550,9 +581,9 @@ useful internally but force a visitor to translate the product. Prefer
 deployment credential, `deploy-staging(revision)`, application, environment,
 log window, service and result.
 
-Use `Action` as the temporary public name because it is immediately
-understandable, but keep the final product terminology open. Show only a few
-concrete calls:
+Use named operation in public-first copy. `Action` remains a possible feature
+or implementation name, but the final product terminology is open. Show only a
+few concrete calls:
 
 ```text
 deploy-staging(revision)
@@ -572,12 +603,12 @@ Planned Action syntax may be shown when it materially explains the model, but it
 must be explicitly labelled illustrative rather than presented as settled API
 design.
 
-The Actions product should be presented as a coherent Kimen product promise,
-not as an apologetic internal “commercial probe.” Discreetly identify Kimen
-Actions as a planned extension. Explicitly distinguish any proposed Action-only
-session from today's convenience session, which unlocks the vault for the
-user's Kimen operations. Do not claim that unimplemented commands can be
-installed and run today.
+The bounded-operations product should be presented as a coherent Kimen product
+promise, not as an apologetic internal “commercial probe.” Discreetly identify
+named operations as a planned extension. Explicitly distinguish any proposed
+operation-only session from today's convenience session, which unlocks the
+vault for the user's Kimen operations. Do not claim that unimplemented commands
+can be installed and run today.
 
 The site should not send sensitive infrastructure descriptions into public
 GitHub issues or use an email link as its primary CTA. A private form or another

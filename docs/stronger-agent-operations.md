@@ -1,4 +1,4 @@
-# Stronger bounded agent operations
+# Stronger bounded operations
 
 Status: product direction presented on the website; implementation deliberately
 deferred until the market test produces external signal.
@@ -29,15 +29,21 @@ are two runtime realizations of one Kimen idea; they are not separate products.
 
 ## The stronger problem
 
-Some agent work reaches an external operation which requires a credential much
-broader than the desired outcome. The current choices are often:
+Some work reaches an external operation which requires a credential much
+broader than the desired outcome. This applies to developers, CI jobs,
+workflows, local workers and agents. The current choices are often:
 
-1. give the agent the credential;
+1. give the caller the credential;
 2. keep the credential back and perform the operation manually.
 
-A stronger Kimen boundary would let an agent cause one permitted external
+A stronger Kimen boundary would let a caller cause one permitted external
 effect without receiving the underlying credential and without choosing an
 arbitrary process which receives it.
+
+The commercial hypothesis depends on the same named operation being useful
+across several callers. If only one workflow engine or provider needs it, that
+system's native connection, IAM policy or protected workflow may be the simpler
+and better boundary.
 
 Representative examples include restarting one known service or triggering a
 server-side backup for one known database. Deploying agent-authored code and
@@ -142,6 +148,63 @@ Whether the two session types share a command family is a later CLI decision.
 Strong protection from an arbitrary same-user host process additionally
 requires OS or container isolation. File permissions and a same-UID Unix socket
 alone do not provide that boundary.
+
+## Kari as a boundary test
+
+Kari demonstrates where bounded operations do and do not fit an existing Kimen
+user. It currently uses Kimen to start a development REPL, run realtime
+scenarios and prepare production configuration during deployment.
+
+### REPL remains value projection
+
+The Kari REPL genuinely needs runtime configuration and provider credentials.
+Starting it through an Action would not create a safer boundary: code evaluated
+inside the credential-bearing REPL can read its environment. This remains a
+`kimen run` use case. Safer agent access should instead use a reduced profile,
+mock providers or a separate REPL without sensitive credentials.
+
+### Realtime scenarios are conditional
+
+A bounded operation such as:
+
+```text
+run-realtime-scenario(revision, scenario, model)
+```
+
+could restrict scenario identity, model choice, run count, cost and returned
+artifacts while keeping the provider credential from the caller. It is only a
+real boundary if the runner is trusted and pinned. Running agent-editable Kari
+code with an injected API key would let that code disclose the key and would be
+ordinary projection under another name.
+
+### Deployment is the strongest initial case
+
+Kari's current deployment combines unprivileged tests and build steps with
+production config materialization, root SSH, file upload, service control and
+health checks. A bounded design would keep test/build in Kari or a workflow
+engine and expose only a fixed operation such as:
+
+```text
+deploy-kari-production(revision, artifact-digest)
+```
+
+The trusted binding fixes the host, paths, services, config profiles,
+credential and blue/green procedure. The caller supplies only an approved
+revision and matching artifact and receives deployment status and a receipt.
+
+The adapter cannot simply execute a deployment script from the writable
+repository with credentials. It must be built into Kimen, installed and pinned
+outside the repository, or delegated to a fixed remote operation.
+
+Deployment also exposes a second boundary: deployed application code receives
+Kari's production runtime secrets. Protecting the deployment credential does
+not make arbitrary agent-authored production code safe. Production invocation
+therefore still requires human approval or an independently trusted revision,
+even when the deployment mechanism itself is a bounded operation.
+
+Kari therefore supplies one strong case, one conditional case and one clear
+non-case. That is enough to make the hypothesis concrete, but not external
+evidence for a general product.
 
 ## Relationship to Ro
 
