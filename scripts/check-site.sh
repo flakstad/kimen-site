@@ -105,8 +105,10 @@ for text in access_required:
     if text not in access_page:
         raise SystemExit(f"access page is missing required product text: {text}")
 
-if 'data-private-form' not in access_page or 'type="submit"' not in access_page:
-    raise SystemExit("access page is missing the private submission form")
+if 'mailto:hello@andreasflakstad.no' not in access_page:
+    raise SystemExit("access page is missing the Operations email CTA")
+if 'operations_contact_clicked' not in access_page:
+    raise SystemExit("access page is missing contact intent measurement")
 
 for required_file in (
     "home.css",

@@ -2,7 +2,6 @@ import {existsSync, writeFileSync} from "node:fs";
 import {join, resolve} from "node:path";
 
 const config = {
-  formEndpoint: process.env.KIMEN_FORM_ENDPOINT || "",
   posthogKey: process.env.KIMEN_POSTHOG_KEY || "",
   posthogHost: process.env.KIMEN_POSTHOG_HOST || "https://eu.i.posthog.com",
 };
@@ -16,9 +15,6 @@ function isHttpsUrl(value) {
 }
 
 if (process.env.KIMEN_REQUIRE_EXTERNAL_CONFIG === "1") {
-  if (!isHttpsUrl(config.formEndpoint)) {
-    throw new Error("KIMEN_FORM_ENDPOINT must be configured as an HTTPS URL before deployment.");
-  }
   if (!config.posthogKey.trim()) {
     throw new Error("KIMEN_POSTHOG_KEY must be configured before deployment.");
   }

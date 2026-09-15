@@ -244,20 +244,19 @@ currently requires broad credentials, production access or a privileged human.
 
 ## Instrumentation required before distribution
 
-At the time of the traffic review, the static site had no analytics, the
-`/access/` form was presentational and there was no `robots.txt` or
+At the time of the traffic review, the static site had no analytics, its
+Operations response path was not connected and there was no `robots.txt` or
 `sitemap.xml`. Consequently, no traffic or conversion baseline exists yet.
 
-The repository now includes a private-form client, privacy-conscious event
-capture, source attribution, `robots.txt` and `sitemap.xml`. The form and event
-capture remain inactive until Andreas configures a private HTTPS receiver and a
-dedicated analytics project. No external service was created or changed as part
-of the site implementation.
+The repository now includes a prefilled email response path, privacy-conscious
+event capture, source attribution, `robots.txt` and `sitemap.xml`. Event capture
+remains inactive until Andreas configures a dedicated analytics project. No
+external service was created or changed as part of the site implementation.
 
 Before sending meaningful traffic, complete the remaining external setup:
 
 - configure a dedicated PostHog project key;
-- configure a private working form endpoint;
+- verify that the public contact address receives the prefilled Operations email;
 - Google Search Console after publication.
 
 Recommended events:
@@ -267,24 +266,20 @@ site_page_viewed
 source_clicked
 install_clicked
 operations_clicked
-operations_form_cta_clicked
-operations_form_started
-operations_form_attempted
-operations_form_submitted
-operations_form_failed
+operations_contact_clicked
 ```
 
-Do not record the form's free-text contents in analytics. The private form
-submission may contain the complete response, while analytics should contain
-only safe categorical values and a submission outcome.
+Do not record email contents in analytics. The CTA event measures the opening of
+an email draft, not a completed send. Actual received emails are the stronger
+conversion signal.
 
-The form should ask:
+The prefilled email should ask:
 
 1. What operation does the team still run through a script, console or person
    with production access?
 2. How is access controlled today?
 3. Who needs to run it: developers, CI, workflows, agents or several of them?
-4. How may Kimen follow up?
+4. What is awkward or risky about the current setup?
 
 Warn respondents not to include credentials or sensitive infrastructure
 details.

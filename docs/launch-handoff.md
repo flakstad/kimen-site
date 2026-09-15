@@ -4,8 +4,8 @@ Status: local implementation complete, external configuration and publication
 remain with Andreas.
 
 This document separates publication, measurement and acquisition. A deployed
-site is not yet a useful market sensor unless the private form and analytics
-are working. Analytics do not create organic traffic without search-oriented
+site is not yet a useful market sensor unless contact and analytics are
+working. Analytics do not create organic traffic without search-oriented
 content and distribution.
 
 ## What the repository already provides
@@ -15,8 +15,8 @@ content and distribution.
 - `robots.txt` and an XML sitemap containing every intended indexed page.
 - A GitHub Pages workflow which builds only public files. Design studies,
   variants and internal Markdown reports are excluded from the artifact.
-- A private Operations form client with validation, honeypot, attribution and
-  clear failure states.
+- A prefilled Operations email which asks for the operation, callers, current
+  access model and problem without requiring a form backend.
 - Anonymous PostHog events with person profiles and IP geolocation disabled.
 - Global Privacy Control and Do Not Track handling.
 - Three search-oriented Core guides.
@@ -47,19 +47,17 @@ can serve the domain.
 
 Only Andreas publishes or changes DNS.
 
-### Private Operations form
+### Operations contact
 
-1. Create a private HTTPS form receiver. It must accept browser `multipart/form-data`
-   POST requests and return a successful HTTP status.
-2. Make sure it permits requests from `https://kimen.systems`.
-3. Store its URL as the GitHub Actions secret `KIMEN_FORM_ENDPOINT`.
-4. Submit one test response without sensitive infrastructure information.
-5. Verify receipt, the browser success message and the absence of a public copy.
-6. Test one rejected or unavailable request and verify the failure message.
+1. Confirm that `hello@andreasflakstad.no` can receive mail.
+2. Click the Operations CTA on desktop and mobile.
+3. Verify that the email draft contains prompts for the operation, callers,
+   current access model and what is awkward or risky.
+4. Send one harmless test message and verify receipt.
 
-The receiver gets operation text, current access method, caller categories,
-work email, source path, UTM values and referring origin. Operation text and
-email are not sent to PostHog.
+The mailto link sends nothing by itself. The visitor chooses whether to send
+the draft. PostHog can measure the CTA click, but not a completed send or the
+email contents. Received replies are therefore the conversion source of truth.
 
 ### PostHog
 
@@ -71,7 +69,7 @@ email are not sent to PostHog.
    `https://eu.i.posthog.com`. Set the variable only if the project uses a
    different ingestion host.
 4. Publish and confirm events in PostHog's live events view.
-5. Check that form text and email never appear as event properties.
+5. Check that no email address, subject or body appears as an event property.
 
 Expected events:
 
@@ -83,28 +81,22 @@ Expected events:
 - `guide_install_clicked`
 - `operations_clicked`
 - `operations_explanation_clicked`
-- `operations_form_cta_clicked`
-- `operations_form_started`
-- `operations_form_attempted`
-- `operations_form_submitted`
-- `operations_form_failed`
+- `operations_contact_clicked`
 
 Create these initial funnels:
 
 1. Core page view to `install_clicked`.
 2. Core page view to `operations_clicked`.
 3. Guide page view to `guide_install_clicked`.
-4. Operations page view to `operations_form_started` to
-   `operations_form_submitted`.
+4. Operations page view to `operations_contact_clicked`.
 
 Break down page views and funnels by `utm_source`, `utm_medium`, `utm_campaign`
 and `referrer`. The site stores only a session-scoped anonymous identifier.
 
 Official reference: <https://posthog.com/docs/libraries/js>
 
-The Pages workflow intentionally fails before deployment if the form endpoint
-or PostHog key is missing. This prevents qualified traffic from reaching an
-unmeasured page or a disconnected response form.
+The Pages workflow intentionally fails before deployment if the PostHog key is
+missing. This prevents qualified traffic from reaching an unmeasured page.
 
 ### Google Search Console
 
@@ -173,10 +165,10 @@ after enough qualified exposure to interpret it.
 The first review asks:
 
 - Is every intended page indexed or indexable?
-- Do PostHog events and the private form work end to end?
+- Do PostHog events and the prefilled email work end to end?
 - Which guide queries appear in Search Console?
 - Which sources lead to installation clicks?
-- Do Operations visitors start and submit the form?
+- Do Operations visitors click the contact link, and do real emails arrive?
 - Are submissions concrete enough to reveal an existing access problem?
 
 Do not interpret silence before qualified traffic has actually reached the

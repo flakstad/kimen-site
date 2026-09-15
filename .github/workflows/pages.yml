@@ -30,9 +30,8 @@ jobs:
       - name: Build public site
         run: node scripts/build-site.mjs
 
-      - name: Configure private form and analytics
+      - name: Configure analytics
         env:
-          KIMEN_FORM_ENDPOINT: ${{ secrets.KIMEN_FORM_ENDPOINT }}
           KIMEN_POSTHOG_KEY: ${{ vars.KIMEN_POSTHOG_KEY }}
           KIMEN_POSTHOG_HOST: ${{ vars.KIMEN_POSTHOG_HOST }}
           KIMEN_SITE_OUTPUT_DIR: _site

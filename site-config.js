@@ -1,8 +1,7 @@
 // Deployment configuration for the static Kimen site.
-// Keep service keys and endpoints empty in source. Replace this file when the
-// private form receiver and analytics project have been configured.
+// Keep the analytics key empty in source. The Pages workflow writes the
+// deployed PostHog configuration.
 window.KIMEN_SITE_CONFIG = Object.freeze({
-  formEndpoint: "",
   posthogKey: "",
   posthogHost: "https://eu.i.posthog.com",
 });

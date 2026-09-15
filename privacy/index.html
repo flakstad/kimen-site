@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Privacy, Kimen</title>
-    <meta name="description" content="How the Kimen website handles anonymous analytics and private Operations form responses." />
+    <meta name="description" content="How the Kimen website handles anonymous analytics and email contact." />
     <meta name="robots" content="index,follow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/privacy/" />
@@ -30,15 +30,15 @@
       <article class="privacy-body">
         <section>
           <h2>Anonymous website analytics</h2>
-          <p>When analytics are configured, Kimen uses PostHog's European service to record page views and a small set of product-intent events, such as an installation link click or the start of the Operations form.</p>
+          <p>When analytics are configured, Kimen uses PostHog's European service to record page views and a small set of product-intent events, such as an installation link click or an Operations contact click.</p>
           <p>The site does not identify visitors, create PostHog person profiles or use session replay. Events contain an anonymous session identifier, page path, referring origin and campaign parameters when present. The configuration disables IP-based geolocation.</p>
           <p>Analytics are not loaded when the browser sends Global Privacy Control or a Do Not Track value of <code>1</code>.</p>
         </section>
         <section>
-          <h2>Operations form</h2>
-          <p>If you submit the Operations form, the private form receiver receives the operation description, current access method, selected caller categories, work email and basic traffic attribution.</p>
-          <p>The operation description and email address are never included in PostHog analytics events. Do not submit credentials, hostnames or sensitive infrastructure details.</p>
-          <p>Responses are used to understand the problem, evaluate early access and contact people who ask to participate. They are removed when they are no longer needed for those purposes.</p>
+          <h2>Email contact</h2>
+          <p>The Operations contact link opens a prefilled draft in your email application. Nothing is sent until you choose to send that email.</p>
+          <p>PostHog records that the contact link was clicked. It does not receive the email address, message body or any edits you make in your email application.</p>
+          <p>If you send the message, it is handled by your email provider and received at <code>hello@andreasflakstad.no</code>. Responses are used to understand the problem, evaluate early access and follow up with people who make contact. Do not include credentials, hostnames or sensitive infrastructure details.</p>
         </section>
         <section>
           <h2>Third-party links</h2>
@@ -46,7 +46,7 @@
         </section>
         <section>
           <h2>Questions and deletion requests</h2>
-          <p>For questions about website data or to request deletion of a submitted response, contact Andreas Flakstad through the contact details at <a href="https://andreasflakstad.no">andreasflakstad.no</a>.</p>
+          <p>For questions about website data or to request deletion of an email, contact Andreas Flakstad through the contact details at <a href="https://andreasflakstad.no">andreasflakstad.no</a>.</p>
         </section>
       </article>
     </main>

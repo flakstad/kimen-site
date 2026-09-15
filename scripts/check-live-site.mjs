@@ -54,9 +54,6 @@ for (const [path] of pages) {
 }
 
 const {text: config} = await fetchText("/site-config.js");
-if (/"formEndpoint":\s*""/.test(config)) {
-  failures.push("the deployed form endpoint is empty");
-}
 if (/"posthogKey":\s*""/.test(config)) {
   failures.push("the deployed PostHog key is empty");
 }

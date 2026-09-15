@@ -760,11 +760,16 @@ vault for the user's Kimen operations. Do not claim that unimplemented commands
 can be installed and run today.
 
 The site should not send sensitive infrastructure descriptions into public
-GitHub issues or use an email link as its primary CTA. A private form or another
-intent-capture mechanism must be chosen before the public market test depends
-on conversion data. The form should ask which routine operation still requires
-broad access, how access is controlled today, which callers need it and for an
-email address. Never ask for credentials or sensitive infrastructure details.
+GitHub issues. The current response path is a prefilled email to the founder's
+established public contact address. It asks which routine operation still
+requires broad access, how access works today, who needs to run it, and what
+makes the current setup awkward or risky. Never ask for credentials or
+sensitive infrastructure details.
+
+This replaces the earlier private-form plan. It removes an unnecessary backend
+and makes the handoff legible before the visitor sends anything. The tradeoff is
+measurement: PostHog can record that the email CTA was clicked, but only a
+received email proves that the visitor completed the contact.
 
 A short section may distinguish Kimen from a runbook platform:
 
@@ -785,8 +790,8 @@ or implement a team control plane before external signal.
 The order is:
 
 1. Present the complete product story on `kimen.systems`.
-2. Connect a private form and privacy-conscious analytics before meaningful
-   distribution begins.
+2. Verify the prefilled email and connect privacy-conscious analytics before
+   meaningful distribution begins.
 3. Send qualified developers and engineering/platform leaders to `/access/`.
 4. Observe which problem produces intent: `.env` hygiene, an existing
    privileged operation or team governance.

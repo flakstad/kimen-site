@@ -93,89 +93,17 @@
     link.addEventListener("click", () => {
       let destinationPath = "";
       try {
-        destinationPath = new URL(link.href, window.location.href).pathname;
+        const destination = new URL(link.href, window.location.href);
+        destinationPath = destination.protocol === "http:" || destination.protocol === "https:"
+          ? destination.pathname
+          : destination.protocol.replace(":", "");
       } catch (_error) {
         destinationPath = "";
       }
-      capture(link.dataset.event, {destination_path: destinationPath});
+      capture(link.dataset.event, {
+        destination_path: destinationPath,
+        cta_location: String(link.dataset.location || ""),
+      });
     });
   }
-
-  const form = document.querySelector("[data-private-form]");
-  if (!form) return;
-
-  const status = form.querySelector("[data-form-status]");
-  const submit = form.querySelector("button[type='submit']");
-  const endpoint = safeHttpsUrl(config.formEndpoint);
-  let started = false;
-
-  form.addEventListener("input", () => {
-    if (started) return;
-    started = true;
-    capture("operations_form_started");
-  });
-
-  function setStatus(message, successful = false) {
-    status.textContent = message;
-    status.classList.toggle("success", successful);
-  }
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const data = new FormData(form);
-    if (data.get("website")) {
-      form.reset();
-      setStatus("Thank you. Your response has been received.", true);
-      return;
-    }
-
-    const callers = data.getAll("callers");
-    if (callers.length === 0) {
-      setStatus("Choose at least one caller which needs the operation.");
-      return;
-    }
-
-    if (!endpoint) {
-      setStatus("The private response form is not connected yet. Please try again later.");
-      return;
-    }
-
-    data.append("source_path", window.location.pathname);
-    data.append("utm_source", source.utm_source);
-    data.append("utm_medium", source.utm_medium);
-    data.append("utm_campaign", source.utm_campaign);
-    data.append("referrer", source.referrer);
-
-    submit.disabled = true;
-    setStatus("Sending your response...");
-    capture("operations_form_attempted", {
-      current_access: String(data.get("current_access") || ""),
-      callers: callers.join(","),
-    });
-
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        mode: "cors",
-        credentials: "omit",
-        cache: "no-store",
-        referrerPolicy: "no-referrer",
-        headers: {"Accept": "application/json"},
-        body: data,
-      });
-      if (!response.ok) throw new Error(`Form submission failed with ${response.status}`);
-      form.reset();
-      setStatus("Thank you. We will follow up about the operation.", true);
-      capture("operations_form_submitted", {
-        current_access: String(data.get("current_access") || ""),
-        callers: callers.join(","),
-      });
-    } catch (_error) {
-      setStatus("We could not send the response. Please try again.");
-      capture("operations_form_failed");
-    } finally {
-      submit.disabled = false;
-    }
-  });
 })();

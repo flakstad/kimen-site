@@ -36,7 +36,7 @@
           <code>restart_worker("payments")</code>
           <small>Not SSH. Not cloud admin. One operation.</small>
         </div>
-        <div class="hero-actions"><a class="button orange" href="#solution" data-event="operations_explanation_clicked">See the smaller way</a><a href="#early-access" data-event="operations_form_cta_clicked">Tell us what your team still runs</a></div>
+        <div class="hero-actions"><a class="button orange" href="#solution" data-event="operations_explanation_clicked">See the smaller way</a><a href="#early-access">Tell us what your team still runs</a></div>
       </section>
 
       <article class="access-story">
@@ -121,33 +121,11 @@
           <h2>What does your team still run through scripts, consoles or someone with production access?</h2>
           <p>Tell us about one routine operation and how access works today. We are looking for teams which already have the work, but not a clean way to let the right callers run it.</p>
           <small>Do not include credentials, hostnames or sensitive infrastructure details.</small>
+          <div class="access-contact">
+            <a class="button" href="mailto:hello@andreasflakstad.no?subject=Kimen%20Operations%2C%20routine%20production%20work&amp;body=Hi%20Andreas%2C%0A%0AOur%20team%20has%20a%20routine%20operation%20we%20would%20like%20to%20delegate%20more%20safely.%0A%0AOperation%3A%0A%0AWho%20needs%20to%20run%20it%20(developers%2C%20CI%2C%20workflows%20or%20agents)%3A%0A%0AHow%20access%20works%20today%3A%0A%0AWhat%20is%20awkward%20or%20risky%20about%20the%20current%20setup%3A%0A%0ATeam%20or%20company%3A%0A%0APlease%20do%20not%20include%20credentials%2C%20hostnames%20or%20sensitive%20infrastructure%20details." data-event="operations_contact_clicked" data-location="operations_end">Tell us about the operation</a>
+            <p>This opens a prefilled email to <code>hello@andreasflakstad.no</code>. You can edit everything before sending.</p>
+          </div>
         </div>
-        <form class="access-form" data-private-form aria-label="Kimen Operations early access form">
-          <label>What routine operation is difficult to delegate?<textarea name="operation" rows="3" required placeholder="Restart a worker, run a backfill, inspect recent logs"></textarea></label>
-          <label>How is access controlled today?
-            <select name="current_access" required>
-              <option value="">Choose the closest answer</option>
-              <option value="local_or_shared_credentials">Local or shared credentials</option>
-              <option value="cloud_iam">Cloud IAM</option>
-              <option value="ci_workflow">CI workflow</option>
-              <option value="runbook_or_internal_tool">Runbook platform or internal tool</option>
-              <option value="ask_privileged_person">Ask someone with access</option>
-              <option value="other">Something else</option>
-            </select>
-          </label>
-          <fieldset>
-            <legend>Who needs to run it?</legend>
-            <label><input type="checkbox" name="callers" value="developers" /> Developers</label>
-            <label><input type="checkbox" name="callers" value="ci" /> CI</label>
-            <label><input type="checkbox" name="callers" value="workflows" /> Workflows</label>
-            <label><input type="checkbox" name="callers" value="agents" /> Agents</label>
-          </fieldset>
-          <label>Work email<input type="email" name="email" autocomplete="email" required placeholder="you@company.com" /></label>
-          <label class="form-trap" aria-hidden="true">Company website<input name="website" tabindex="-1" autocomplete="off" /></label>
-          <button class="button" type="submit">Tell us about the operation</button>
-          <p class="form-status" data-form-status role="status" aria-live="polite"></p>
-          <small>Your response is private. No public issue will be created. <a href="../privacy/">How Kimen handles this data.</a></small>
-        </form>
       </section>
 
       <aside class="access-boundary"><strong>A precise boundary:</strong> Kimen Operations is intended to keep credentials out of callers and restrict them to approved operations. Protection from a compromised operating-system account may also require sandboxing, separate identities or remote execution.</aside>
