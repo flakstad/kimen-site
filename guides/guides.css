@@ -1,0 +1,224 @@
+.guide-page {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.guide-hero,
+.guide-body,
+.guide-index,
+.guide-closing,
+.privacy-body {
+  padding-left: var(--page-pad);
+  padding-right: var(--page-pad);
+}
+
+.guide-hero {
+  padding-top: 88px;
+  padding-bottom: 82px;
+  background: var(--dark);
+  color: white;
+}
+
+.guide-hero h1 {
+  max-width: 900px;
+  font-size: clamp(40px, 4.8vw, 64px);
+}
+
+.guide-hero p {
+  max-width: 730px;
+  margin: 28px 0 0;
+  color: var(--dark-muted);
+  font: 19px/1.65 var(--serif);
+}
+
+.guide-hero .guide-meta {
+  margin-top: 34px;
+  color: #95a598;
+  font: 11px/1.5 var(--mono);
+}
+
+.guide-index,
+.guide-body,
+.privacy-body {
+  max-width: calc(820px + (2 * var(--page-pad)));
+  padding-top: 88px;
+  padding-bottom: 100px;
+}
+
+.guide-index > p,
+.guide-body > p,
+.guide-body li,
+.privacy-body > p,
+.privacy-body li {
+  color: var(--muted);
+  font: 17px/1.75 var(--serif);
+}
+
+.guide-index > p {
+  max-width: 720px;
+  margin: 24px 0 52px;
+}
+
+.guide-list {
+  margin: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.guide-list article {
+  padding: 31px 0 34px;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-list h2 {
+  max-width: 700px;
+  font-size: clamp(25px, 3vw, 34px);
+}
+
+.guide-list h2 a {
+  text-decoration: none;
+}
+
+.guide-list h2 a:hover {
+  color: var(--green);
+}
+
+.guide-list p {
+  max-width: 680px;
+  margin: 15px 0 0;
+  color: var(--muted);
+  font: 15px/1.65 var(--serif);
+}
+
+.guide-body section,
+.privacy-body section {
+  padding: 51px 0 55px;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-body section:first-child,
+.privacy-body section:first-child {
+  padding-top: 0;
+}
+
+.guide-body h2,
+.privacy-body h2 {
+  max-width: 730px;
+  font-size: clamp(29px, 3.2vw, 42px);
+}
+
+.guide-body h3,
+.privacy-body h3 {
+  margin-top: 35px;
+}
+
+.guide-body section > p,
+.privacy-body section > p {
+  max-width: 730px;
+  margin: 22px 0 0;
+  color: var(--muted);
+  font: 17px/1.75 var(--serif);
+}
+
+.guide-body ul,
+.privacy-body ul {
+  max-width: 700px;
+  margin: 25px 0 0;
+  padding-left: 23px;
+}
+
+.guide-body li + li,
+.privacy-body li + li {
+  margin-top: 10px;
+}
+
+.guide-body pre {
+  max-width: 730px;
+  margin: 28px 0 0;
+  padding: 20px 22px;
+  overflow-x: auto;
+  background: var(--dark);
+  color: white;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.guide-body p code,
+.guide-body li code,
+.privacy-body p code {
+  color: var(--green);
+  font-size: .84em;
+  font-weight: 700;
+}
+
+.guide-note {
+  max-width: 730px;
+  margin: 32px 0 0;
+  padding: 23px 0 2px 20px;
+  border-top: 1px solid var(--line);
+  border-left: 4px solid var(--orange);
+}
+
+.guide-note strong {
+  display: block;
+  margin-bottom: 9px;
+}
+
+.guide-note p {
+  margin: 0;
+  color: var(--muted);
+  font: 15px/1.68 var(--serif);
+}
+
+.guide-closing {
+  padding-top: 72px;
+  padding-bottom: 78px;
+  background: var(--green);
+  color: white;
+}
+
+.guide-closing h2 {
+  max-width: 760px;
+}
+
+.guide-closing p {
+  max-width: 680px;
+  margin: 23px 0 30px;
+  color: #d4e0d5;
+  font: 17px/1.65 var(--serif);
+}
+
+.guide-closing .button {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.privacy-body {
+  min-height: 60vh;
+}
+
+.privacy-body > p:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 700px) {
+  .guide-hero,
+  .guide-index,
+  .guide-body,
+  .guide-closing,
+  .privacy-body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .guide-hero {
+    padding-top: 62px;
+    padding-bottom: 67px;
+  }
+
+  .guide-index,
+  .guide-body,
+  .privacy-body {
+    padding-top: 60px;
+    padding-bottom: 70px;
+  }
+}

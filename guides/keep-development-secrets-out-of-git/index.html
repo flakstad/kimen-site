@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>How to keep local development secrets out of Git, Kimen</title>
+    <meta name="description" content="Keep database URLs, API keys and other local development secrets out of Git and out of project-local plaintext files." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/keep-development-secrets-out-of-git/" />
+    <meta property="og:title" content="How to keep local development secrets out of Git" />
+    <meta property="og:description" content="Let the project declare what it needs without storing the secret values beside the code." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/keep-development-secrets-out-of-git/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How to keep local development secrets out of Git","description":"A practical model for keeping database URLs, API keys and local development secrets out of Git and the project workspace.","datePublished":"2026-09-15","dateModified":"2026-09-15","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/keep-development-secrets-out-of-git/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_keep_secrets_out_of_git">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>How to keep local development secrets out of Git</h1>
+        <p>Your application may need a database URL or API key. The repository needs to describe that requirement. It does not need to contain the value.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>The usual solution stops at <code>.gitignore</code>.</h2>
+          <p>A common local setup puts credentials in <code>.env</code> and adds that filename to <code>.gitignore</code>. This reduces accidental commits, but the plaintext file still lives inside the project workspace.</p>
+          <p>Any editor, script, plugin or coding agent which can read the workspace may also be able to read the file. Each developer must create a copy, keep it current and remove it when access changes.</p>
+          <p>If the file is accidentally committed, removing it in a later commit is not sufficient. Git history and existing clones may still contain the value, so the credential should be revoked or rotated.</p>
+        </section>
+        <section>
+          <h2>Separate the requirement from the value.</h2>
+          <p>The repository should carry enough information to explain what the application needs. The actual value should belong to the environment where the application runs.</p>
+          <pre><code>project requirement
+DATABASE_URL
+
+local binding
+DATABASE_URL → dev.database_url
+
+local encrypted vault
+dev.database_url → postgres://…</code></pre>
+          <p>The mapping can be reviewed and committed. The database URL cannot, because it is not in the project.</p>
+        </section>
+        <section>
+          <h2>Supply the value only when the program starts.</h2>
+          <p>Kimen stores local values in an encrypted vault. A small map in the project connects the application variable to a vault entry:</p>
+          <pre><code># .kimen/profiles/dev.kmap
+env DATABASE_URL=dev.database_url</code></pre>
+          <p>Then start the application through Kimen:</p>
+          <pre><code>kimen run --profile dev -- ./app</code></pre>
+          <p>The application receives a normal <code>DATABASE_URL</code>. It does not need a Kimen library or a new configuration API. The plaintext value does not need to be stored in the project.</p>
+          <aside class="guide-note"><strong>The receiving program can read the value.</strong><p>Runtime injection reduces where secrets are stored. It does not make an untrusted child process safe. Only project values into software you trust with them.</p></aside>
+        </section>
+        <section>
+          <h2>What this changes for a development team</h2>
+          <ul>
+            <li>The repository documents required names without containing reusable credentials.</li>
+            <li>A fresh checkout does not need a copied plaintext secrets file beside the code.</li>
+            <li>Local tools can inspect the project structure without automatically seeing the values.</li>
+            <li>A developer can use separate vaults and profiles for different projects or environments.</li>
+            <li>Secret rotation no longer depends on finding every forgotten project-local copy.</li>
+          </ul>
+          <p>Kimen is deliberately local and open source. Teams which already have a shared password or secrets service can keep using it. Kimen's useful boundary is the project contract and runtime projection, not ownership of every organization's secret storage.</p>
+        </section>
+        <section>
+          <h2>A practical migration</h2>
+          <p>Start with one non-production credential. Record the variable name in a Kimen profile, store the value in the vault and run the application through <code>kimen run</code>. Confirm that the program behaves exactly as before, then remove the plaintext project copy.</p>
+          <p>Do not migrate a value until you know every process which needs it. Configuration errors are easier to diagnose one secret at a time.</p>
+          <p>Next, read <a href="../runtime-configuration-without-env-files/">how runtime configuration works without a project-local <code>.env</code> file</a>.</p>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Keep the name. Move the value.</h2>
+        <p>Install Kimen and move one local development secret out of the repository and project workspace.</p>
+        <a class="button" href="../../docs/#start" data-event="guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

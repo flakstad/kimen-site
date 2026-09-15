@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Why .env files are not a secrets management strategy, Kimen</title>
+    <meta name="description" content="A .env file is a convenient configuration format, but .gitignore does not make plaintext API keys and database credentials secure or manageable." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/env-files-are-not-secret-management/" />
+    <meta property="og:title" content="Why .env files are not a secrets management strategy" />
+    <meta property="og:description" content="A convenient configuration format is not the same thing as protected storage and controlled runtime delivery." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/env-files-are-not-secret-management/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Why .env files are not a secrets management strategy","description":"Why project-local .env files and .gitignore do not provide protected secret storage or controlled runtime delivery.","datePublished":"2026-09-15","dateModified":"2026-09-15","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/env-files-are-not-secret-management/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_env_files">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Why <code>.env</code> files are not a secrets management strategy</h1>
+        <p>A <code>.env</code> file is a useful way to load configuration. It does not decide where secrets should live, who may read them or how they should be updated.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2><code>.gitignore</code> solves one narrow problem.</h2>
+          <p>Adding <code>.env</code> to <code>.gitignore</code> tells Git not to add an untracked file by default. That is useful, but it does not encrypt the file or move it outside the workspace.</p>
+          <p>The value remains readable to local processes with file access. It can appear in backups, editor indexes, support bundles, command output or agent context. It can also be copied into a differently named file which is not ignored.</p>
+          <p>A developer can still force-add the ignored file. A secret committed before the ignore rule was added remains tracked until it is explicitly removed, and it may remain in history afterwards.</p>
+        </section>
+        <section>
+          <h2>The file becomes a distribution system.</h2>
+          <p>In a team, somebody must deliver the initial file to every developer. When a key changes, every copy must change. When somebody leaves, it can be difficult to know which credentials still exist on which machines.</p>
+          <ul>
+            <li>Chat messages and password-manager notes become setup instructions.</li>
+            <li>Different developers silently run with different values.</li>
+            <li>Old clones and forgotten worktrees keep old copies.</li>
+            <li>Applications, scripts and local tools share the same readable file.</li>
+          </ul>
+          <p>This can be acceptable for non-sensitive local defaults. It is a poor lifecycle for reusable credentials.</p>
+        </section>
+        <section>
+          <h2>Keep environment variables. Replace plaintext storage.</h2>
+          <p>The problem is not the environment-variable interface. Many applications correctly read values such as <code>DATABASE_URL</code> and <code>STRIPE_API_KEY</code> from their runtime environment.</p>
+          <p>The avoidable part is storing those values in a plaintext file beside the application. Kimen keeps the names and mappings with the project while storing the values in a local encrypted vault.</p>
+          <pre><code># committed project map
+env DATABASE_URL=dev.database_url
+env STRIPE_API_KEY=dev.stripe_api_key
+
+# application startup
+kimen run --profile dev -- ./app</code></pre>
+          <p>The child process sees ordinary environment variables. A repository reader sees only the names and vault references.</p>
+        </section>
+        <section>
+          <h2>When a <code>.env</code> file is still reasonable</h2>
+          <p>A project-local env file can be perfectly reasonable when every value is public, disposable or a local default. Examples include a development port, a feature flag or the hostname of a local container.</p>
+          <p>The distinction is whether disclosure creates work or risk. If exposure means revoking a token, changing a password or investigating access, the value deserves protected storage.</p>
+          <aside class="guide-note"><strong>A useful rule</strong><p>Commit safe defaults. Declare secret names. Store reusable credentials outside the project. Materialize them only for the runtime which needs them.</p></aside>
+        </section>
+        <section>
+          <h2>What about <code>.env.example</code>?</h2>
+          <p>An example file is useful because it documents the names the application expects. Keep it free of realistic secret values. Kimen's project map serves a related purpose while also connecting those names to local vault references.</p>
+          <p>The project contract can therefore remain precise without turning the repository into the place where private values live.</p>
+          <p>For a concrete migration, read <a href="../keep-development-secrets-out-of-git/">how to move local development secrets out of Git and the project workspace</a>.</p>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Your application can keep using environment variables.</h2>
+        <p>Move the secret values out of the project and let Kimen supply them when the application starts.</p>
+        <a class="button" href="../../docs/#start" data-event="guide_install_clicked">Try Kimen on one project</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy, Kimen</title>
+    <meta name="description" content="How the Kimen website handles anonymous analytics and private Operations form responses." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/privacy/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../site.css" />
+    <link rel="stylesheet" href="../guides/guides.css" />
+    <script src="../site-config.js" defer></script>
+    <script src="../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="privacy">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Kimen Core</a><a href="../guides/">Guides</a><a href="../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Privacy</h1>
+        <p>Kimen collects only the information needed to understand whether the website and product direction are useful.</p>
+        <p class="guide-meta">Last updated September 15, 2026</p>
+      </header>
+      <article class="privacy-body">
+        <section>
+          <h2>Anonymous website analytics</h2>
+          <p>When analytics are configured, Kimen uses PostHog's European service to record page views and a small set of product-intent events, such as an installation link click or the start of the Operations form.</p>
+          <p>The site does not identify visitors, create PostHog person profiles or use session replay. Events contain an anonymous session identifier, page path, referring origin and campaign parameters when present. The configuration disables IP-based geolocation.</p>
+          <p>Analytics are not loaded when the browser sends Global Privacy Control or a Do Not Track value of <code>1</code>.</p>
+        </section>
+        <section>
+          <h2>Operations form</h2>
+          <p>If you submit the Operations form, the private form receiver receives the operation description, current access method, selected caller categories, work email and basic traffic attribution.</p>
+          <p>The operation description and email address are never included in PostHog analytics events. Do not submit credentials, hostnames or sensitive infrastructure details.</p>
+          <p>Responses are used to understand the problem, evaluate early access and contact people who ask to participate. They are removed when they are no longer needed for those purposes.</p>
+        </section>
+        <section>
+          <h2>Third-party links</h2>
+          <p>The site links to GitHub and other external websites. Those services handle visits according to their own privacy policies.</p>
+        </section>
+        <section>
+          <h2>Questions and deletion requests</h2>
+          <p>For questions about website data or to request deletion of a submitted response, contact Andreas Flakstad through the contact details at <a href="https://andreasflakstad.no">andreasflakstad.no</a>.</p>
+        </section>
+      </article>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="../guides/">Guides</a><a href="../docs/">Manual</a><a href="../access/">Operations</a></nav></footer>
+  </body>
+</html>
