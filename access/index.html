@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen, stop copying deployment credentials</title>
+    <title>Kimen Operations, stop copying deployment credentials</title>
     <meta name="description" content="Let developers, CI and agents deploy software without giving each of them a reusable infrastructure credential." />
     <link rel="canonical" href="https://kimen.systems/access/" />
     <meta property="og:title" content="Your deployment credential ends up everywhere work happens." />
@@ -17,7 +17,7 @@
   <body class="access-page">
     <header class="topbar dark-topbar access-topbar">
       <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="#problem">The problem</a><a href="#solution">A better way</a><a href="#definition">How Actions work</a><a href="#teams">Teams</a><a href="../">Kimen Core ↗</a></nav>
+      <nav aria-label="Primary"><a href="#problem">The problem</a><a href="#solution">A better way</a><a href="#definition">How Operations work</a><a href="#teams">Teams</a><a href="../">Kimen Core ↗</a></nav>
     </header>
 
     <main>
@@ -68,7 +68,7 @@
           <span>Agents</span>
         </div>
 
-        <p class="solution-copy">Kimen keeps the credential, deployment target and provider setup. The callers can request a staging deployment and receive its result. They cannot reveal the token or turn it into another provider operation.</p>
+        <p class="solution-copy">Kimen Operations keeps the credential, deployment target and provider setup. The callers can request a staging deployment and receive its result. They cannot reveal the token or turn it into another provider operation.</p>
         <p class="product-line">Give access to the operation, not the credential behind it.</p>
       </section>
 
@@ -91,7 +91,7 @@
         </div>
       </section>
 
-      <section class="action-model" id="definition">
+      <section class="operation-model" id="definition">
         <header>
           <h2>Keep the deployment script. Remove the credential from it.</h2>
           <p>The script in the repository can still build, test and choose what to deploy. Its sensitive step becomes a request to Kimen.</p>
@@ -133,16 +133,16 @@ credential deploy_token</code></pre>
           <figcaption id="deploy-path-caption">The repository controls the workflow around deployment. Kimen controls the credential-bearing step.</figcaption>
         </figure>
 
-        <div class="action-explanation">
+        <div class="operation-explanation">
           <h3>Why this is not just a named script</h3>
-          <p>If Kimen injects <code>DEPLOY_TOKEN</code> into a repository script, anyone who can edit the script can print or transmit the token. A Kimen Action gives the editable script no credential. It hands a validated request to a trusted adapter outside the project.</p>
+          <p>If Kimen injects <code>DEPLOY_TOKEN</code> into a repository script, anyone who can edit the script can print or transmit the token. A Kimen operation gives the editable script no credential. It hands a validated request to a trusted adapter outside the project.</p>
           <p>The adapter may itself be implemented as a script, but it must be installed and pinned by Kimen or an administrator. The caller cannot replace it.</p>
         </div>
 
-        <div class="action-explanation">
+        <div class="operation-explanation">
           <h3>What Kimen Teams sends to developers</h3>
-          <p>The Action name travels with the project through Git. Kimen Teams syncs the approved adapter version, access rules and environment policy. Credentials stay in the vault, secret manager or runner that performs the operation.</p>
-          <p>An administrator can update or revoke the Action once. Local Kimen verifies the new signed version before accepting another call. No deployment credential needs to be copied to developer machines.</p>
+          <p>The operation name travels with the project through Git. Kimen Teams syncs the approved adapter version, access rules and environment policy. Credentials stay in the vault, secret manager or runner that performs the operation.</p>
+          <p>An administrator can update or revoke the operation once. Local Kimen verifies the new signed version before accepting another call. No deployment credential needs to be copied to developer machines.</p>
         </div>
 
         <aside class="deployed-code-note"><strong>One separate boundary remains.</strong> Kimen protects the deployment credential. Code deployed to an environment may still access that environment's runtime secrets. Staging should use limited staging credentials. Production can require a reviewed revision, verified artifact and approval.</aside>
@@ -159,7 +159,7 @@ credential deploy_token</code></pre>
         </div>
 
         <div class="core-connection">
-          <p>Kimen already keeps runtime secrets out of the repository and supplies them only when a trusted application starts. Named operations take the next step. When someone only needs a result, Kimen can keep the credential to itself.</p>
+          <p>Kimen already keeps runtime secrets out of the repository and supplies them only when a trusted application starts. Kimen Operations takes the next step. When someone only needs a result, Kimen can keep the credential to itself.</p>
           <a href="../">See Kimen Core →</a>
         </div>
       </section>

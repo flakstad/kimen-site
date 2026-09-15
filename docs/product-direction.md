@@ -43,8 +43,8 @@ edition which will be replaced by an agent product. It is the foundation.
 
 ## Current commercial product hypothesis
 
-Actions are a coherent and falsifiable product hypothesis, not yet a validated
-product direction. There is no external demand evidence yet.
+Kimen Operations is a coherent and falsifiable product hypothesis, not yet a
+validated product direction. There is no external demand evidence yet.
 
 The hypothesis is:
 
@@ -65,8 +65,8 @@ CI jobs, workflow engines and local workers have the same underlying problem.
 
 The strongest alternative is that provider-native IAM, OIDC, protected CI
 workflows and internal endpoints are already sufficient. If users do not care
-that an operation is portable across callers, Actions are likely a useful open
-source feature rather than a commercial product.
+that an operation is portable across callers, Kimen Operations is likely a
+useful open source feature rather than a commercial product.
 
 The website must test for people who already have multiple wrappers,
 credentials and access rules for the same operational jobs. External intent,
@@ -164,15 +164,15 @@ through `run`, `render` or `envfile`.
 Preserve the current session semantics for trusted human use if they remain
 useful, but do not describe them as scoped agent access.
 
-### An Action session is a broker, not a scoped passphrase file
+### An operation session is a broker, not a scoped passphrase file
 
 The agent product requires a second meaning of session:
 
 ```text
 human enters vault password
     -> Kimen broker holds decrypted authority
-    -> session permits selected Actions for a limited time
-    -> agent may invoke those Actions
+    -> session permits selected operations for a limited time
+    -> agent may invoke those operations
     -> reveal, projection and administration remain locked
 ```
 
@@ -197,7 +197,7 @@ secret get
 run
 render
 envfile
-action create / edit
+operation create / edit
 binding or credential changes
 ```
 
@@ -205,8 +205,8 @@ This is not best understood as “the vault is unlocked with scopes.” Kimen ha
 the authority; the session may ask Kimen to use selected parts of it.
 
 Credential use therefore needs policy as well as storage semantics. A
-credential backing an Action may be usable by the trusted adapter while being
-neither revealable nor projectable through that Action session.
+credential backing an operation may be usable by the trusted adapter while
+being neither revealable nor projectable through that operation session.
 
 ## Why bounded operations are needed
 
@@ -251,13 +251,13 @@ approved operation with exfiltration. A one-time approval, organization policy
 or short-lived grant may authorize an invocation, but none of them may let the
 agent redefine the operation itself.
 
-`Actions` is a possible feature name, not the product thesis. Better internal
-terms are bounded operation or capability. Public copy should normally describe
-the actual job rather than teach either term first.
+`Kimen Operations` is the product name. An individual unit is an `operation`.
+Bounded operation and capability remain useful internal descriptions. Public
+copy should normally describe the actual job before teaching the category.
 
 The clearest use-case line is:
 
-> Give access to actions, not credentials.
+> Give access to operations, not credentials.
 
 ## Concrete operation examples
 
@@ -314,17 +314,18 @@ The implementation concepts currently worth preserving are requirement,
 binding, grant, invocation, adapter and receipt. Their wire formats, command
 names and serialization are intentionally undecided.
 
-The working public term is `Action`. The final name remains open.
+The public product term is `Kimen Operations`. A single callable unit is an
+`operation`. Do not shorten the product name to `Ops` in primary copy.
 
-### Action definition and lifecycle
+### Operation definition and lifecycle
 
-An Action is split deliberately between the project and the trusted
+An operation is split deliberately between the project and the trusted
 environment.
 
 The project may commit a portable contract such as:
 
 ```text
-action deploy_staging(revision: git_sha)
+operation deploy_staging(revision: git_sha)
 ```
 
 It declares the operation name and accepted input, but no target, provider,
@@ -357,15 +358,15 @@ ability to choose another command, target or provider request.
 
 This is the defining difference from a named script. If the caller can edit the
 implementation and Kimen injects a credential into it, the caller can disclose
-that credential. A protected Action therefore uses an adapter outside the
+that credential. A protected operation therefore uses an adapter outside the
 caller's control, with constrained inputs, a fixed target and bounded output.
 
 Repository scripts still have a useful role. They may build, test, calculate an
 artifact digest and invoke `deploy_staging(revision, artifact)`. They remain
 caller-editable because they never receive the deployment credential. Kimen
 validates the request and crosses into a trusted adapter or runner for the
-credential-bearing step. Actions separate orchestration from protected
-execution. They do not attempt to replace deployment workflows.
+credential-bearing step. Kimen Operations separates orchestration from protected
+execution. It does not attempt to replace deployment workflows.
 
 For one developer, the protected binding lives in the local vault. The project
 declaration reaches other developers through Git. A team owner can update the
@@ -383,10 +384,10 @@ CLI syntax remain illustrative.
 
 For the product story, “YOLO” should mean that the agent can run arbitrary
 commands and change files in its working project without per-command human
-approval. Kimen should let this agent use selected Actions without automatically
+approval. Kimen should let this agent use selected operations without automatically
 gaining secret-disclosure or secret-projection authority.
 
-An Action-only broker session can be a meaningful boundary under that model,
+An operation-only broker session can be a meaningful boundary under that model,
 even when the agent and developer share a machine. The password remains a form
 of user authorization which the agent does not know.
 
@@ -399,9 +400,9 @@ integrity or external user-presence mechanisms.
 
 The concrete public promise is:
 
-> Let the agent work freely in the project. Unlock only the Actions it needs.
+> Let the agent work freely in the project. Unlock only the operations it needs.
 
-The stronger deployment option is to combine Action-only sessions with a
+The stronger deployment option is to combine operation-only sessions with a
 sandbox, container, VM, separate OS identity or remote broker. Kimen need not
 build the sandbox itself; it can own the narrow bridge out of it.
 
@@ -609,9 +610,9 @@ project without plaintext values being stored there. Make clear that local
 development, tests, tools, files and process managers are use cases; this is not
 only deployment and not primarily an agent product.
 
-### Kimen operations and team access
+### Kimen Operations and team access
 
-Actions are not primarily an agent product. Coding agents are one especially
+Kimen Operations is not primarily an agent product. Coding agents are one especially
 urgent caller alongside developers, CI and deterministic workflows. The public
 path lives at `/access/`; `/agents/` is only a compatibility redirect.
 
@@ -690,9 +691,8 @@ useful internally but force a visitor to translate the product. Prefer
 deployment credential, `deploy_staging(revision)`, application, environment,
 log window, service and result.
 
-Use named operation in public-first copy. `Action` remains a possible feature
-or implementation name, but the final product terminology is open. Show only a
-few concrete calls:
+Use operation in public-first copy. `Kimen Operations` names the product area.
+Show only a few concrete calls:
 
 ```text
 deploy_staging(revision)
@@ -708,7 +708,7 @@ not read as an add-on for one agent or source-control vendor.
 Do not use numbered `01 / 02 / 03` decoration, oversized headings in narrow
 columns, unexplained code boxes, eyebrows above headings or generic security
 imagery. Code examples for current Kimen must be verified against the real CLI.
-Planned Action syntax may be shown when it materially explains the model, but it
+Planned operation syntax may be shown when it materially explains the model, but it
 must be explicitly labelled illustrative rather than presented as settled API
 design.
 

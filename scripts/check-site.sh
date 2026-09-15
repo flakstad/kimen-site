@@ -9,6 +9,7 @@ cd "$site_root"
 python3 - <<'PY'
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 from urllib.parse import unquote, urlparse
 
 
@@ -19,6 +20,7 @@ class PageParser(HTMLParser):
         self.links = []
         self.title_depth = 0
         self.title = []
+        self.text = []
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
@@ -34,6 +36,7 @@ class PageParser(HTMLParser):
             self.title_depth -= 1
 
     def handle_data(self, data):
+        self.text.append(data)
         if self.title_depth:
             self.title.append(data)
 
@@ -47,6 +50,8 @@ for path in sorted(Path(".").rglob("*.html")):
     parser.close()
     if not "".join(parser.title).strip():
         raise SystemExit(f"missing title: {path}")
+    if re.search(r"\bActions?\b", " ".join(parser.text)):
+        raise SystemExit(f"obsolete product term in public text: {path}")
     pages[path.resolve()] = parser
 
 for source, parser in pages.items():
@@ -87,6 +92,7 @@ for text in required:
 
 access_page = Path("access/index.html").read_text(encoding="utf-8")
 access_required = [
+    "Kimen Operations",
     "deploy_staging(revision)",
     "Keep the deployment script. Remove the credential from it.",
     "What Kimen Teams sends to developers",

@@ -59,7 +59,7 @@ can select a program which prints its environment or alter the intended
 program to exfiltrate it.
 
 The stronger boundary therefore requires something outside the agent's control
-to constrain what receives or uses the secret. Pre-registering a named action
+to constrain what receives or uses the secret. Pre-registering a named operation
 is one possible interface, but not an architectural requirement. A one-time
 human approval, a short-lived grant, a provider integration or a fixed remote
 workflow could establish the same constraint. What matters is that the agent
@@ -100,21 +100,21 @@ A portable first adapter could be a deliberately narrow HTTPS request:
 Provider-specific adapters may be safer and easier to explain where a generic
 HTTP template would expose too much freedom.
 
-## Where an Action is defined
+## Where an operation is defined
 
-An Action has two definitions on opposite sides of the trust boundary.
+An operation has two definitions on opposite sides of the trust boundary.
 
 The project carries a portable contract which may be committed with the code:
 
 ```text
-action deploy_staging(revision: git_sha)
+operation deploy_staging(revision: git_sha)
 ```
 
 This contract gives developers, CI, workflows and agents a stable name and an
 input schema. It contains no provider endpoint, deployment target, credential
 reference or executable implementation. A caller which can edit the repository
 may request a contract change, but cannot thereby change what authority an
-already approved Action uses.
+already approved operation uses.
 
 The environment owner creates a protected binding in Kimen's authenticated
 local state:
@@ -142,7 +142,7 @@ repository-controlled code. For a team, the effective binding may combine a
 signed organization definition with the local environment and credential
 reference held in the vault.
 
-The public examples use `snake_case` for Action identifiers, such as
+The public examples use `snake_case` for operation identifiers, such as
 `deploy_staging(revision)`. This makes the name read like a callable operation
 instead of a shell command. The exact declaration and CLI syntax remain
 illustrative until implementation work is justified.
@@ -153,9 +153,9 @@ When a caller asks for `deploy_staging(revision: "abc123")`, Kimen is not just
 looking up a command name. It:
 
 1. identifies the project, caller and active authorization session;
-2. resolves the requested Action contract and its protected binding;
+2. resolves the requested operation contract and its protected binding;
 3. validates the revision against the declared type and local restrictions;
-4. checks whether this caller may use this Action in this environment;
+4. checks whether this caller may use this operation in this environment;
 5. obtains a specific approval if policy requires one;
 6. resolves the credential without revealing it to the caller;
 7. gives the credential and validated data to the trusted adapter;
@@ -175,12 +175,12 @@ often edit. If Kimen injects a deployment token into a repository script, a
 caller which controls that script can print or transmit the token. Naming the
 script `deploy_staging` does not reduce its authority.
 
-A protected Action has a different call boundary:
+A protected operation has a different call boundary:
 
 ```text
 caller controls                 Kimen controls
 
-Action name                     trusted adapter
+operation name                  trusted adapter
 allowed input values            target and provider request
                                 credential resolution
                                 policy and approval
@@ -195,7 +195,7 @@ model. Built-in or signed provider adapters provide a clearer final boundary.
 ### Repository scripts can still orchestrate the work
 
 An editable repository script may safely perform the non-sensitive work and
-then invoke an Action:
+then invoke an operation:
 
 ```text
 scripts/deploy_staging
@@ -212,13 +212,13 @@ request and passes only the approved data into a trusted adapter or runner.
 This is different from asking Kimen to inject a token and execute the same
 repository script. That would let caller-controlled code disclose the token.
 The useful split is editable orchestration in the repository and protected
-execution behind the Action boundary.
+execution behind the operation boundary.
 
 ## Updates and team distribution
 
 The portable contract and the protected binding have separate lifecycles.
 
-- A project changes an Action name or input schema through an ordinary code
+- A project changes an operation name or input schema through an ordinary code
   review. This creates a new contract version.
 - An environment owner changes targets, adapters, credentials and constraints
   through the protected administration path.
@@ -248,7 +248,7 @@ base64-encoded vault passphrase in a same-user-readable `0600` file. It gives
 all normal Kimen commands the ability to decrypt the vault and is not suitable
 as the agent authorization mechanism.
 
-An Action session must instead be broker-held and operation-scoped:
+An operation session must instead be broker-held and operation-scoped:
 
 ```text
 kimen session start --allow deploy_staging,inspect_logs --ttl 2h
@@ -256,15 +256,15 @@ kimen session start --allow deploy_staging,inspect_logs --ttl 2h
 
 The broker retains the decrypted key in memory and exposes only the selected
 invocations. The session does not authorize raw disclosure, arbitrary
-projection through `run`/`render`/`envfile`, binding changes or Action
-administration. Credentials backing Actions must be adapter-usable without
+projection through `run`/`render`/`envfile`, binding changes or operation
+administration. Credentials backing operations must be adapter-usable without
 becoming revealable or projectable through that session.
 
 This gives three useful modes:
 
 - locked vault: password required;
 - trusted human session: ordinary projection and administration;
-- Action session: selected invocations only, for a bounded time.
+- operation session: selected invocations only, for a bounded time.
 
 Whether the two session types share a command family is a later CLI decision.
 
@@ -299,7 +299,7 @@ scenarios and prepare production configuration during deployment.
 ### REPL remains value projection
 
 The Kari REPL genuinely needs runtime configuration and provider credentials.
-Starting it through an Action would not create a safer boundary: code evaluated
+Starting it through an operation would not create a safer boundary: code evaluated
 inside the credential-bearing REPL can read its environment. This remains a
 `kimen run` use case. Safer agent access should instead use a reduced profile,
 mock providers or a separate REPL without sensitive credentials.
