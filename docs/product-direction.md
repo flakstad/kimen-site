@@ -556,10 +556,26 @@ Lead with the concrete product promise:
 
 > Give access to operations, not credentials.
 
-Use one illustration on the page. Contrast distributing
-`DEPLOY_TOKEN=••••••••` with granting `deploy-staging(revision)`. The visual
-must show that access becomes narrower, not merely that the credential text is
-hidden. Do not add broker, session, lifecycle or team diagrams elsewhere.
+Use one main illustration on the page. Begin with five separate holders:
+
+```text
+developer A -> DEPLOY_TOKEN
+developer B -> DEPLOY_TOKEN
+developer C -> DEPLOY_TOKEN
+CI          -> DEPLOY_TOKEN
+agent       -> DEPLOY_TOKEN
+```
+
+Then show the same callers sharing `deploy-staging(revision)` while Kimen keeps
+the one credential and provider setup behind the operation. This is the
+strongest concrete expression of both the immediate problem and the
+cross-caller product hypothesis. The visual must show that access becomes
+narrower, not merely that the credential text is hidden. Do not add broker,
+session, lifecycle or team diagrams elsewhere.
+
+Keep the rest of the page predominantly single-column and left-aligned. Avoid
+repeated card grids, table-like comparisons and section headers whose columns
+do not align with the content below them.
 
 Sell the credential-distribution problem before explaining the implementation:
 a token grants more than one job and must be copied, stored, kept out of Git,

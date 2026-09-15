@@ -24,26 +24,52 @@
       <section class="access-hero">
         <div class="access-hero-copy">
           <h1>Give access to operations, not credentials.</h1>
-          <p class="access-lede">A developer, CI job or agent usually needs to deploy, inspect or restart something. They do not need to hold the credential to your infrastructure. Kimen keeps that authority behind a small set of named operations.</p>
+          <p class="access-lede">A developer, CI job or agent usually needs to deploy, inspect or restart something. They do not need to hold the credential to your infrastructure. Kimen keeps the credential and provider setup behind a small set of named operations.</p>
+          <div class="hero-operation">
+            <span>Give access to</span>
+            <code>deploy-staging(revision)</code>
+            <small>Not <code>DEPLOY_TOKEN=••••••••</code></small>
+          </div>
           <div class="access-actions"><a class="button orange" href="#early-access">Join early access</a><a href="#how">See how it works ↓</a></div>
           <p class="access-status"><i aria-hidden="true"></i><span>Named operations are a planned extension to Kimen Core.</span></p>
         </div>
+      </section>
 
-        <figure class="access-example" aria-labelledby="access-example-caption">
-          <div class="example-need">
-            <span>What the work requires</span>
-            <code>deploy-staging(revision)</code>
+      <section class="distribution-story" id="problem">
+        <header>
+          <h2>Stop copying the same credential to every place work can start.</h2>
+          <p>Every copy creates another place where broad access must be stored, protected, rotated and eventually revoked.</p>
+        </header>
+
+        <figure class="distribution-example" aria-labelledby="distribution-caption">
+          <div class="distribution-before">
+            <h3>Today: five holders of the credential</h3>
+            <div class="credential-row"><span>Developer A</span><code>DEPLOY_TOKEN=••••••••</code></div>
+            <div class="credential-row"><span>Developer B</span><code>DEPLOY_TOKEN=••••••••</code></div>
+            <div class="credential-row"><span>Developer C</span><code>DEPLOY_TOKEN=••••••••</code></div>
+            <div class="credential-row"><span>CI</span><code>DEPLOY_TOKEN=••••••••</code></div>
+            <div class="credential-row"><span>Agent</span><code>DEPLOY_TOKEN=••••••••</code></div>
           </div>
-          <div class="example-credential">
-            <span>What we distribute today</span>
-            <code>DEPLOY_TOKEN=••••••••</code>
-            <p>Reusable access to a much larger system.</p>
+
+          <div class="distribution-after">
+            <h3>With Kimen: one operation for every caller</h3>
+            <div class="caller-names">
+              <span>Developer A</span>
+              <span>Developer B</span>
+              <span>Developer C</span>
+              <span>CI</span>
+              <span>Agent</span>
+            </div>
+            <div class="shared-operation">
+              <code>deploy-staging(revision)</code>
+              <p>Kimen keeps the deployment credential and provider setup behind this operation.</p>
+            </div>
           </div>
-          <figcaption id="access-example-caption">Share the operation. Keep the credential, target and provider access behind Kimen.</figcaption>
+          <figcaption id="distribution-caption">The callers share a useful operation. They do not each receive a reusable infrastructure credential.</figcaption>
         </figure>
       </section>
 
-      <section class="credentials-problem" id="problem">
+      <section class="credentials-problem">
         <div>
           <h2>The credential is not the job.</h2>
           <p>A deployment token is only the mechanism. The job is to deploy one revision to staging.</p>
@@ -88,38 +114,26 @@
         <div class="resolution-pair">
           <article>
             <code>DATABASE_URL</code>
-            <h3>Resolves to a value</h3>
-            <p><code>kimen run</code> gives the value to a trusted application that needs it.</p>
+            <div><h3>Resolves to a value</h3><p><code>kimen run</code> gives the value to a trusted application that needs it.</p></div>
           </article>
           <article>
             <code>deploy-staging(revision)</code>
-            <h3>Resolves to an operation</h3>
-            <p>Kimen uses the credential itself and returns the result without revealing it.</p>
+            <div><h3>Resolves to an operation</h3><p>Kimen uses the credential itself and returns the result without revealing it.</p></div>
           </article>
-        </div>
-      </section>
-
-      <section class="caller-section">
-        <header class="access-section-head">
-          <h2>The operation stays the same, wherever the work starts.</h2>
-          <p>Developers, automation and autonomous tools can use the same project-level operation without learning how its authority is provided.</p>
-        </header>
-        <div class="caller-list">
-          <article><h3>Developer</h3><code>deploy-staging(revision)</code><p>Deploy from a terminal without keeping the deployment credential on every laptop.</p></article>
-          <article><h3>CI or workflow</h3><code>publish-release(version)</code><p>Publish one known release without embedding broad provider access in every workflow.</p></article>
-          <article><h3>Agent</h3><code>inspect-logs(service, since)</code><p>Investigate a failure without receiving the observability credential or access to unrelated services.</p></article>
         </div>
       </section>
 
       <section class="more-operations">
-        <h2>Operations should be small enough to understand.</h2>
+        <header>
+          <h2>Use the same model for other narrow jobs.</h2>
+          <p>Each operation has a fixed implementation, a small input space and a result the caller can safely receive.</p>
+        </header>
         <div class="operation-list" aria-label="Examples of bounded operations">
-          <code>restart-staging(service)</code>
-          <code>trigger-backup(database)</code>
-          <code>deployment-status(id)</code>
-          <code>invalidate-cache(service)</code>
+          <article><code>inspect-logs(service, since)</code><p>Inspect one service and time window without distributing the observability credential.</p></article>
+          <article><code>restart-staging(service)</code><p>Restart a known staging service without giving the caller SSH or general cloud access.</p></article>
+          <article><code>trigger-backup(database)</code><p>Trigger one known backup procedure without handing out database administration access.</p></article>
         </div>
-        <p>Not an arbitrary shell with a secret. Each operation has a fixed implementation, a small input space and a result the caller can safely receive.</p>
+        <p class="not-shell">Not an arbitrary shell with a secret. Kimen controls the implementation behind every operation.</p>
       </section>
 
       <section class="access-teams" id="teams">
