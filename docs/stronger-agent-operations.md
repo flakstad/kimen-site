@@ -318,7 +318,7 @@ real boundary if the runner is trusted and pinned. Running agent-editable Kari
 code with an injected API key would let that code disclose the key and would be
 ordinary projection under another name.
 
-### Deployment is the strongest initial case
+### Deployment is a useful boundary test, not the market wedge
 
 Kari's current deployment combines unprivileged tests and build steps with
 production config materialization, root SSH, file upload, service control and
@@ -343,9 +343,12 @@ not make arbitrary agent-authored production code safe. Production invocation
 therefore still requires human approval or an independently trusted revision,
 even when the deployment mechanism itself is a bounded operation.
 
-Kari therefore supplies one strong case, one conditional case and one clear
-non-case. That is enough to make the hypothesis concrete, but not external
-evidence for a general product.
+Kari therefore supplies one technically strong case, one conditional case and
+one clear non-case. That is enough to make the security boundary concrete, but
+not external evidence for a general product. In established teams, deployment
+is often already protected through pull requests, CI, environment rules and
+short-lived identity. The broader market test should focus on existing scripts,
+APIs and runbooks which still require broad production access.
 
 ## Relationship to Ro
 
@@ -380,9 +383,14 @@ may already provide the simpler boundary.
 
 The website and directed conversations come before a protocol RFC or broker
 implementation. The market test must establish whether developers and teams
-recognize both of these needs:
+recognize these needs:
 
-- one operation should be usable across several agents, workflows or runtimes;
+- a routine existing operation still requires a broad credential, production
+  access or a privileged human;
+- its contract should live with the project while its implementation and
+  authority remain controlled by the environment;
+- the operation should be usable across developers, agents, workflows or
+  runtimes;
 - an organization wants shared policy, revocation and audit without moving its
   credentials into a Kimen-hosted control plane.
 
@@ -391,7 +399,8 @@ serialization, client libraries or a general adapter API.
 
 ## Questions to answer before productizing
 
-- Which real operation do users repeatedly withhold from an agent?
+- Which real operation still requires broad access or a privileged person?
+- Which developers, CI jobs, workflows or agents need to invoke it?
 - Is a fixed HTTPS/provider operation sufficient, or is sandboxed command
   execution required?
 - Should approval happen once during binding, once per agent run, or at every
@@ -399,7 +408,8 @@ serialization, client libraries or a general adapter API.
 - How is an agent placed outside the trusted host boundary on macOS, Linux and
   CI systems?
 - What response data is genuinely needed by the agent?
-- Does the same operation need portable bindings across laptop, CI, VM and Ro?
+- Does the same project contract need bindings across laptop, CI, VM and other
+  environments?
 
 ## Gates
 

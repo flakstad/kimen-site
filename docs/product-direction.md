@@ -2,7 +2,7 @@
 
 Status: canonical product and market thesis
 
-Date: 2026-09-14
+Date: 2026-09-15
 
 This document preserves the product decisions behind Kimen's website and the
 planned extension from runtime values to bounded operations. It is deliberately
@@ -46,31 +46,41 @@ edition which will be replaced by an agent product. It is the foundation.
 Kimen Operations is a coherent and falsifiable product hypothesis, not yet a
 validated product direction. There is no external demand evidence yet.
 
-The hypothesis is:
+The refined hypothesis is:
 
-> Kimen lets teams replace broad credentials with named operations that work
-> across developers, CI, agents and workflows.
+> Kimen puts a small, project-aware access boundary in front of operational
+> scripts, APIs and workflows a team already has.
 
-> The project declares what may be done. The environment controls how it is
-> done and which authority it uses.
+> The operation contract belongs to the project. Its implementation and
+> authority belong to the environment.
 
-The possible differentiation is not secret storage, “secrets for agents” or a
-friendlier wrapper around one deploy script. It is one stable operation across
-several callers, with its provider implementation, credentials and restrictions
-bound outside those callers' control.
+The possible differentiation is not secret storage, “secrets for agents”, a
+friendlier wrapper around one deploy script or a lighter central runbook
+platform. It is a stable operation contract in the project, bound outside the
+project to an existing implementation, credentials and restrictions.
+
+The direct explanation is:
+
+> Your code can declare `restart_worker(queue)`. It cannot decide how
+> `restart_worker` works, where it runs or which credentials it uses.
+
+An operation declared by a developer or agent has no authority until the
+environment supplies an approved binding.
 
 Agents make the mismatch between a requested job and a broad credential more
 visible, but they are one caller rather than the product category. Developers,
 CI jobs, workflow engines and local workers have the same underlying problem.
 
-The strongest alternative is that provider-native IAM, OIDC, protected CI
-workflows and internal endpoints are already sufficient. If users do not care
-that an operation is portable across callers, Kimen Operations is likely a
-useful open source feature rather than a commercial product.
+The strongest alternatives are provider-native IAM, OIDC, protected CI
+workflows, internal endpoints and runbook platforms such as Windmill or
+Rundeck. If users do not care that the contract belongs to the project and can
+be bound across callers and environments, Kimen Operations is likely a useful
+open-source feature rather than a commercial product.
 
-The website must test for people who already have multiple wrappers,
-credentials and access rules for the same operational jobs. External intent,
-not further protocol design, determines whether the hypothesis advances.
+The website must test for teams which already have good scripts, APIs or
+workflows but still require broad credentials, production access or a
+privileged human to invoke routine work. External intent, not further protocol
+design, determines whether the hypothesis advances.
 
 ## What the name means
 
@@ -622,90 +632,111 @@ and only then introduce Kimen. Do not begin by teaching the solution model.
 
 Lead with the concrete problem:
 
-> Your deployment credential ends up everywhere work happens.
+> You should not need production credentials to run one routine operation.
 
-The opening story describes the scaling problem rather than an arbitrary number
-of named people:
+The opening story describes work which already exists as a script, API,
+workflow, console procedure or handoff to someone with production access. The
+team does not need another automation platform. It needs a safer way to let
+more callers perform that existing work.
 
-> Developers, CI jobs, workflows and agents all need to deploy. Each becomes
-> another place where the same `DEPLOY_TOKEN` must be stored and protected.
-
-Use one restrained typographic contrast instead of an architecture diagram.
-Begin with the caller groups which grow with the organization:
+Start with operations which commonly fall outside a protected deployment path:
 
 ```text
-developers -> one DEPLOY_TOKEN copy each
-CI jobs    -> more copies
-workflows  -> more copies
-agents     -> more copies
+restart_worker("payments")
+run_backfill("invoices", "2026-09")
+inspect_logs("api", since="30m")
 ```
 
-Then give `deploy_staging(revision)` one strong typographic moment while Kimen
-keeps the credential and provider setup behind the operation. Follow it with a
-real repository script and a quiet vertical sequence for project preparation,
-Kimen validation and trusted execution. Do not enclose this sequence in a
-system diagram.
+State the ordinary workaround and its cost plainly:
 
-Keep the page single-column and left-aligned. After the dark opening, use one
-continuous light reading surface through the product and team story. Dark code
-may appear once for the repository script. Use green for product identity and
-code, and orange only where protected authority is crossed. Avoid repeated
-cards, chips, full-width color bands, table-like comparisons and section
-headers whose columns do not align with the content below them.
+> A developer needs to restart one worker. The available route is an SSH key,
+> a cloud credential or a message to the person who has production access.
+
+Then introduce the operation, not the architecture:
+
+> Give the developer `restart_worker("payments")`, not general access to the
+> production system.
+
+Use one restrained typographic example instead of an architecture diagram. Do
+not make deployment the page's main story. Mature teams often already protect
+deployment through pull requests, CI, environment rules and short-lived
+identity.
 
 The public page has one story:
 
-1. Every new caller of one routine staging deployment becomes another holder
-   of the deployment credential.
-2. Each copy must be installed, kept out of source control, protected, rotated
-   and revoked; the credential also permits more than the intended job.
-3. The callers do not need the token. They need
-   `deploy_staging(revision)`.
-4. Kimen validates and performs that fixed deployment and returns its outcome.
-5. Access can then be granted, revoked, changed and audited around the actual
-   job rather than around copies of a key.
-6. The same mismatch appears around log inspection, restarts and backups.
-7. Local Kimen remains free; a team product coordinates these operations
-   across people, CI, workflows and agents.
+1. The team already has routine privileged work implemented somewhere.
+2. Running that work still requires a broad credential, production access or a
+   privileged human.
+3. The caller needs one operation, not access to the whole underlying system.
+4. The project can declare the operation contract safely.
+5. The environment binds it to a trusted implementation, credential and fixed
+   restrictions.
+6. Developers, CI, workflows and agents can call the same narrow operation.
+7. A team product can govern the bindings, access, approvals and audit without
+   becoming another vault or automation platform.
+
+The essential model appears only after the problem is understood:
+
+```text
+PROJECT                         ENVIRONMENT
+
+restart_worker(queue)      ->   existing script, API or workflow
+                                credential or workload identity
+                                allowed services and environment
+```
+
+The copy immediately below it should say:
+
+> The operation contract belongs to the project. Its implementation and
+> authority belong to the environment.
+
+And then make the boundary concrete:
+
+> Your code can declare `restart_worker(queue)`. It cannot decide how
+> `restart_worker` works, where it runs or which credentials it uses.
+
+Keep the page single-column and left-aligned. After the dark opening, use one
+continuous light reading surface through the product and team story. Dark code
+may appear once if it clarifies that a repository script calls Kimen only for
+the sensitive step. Use green for product identity and code, and orange only
+where protected access is crossed. Avoid repeated cards, chips, full-width
+color bands, table-like comparisons and section headers whose columns do not
+align with the content below them.
 
 All deeper architecture, session semantics, threat-model explanation, provider
 design and implementation constraints remain in product documentation. They
 must make the public promise true but do not each deserve a marketing section.
 A single restrained boundary note is sufficient on the access page.
 
-Sell the credential-distribution problem before explaining the implementation:
-a token grants more than one job and must be copied, stored, kept out of Git,
-rotated and revoked everywhere it is held. The first scenario is a developer
-who may deploy staging but should not need the deployment token on the laptop.
-Present the concrete replacement immediately:
+Explain that the operation may still be implemented by a repository script,
+but the credential-bearing step cannot be caller-controlled. Kimen may bind the
+contract to a pinned local adapter, a protected runner, a fixed API request or
+an existing workflow. The caller supplies validated parameters and receives a
+limited result.
 
-> Let the developer call `deploy_staging(revision)`. Keep the deployment
-> credential in Kimen.
-
-Then explain only the minimum model needed: the project declares the operation and
-the environment binds its provider, restrictions and credential locally. Show
-developers, CI and coding agents as peer callers. Agent autonomy is a reason the
-problem is becoming more urgent, not the definition of the category.
+Show developers, CI, workflows and coding agents as peer callers. Agent
+autonomy is a reason the problem is becoming more urgent, not the definition of
+the category.
 
 Avoid public-first abstractions such as authority boundary, execution surface,
 workload contract, capability architecture and delegated authority. They are
 useful internally but force a visitor to translate the product. Prefer
-deployment credential, `deploy_staging(revision)`, application, environment,
-log window, service and result.
+production access, existing script, operation, application, environment, log
+window, service and result.
 
 Use operation in public-first copy. `Kimen Operations` names the product area.
 Show only a few concrete calls:
 
 ```text
-deploy_staging(revision)
-inspect_logs(service, since, filter)
-restart_staging(service)
+restart_worker(queue)
+run_backfill(dataset, period)
+inspect_logs(service, since)
 ```
 
-The provider is deliberately generic in the primary story. Kimen may call a
-deployment platform, CI system, cloud provider or internal service. Vendor
-names can appear in integrations and documentation later, but the product must
-not read as an add-on for one agent or source-control vendor.
+The implementation is deliberately generic in the primary story. Kimen may
+call an existing script, internal API, CI workflow, cloud provider or service.
+Vendor names can appear in integrations and documentation later, but the
+product must not read as an add-on for one agent or source-control vendor.
 
 Do not use numbered `01 / 02 / 03` decoration, oversized headings in narrow
 columns, unexplained code boxes, eyebrows above headings or generic security
@@ -724,9 +755,20 @@ can be installed and run today.
 The site should not send sensitive infrastructure descriptions into public
 GitHub issues or use an email link as its primary CTA. A private form or another
 intent-capture mechanism must be chosen before the public market test depends
-on conversion data. The form should ask which person or system needs access,
-which operation it should perform, how access is provided today and for an
+on conversion data. The form should ask which routine operation still requires
+broad access, how access is controlled today, which callers need it and for an
 email address. Never ask for credentials or sensitive infrastructure details.
+
+A short section may distinguish Kimen from a runbook platform:
+
+> Kimen does not become your automation platform. Keep your existing scripts,
+> APIs, workflows and secret store. Kimen binds project-declared operations to
+> trusted implementations and controls who may invoke them.
+
+The page should end with the research question which tests the wedge:
+
+> What does your team still run through scripts, consoles or someone with
+> production access?
 
 ## Validation order
 
@@ -736,14 +778,16 @@ or implement a team control plane before external signal.
 The order is:
 
 1. Present the complete product story on `kimen.systems`.
-2. Send qualified developers and engineering/platform leaders to `/access/`.
-3. Observe which problem produces intent: `.env` hygiene, a withheld operation,
-   or team governance.
-4. Ask for the exact caller, operation, provider, current workaround and overly
-   broad credential.
-5. Design one operation with the first credible design partner.
-6. Build the smallest bounded adapter only after that demand remains concrete.
-7. Generalize the protocol only after multiple users or execution surfaces
+2. Connect a private form and privacy-conscious analytics before meaningful
+   distribution begins.
+3. Send qualified developers and engineering/platform leaders to `/access/`.
+4. Observe which problem produces intent: `.env` hygiene, an existing
+   privileged operation or team governance.
+5. Ask for the exact caller, operation, implementation, current access method
+   and overly broad credential.
+6. Design one operation with the first credible design partner.
+7. Build the smallest bounded adapter only after that demand remains concrete.
+8. Generalize the protocol only after multiple users or execution surfaces
    require it.
 
 A single user can justify one narrow prototype. Multiple independent users and
@@ -751,15 +795,19 @@ repeated use are needed to justify a general product direction.
 
 The most important disconfirmation questions are:
 
-- Would the user simply choose 1Password, Vault, Infisical or a provider-native
-  workflow instead?
+- Would the user simply choose 1Password, Vault, Infisical, provider-native IAM,
+  a CI workflow, Windmill or Rundeck instead?
 - Does the same operation actually need to work across more than one developer,
   CI job, agent, workflow engine or runtime?
 - Will a team pay for common policy and audit, or are local wrappers sufficient?
-- Does the boundary reduce real credential distribution or let automation
-  complete work which humans currently take over?
+- Does the boundary reduce real credential distribution or let more callers
+  use work which is currently restricted to privileged humans?
 - Can the desired operation be implemented without running agent-controlled code
   with a credential present?
+
+Detailed search evidence, measurement events, traffic channels and validation
+gates are maintained in
+[`market-demand-and-validation.md`](market-demand-and-validation.md).
 
 ## Non-goals
 

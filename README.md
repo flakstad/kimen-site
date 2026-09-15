@@ -31,6 +31,10 @@ kept in [`docs/product-direction.md`](docs/product-direction.md). Update that
 document when a product decision changes so the reasoning is not trapped in a
 chat transcript.
 
+Search demand, competitor category boundaries, acquisition channels,
+instrumentation and validation gates are recorded in
+[`docs/market-demand-and-validation.md`](docs/market-demand-and-validation.md).
+
 The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
 domain mapping.
 
