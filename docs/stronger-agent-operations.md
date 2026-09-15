@@ -100,6 +100,112 @@ A portable first adapter could be a deliberately narrow HTTPS request:
 Provider-specific adapters may be safer and easier to explain where a generic
 HTTP template would expose too much freedom.
 
+## Where an Action is defined
+
+An Action has two definitions on opposite sides of the trust boundary.
+
+The project carries a portable contract which may be committed with the code:
+
+```text
+action deploy_staging(revision: git_sha)
+```
+
+This contract gives developers, CI, workflows and agents a stable name and an
+input schema. It contains no provider endpoint, deployment target, credential
+reference or executable implementation. A caller which can edit the repository
+may request a contract change, but cannot thereby change what authority an
+already approved Action uses.
+
+The environment owner creates a protected binding outside the writable
+project:
+
+```text
+deploy_staging
+  contract    deploy_staging@1
+  target      staging
+  adapter     deployment_workflow@3
+  credential  vault.deploy_token
+  revision    commit_on_main
+```
+
+The binding fixes the parts the caller must not control: the trusted adapter,
+target, credential, input constraints and result shape. For one developer this
+may be local Kimen configuration. For a team it may combine an organization
+definition with a local environment and credential binding.
+
+The public examples use `snake_case` for Action identifiers, such as
+`deploy_staging(revision)`. This makes the name read like a callable operation
+instead of a shell command. The exact declaration and CLI syntax remain
+illustrative until implementation work is justified.
+
+## What Kimen does during an invocation
+
+When a caller asks for `deploy_staging(revision: "abc123")`, Kimen is not just
+looking up a command name. It:
+
+1. identifies the project, caller and active authorization session;
+2. resolves the requested Action contract and its protected binding;
+3. validates the revision against the declared type and local restrictions;
+4. checks whether this caller may use this Action in this environment;
+5. obtains a specific approval if policy requires one;
+6. resolves the credential without revealing it to the caller;
+7. gives the credential and validated data to the trusted adapter;
+8. lets the adapter construct and perform the fixed provider operation;
+9. filters the provider response to the bounded result contract;
+10. records the decision, target, inputs, adapter version and outcome without
+    recording secret values.
+
+The workflow or caller still decides when an operation should happen. Kimen
+decides whether this caller may perform it and controls how its protected
+authority is used. Kimen is therefore not a general workflow engine.
+
+## Why this is not a named script
+
+A named script normally remains code which the caller can execute, inspect and
+often edit. If Kimen injects a deployment token into a repository script, a
+caller which controls that script can print or transmit the token. Naming the
+script `deploy_staging` does not reduce its authority.
+
+A protected Action has a different call boundary:
+
+```text
+caller controls                 Kimen controls
+
+Action name                     trusted adapter
+allowed input values            target and provider request
+                                credential resolution
+                                policy and approval
+                                bounded response
+```
+
+The caller receives a result, not a child process with the credential in its
+environment. A trusted executable pinned by path and digest could be one
+adapter implementation, but a caller-writable shell script is not the security
+model. Built-in or signed provider adapters provide a clearer final boundary.
+
+## Updates and team distribution
+
+The portable contract and the protected binding have separate lifecycles.
+
+- A project changes an Action name or input schema through an ordinary code
+  review. This creates a new contract version.
+- An environment owner changes targets, adapters, credentials and constraints
+  through the protected administration path.
+- A team control plane may publish signed contract approvals, adapter versions
+  and access policy to local Kimen installations and runners.
+- Secret values do not need to pass through the team control plane. Each
+  environment binds the approved Action to its local vault, existing secret
+  manager or workload identity.
+- Local Kimen verifies signatures and versions before an invocation. A changed
+  contract or adapter does not silently inherit approval granted to an older
+  version.
+- Revocation prevents new invocations after updated policy reaches the local
+  Kimen runtime. It cannot undo an external operation which already completed.
+
+This separation lets the same project contract work for a developer laptop, CI
+runner, workflow worker or agent environment while each keeps its own trusted
+authority binding.
+
 ## Session model
 
 Today's `kimen session start` is a convenience unlock: it stores a reusable
@@ -110,7 +216,7 @@ as the agent authorization mechanism.
 An Action session must instead be broker-held and operation-scoped:
 
 ```text
-kimen session start --allow deploy-staging,inspect-logs --ttl 2h
+kimen session start --allow deploy_staging,inspect_logs --ttl 2h
 ```
 
 The broker retains the decrypted key in memory and exposes only the selected
@@ -168,7 +274,7 @@ mock providers or a separate REPL without sensitive credentials.
 A bounded operation such as:
 
 ```text
-run-realtime-scenario(revision, scenario, model)
+run_realtime_scenario(revision, scenario, model)
 ```
 
 could restrict scenario identity, model choice, run count, cost and returned
@@ -185,7 +291,7 @@ health checks. A bounded design would keep test/build in Kari or a workflow
 engine and expose only a fixed operation such as:
 
 ```text
-deploy-kari-production(revision, artifact-digest)
+deploy_kari_production(revision, artifact_digest)
 ```
 
 The trusted binding fixes the host, paths, services, config profiles,

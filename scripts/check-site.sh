@@ -85,5 +85,25 @@ for text in required:
     if text not in homepage:
         raise SystemExit(f"homepage is missing required product text: {text}")
 
+access_page = Path("access/index.html").read_text(encoding="utf-8")
+access_required = [
+    "deploy_staging(revision)",
+    "An Action is not a script with a nicer name.",
+    "Teams sync definitions, not credentials",
+]
+for text in access_required:
+    if text not in access_page:
+        raise SystemExit(f"access page is missing required product text: {text}")
+
+em_dash = chr(0x2014)
+em_dash_entities = ("&" + "mdash;", "&#" + "8212;")
+for pattern in ("*.html", "*.md"):
+    for path in sorted(Path(".").rglob(pattern)):
+        if ".git" in path.parts:
+            continue
+        contents = path.read_text(encoding="utf-8")
+        if em_dash in contents or any(entity in contents for entity in em_dash_entities):
+            raise SystemExit(f"em dash is not allowed: {path}")
+
 print(f"checked {len(pages)} HTML pages")
 PY

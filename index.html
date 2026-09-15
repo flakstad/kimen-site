@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen — move secrets out of your project</title>
+    <title>Kimen, move secrets out of your project</title>
     <meta name="description" content="Store database URLs and API keys outside your project, then pass them to your application with kimen run." />
     <link rel="canonical" href="https://kimen.systems/" />
     <meta property="og:title" content="Kimen" />
@@ -117,11 +117,11 @@
           <article><h3>Render a required file</h3><code>kimen render --dir ./runtime --profile staging</code></article>
           <article><h3>Prepare an envfile</h3><code>kimen envfile --out .env.runtime --profile worker</code></article>
         </div>
-        <p class="boundary-note" id="boundary">The selected process receives projected values. Use <code>kimen run</code> for software you trust with those values—not as a sandbox for arbitrary code.</p>
+        <p class="boundary-note" id="boundary">The selected process receives projected values. Use <code>kimen run</code> for software you trust with those values. It is not a sandbox for arbitrary code.</p>
       </section>
 
       <section class="authority-callout">
-        <div><h2>Give access to operations, not credentials.</h2><p>A developer, CI job or agent usually needs to deploy, inspect or restart something—not hold the credential to your infrastructure. Kimen is extending its local binding model to named operations such as <code>deploy-staging(revision)</code>.</p></div>
+        <div><h2>Give access to operations, not credentials.</h2><p>A developer, CI job or agent usually needs to deploy, inspect or restart something. They do not need to hold the credential to your infrastructure. Kimen is extending its local binding model to named operations such as <code>deploy_staging(revision)</code>.</p></div>
         <a class="button light" href="./access/">See how it works →</a>
       </section>
 

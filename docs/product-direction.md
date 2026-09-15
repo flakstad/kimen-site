@@ -179,14 +179,14 @@ human enters vault password
 Conceptually:
 
 ```text
-kimen session start --allow deploy-staging,inspect-logs --ttl 2h
+kimen session start --allow deploy_staging,inspect_logs --ttl 2h
 ```
 
 must authorize only calls such as:
 
 ```text
-deploy-staging(revision)
-inspect-logs(filter, since)
+deploy_staging(revision)
+inspect_logs(filter, since)
 ```
 
 It must not expose a reusable vault passphrase or authorize any of these paths
@@ -287,7 +287,7 @@ The clearest use-case line is:
 Clean initial examples call a provider or fixed remote workflow directly.
 Publishing packages and deploying agent-authored code are harder because
 package hooks or deployed code may execute while authority is available. A
-generic `run-with-token(command)` is not a Kimen security primitive.
+generic `run_with_token(command)` is not a Kimen security primitive.
 
 ## What a trustworthy bounded operation requires
 
@@ -315,6 +315,49 @@ binding, grant, invocation, adapter and receipt. Their wire formats, command
 names and serialization are intentionally undecided.
 
 The working public term is `Action`. The final name remains open.
+
+### Action definition and lifecycle
+
+An Action is split deliberately between the project and the trusted
+environment.
+
+The project may commit a portable contract such as:
+
+```text
+action deploy_staging(revision: git_sha)
+```
+
+It declares the operation name and accepted input, but no target, provider,
+credential or executable implementation. The environment owner binds that
+contract outside the writable repository:
+
+```text
+deploy_staging
+  adapter     deployment_workflow
+  target      staging
+  credential  vault.deploy_token
+  revision    commit_on_main
+```
+
+On invocation Kimen identifies the caller, resolves the protected binding,
+validates inputs and policy, obtains approval if required, lets the trusted
+adapter use the credential, filters the response and records the outcome. The
+caller gets the result. It does not get a credential-bearing process or the
+ability to choose another command, target or provider request.
+
+This is the defining difference from a named script. If the caller can edit the
+implementation and Kimen injects a credential into it, the caller can disclose
+that credential. A protected Action therefore uses an adapter outside the
+caller's control, with constrained inputs, a fixed target and bounded output.
+
+For one developer, the protected binding may be local. A team product can
+distribute signed Action contracts, adapter versions and access policy while
+each environment keeps its credential binding. Contracts and adapters are
+versioned, and changed versions do not silently inherit prior approval.
+
+Public examples use `snake_case`, such as `deploy_staging(revision)`, because
+it reads as a callable operation rather than a shell command. Exact file and
+CLI syntax remain illustrative.
 
 ## Practical YOLO threat model
 
@@ -468,7 +511,7 @@ The likely shape, if validated, is a hybrid:
 - trusted provider adapters;
 - canonical examples and cross-language test vectors.
 
-Share neutral request, decision and receipt mechanics—not Ro's domain model,
+Share neutral request, decision and receipt mechanics. Do not share Ro's domain model,
 Breyta's workflow runtime or Kimen's vault internals. A protocol matters more
 than forcing three codebases and languages to use the same library.
 
@@ -558,7 +601,7 @@ and only then introduce Kimen. Do not begin by teaching the solution model.
 
 Lead with the concrete problem:
 
-> Shh. Don't hand out the deploy token.
+> Your deployment credential ends up everywhere work happens.
 
 The opening story describes the scaling problem rather than an arbitrary number
 of named people:
@@ -576,7 +619,7 @@ workflows  -> more copies
 agents     -> more copies
 ```
 
-Then show the same groups sharing `deploy-staging(revision)` while Kimen keeps
+Then show the same groups sharing `deploy_staging(revision)` while Kimen keeps
 the one credential and provider setup behind the operation. This is the
 strongest concrete expression of both the immediate problem and the
 cross-caller product hypothesis. The visual must show that access becomes
@@ -594,7 +637,7 @@ The public page has one story:
 2. Each copy must be installed, kept out of source control, protected, rotated
    and revoked; the credential also permits more than the intended job.
 3. The callers do not need the token. They need
-   `deploy-staging(revision)`.
+   `deploy_staging(revision)`.
 4. Kimen validates and performs that fixed deployment and returns its outcome.
 5. Access can then be granted, revoked, changed and audited around the actual
    job rather than around copies of a key.
@@ -613,7 +656,7 @@ rotated and revoked everywhere it is held. The first scenario is a developer
 who may deploy staging but should not need the deployment token on the laptop.
 Present the concrete replacement immediately:
 
-> Let the developer call `deploy-staging(revision)`. Keep the deployment
+> Let the developer call `deploy_staging(revision)`. Keep the deployment
 > credential in Kimen.
 
 Then explain only the minimum model needed: the project declares the operation and
@@ -624,7 +667,7 @@ problem is becoming more urgent, not the definition of the category.
 Avoid public-first abstractions such as authority boundary, execution surface,
 workload contract, capability architecture and delegated authority. They are
 useful internally but force a visitor to translate the product. Prefer
-deployment credential, `deploy-staging(revision)`, application, environment,
+deployment credential, `deploy_staging(revision)`, application, environment,
 log window, service and result.
 
 Use named operation in public-first copy. `Action` remains a possible feature
@@ -632,9 +675,9 @@ or implementation name, but the final product terminology is open. Show only a
 few concrete calls:
 
 ```text
-deploy-staging(revision)
-inspect-logs(service, since, filter)
-restart-staging(service)
+deploy_staging(revision)
+inspect_logs(service, since, filter)
+restart_staging(service)
 ```
 
 The provider is deliberately generic in the primary story. Kimen may call a
