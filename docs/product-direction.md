@@ -552,9 +552,14 @@ Actions are not primarily an agent product. Coding agents are one especially
 urgent caller alongside developers, CI and deterministic workflows. The public
 path lives at `/access/`; `/agents/` is only a compatibility redirect.
 
-Lead with the concrete product promise:
+Lead with the concrete problem:
 
-> Give access to operations, not credentials.
+> Your team should not need infrastructure credentials to deploy software.
+
+Immediately give the answer:
+
+> Kimen gives developers, CI jobs and agents
+> `deploy-staging(revision)` instead of `DEPLOY_TOKEN`.
 
 Use one main illustration on the page. Begin with five separate holders:
 
@@ -573,9 +578,23 @@ cross-caller product hypothesis. The visual must show that access becomes
 narrower, not merely that the credential text is hidden. Do not add broker,
 session, lifecycle or team diagrams elsewhere.
 
-Keep the rest of the page predominantly single-column and left-aligned. Avoid
-repeated card grids, table-like comparisons and section headers whose columns
-do not align with the content below them.
+Keep the rest of the page single-column and left-aligned. Avoid repeated card
+grids, table-like comparisons and section headers whose columns do not align
+with the content below them.
+
+The public page has one story in four parts:
+
+1. The team should not need infrastructure credentials to deploy software.
+2. Five callers currently receive five copies of one deployment credential;
+   Kimen gives all five one named operation instead.
+3. This makes access easier to grant, revoke, change and audit.
+4. Local Kimen remains free; a team product coordinates the operation across
+   people, CI, workflows and agents.
+
+All deeper architecture, session semantics, threat-model explanation, provider
+design and implementation constraints remain in product documentation. They
+must make the public promise true but do not each deserve a marketing section.
+A single restrained boundary note is sufficient on the access page.
 
 Sell the credential-distribution problem before explaining the implementation:
 a token grants more than one job and must be copied, stored, kept out of Git,
