@@ -244,28 +244,34 @@ currently requires broad credentials, production access or a privileged human.
 
 ## Instrumentation required before distribution
 
-The current static site has no analytics. The `/access/` form is presentational
-and does not submit. There is no `robots.txt` or `sitemap.xml`. Consequently,
-the site does not yet produce a traffic or conversion baseline.
+At the time of the traffic review, the static site had no analytics, the
+`/access/` form was presentational and there was no `robots.txt` or
+`sitemap.xml`. Consequently, no traffic or conversion baseline exists yet.
 
-Before sending meaningful traffic, add:
+The repository now includes a private-form client, privacy-conscious event
+capture, source attribution, `robots.txt` and `sitemap.xml`. The form and event
+capture remain inactive until Andreas configures a private HTTPS receiver and a
+dedicated analytics project. No external service was created or changed as part
+of the site implementation.
 
-- privacy-conscious page and event analytics;
-- source and UTM attribution;
-- a private working form endpoint;
-- `robots.txt` and `sitemap.xml`;
+Before sending meaningful traffic, complete the remaining external setup:
+
+- configure a dedicated PostHog project key;
+- configure a private working form endpoint;
 - Google Search Console after publication.
 
 Recommended events:
 
 ```text
-page_view
-source_click
-docs_click
-install_click
-operations_view
-operations_form_start
-operations_form_submit
+site_page_viewed
+source_clicked
+install_clicked
+operations_clicked
+operations_form_cta_clicked
+operations_form_started
+operations_form_attempted
+operations_form_submitted
+operations_form_failed
 ```
 
 Do not record the form's free-text contents in analytics. The private form

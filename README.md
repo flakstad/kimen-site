@@ -10,13 +10,15 @@ separate from the CLI/runtime repository.
 - A direct developer story based on keeping plaintext values out of the
   workspace and projecting them only when a runtime starts
 - A separate `/access/` product path for Kimen Operations and team governance
-- Production pages have no JavaScript, build system, analytics or runtime service
+- Production pages remain static and use a small plain-JavaScript layer for a
+  private response form and optional privacy-conscious analytics
 - Three deliberately different design studies live at `/studies/`
 
-The `/access/` page includes the early-access form presentation, but no private
-submission service is configured in this repository. Connect that form to a
-private endpoint before publication; do not replace it with email or a public
-issue tracker.
+The `/access/` page includes a working private-form client, but no external
+submission service is created by this repository. Configure an HTTPS form
+endpoint before publication; do not replace it with email or a public issue
+tracker. Free-text responses and email addresses are submitted only to that
+endpoint and are never included in analytics events.
 
 The Kimen Operations path tests whether teams want the same named operation to
 work across developers, CI, workflows and agents without distributing the
@@ -64,6 +66,27 @@ Run the local site check:
 The check validates internal links, referenced local files, document titles and
 HTML parsing.
 
+## Measurement and form configuration
+
+[`site.js`](site.js) records anonymous page and intent events only when a
+PostHog key is configured and the visitor has not enabled Global Privacy
+Control or Do Not Track. It disables person profiles and IP-based geolocation.
+Form analytics contain only the selected access method and caller categories,
+never the operation description or email address.
+
+Local source keeps all external configuration empty in
+[`site-config.js`](site-config.js). The Pages workflow generates the deployed
+configuration from:
+
+- GitHub Actions secret `KIMEN_FORM_ENDPOINT`, an HTTPS private form receiver;
+- repository variable `KIMEN_POSTHOG_KEY`;
+- optional repository variable `KIMEN_POSTHOG_HOST`, which defaults to the EU
+  PostHog endpoint.
+
+The form is intentionally unable to submit until `KIMEN_FORM_ENDPOINT` is set.
+Creating that endpoint and the analytics project are external configuration
+steps for Andreas. The repository does not create or mutate those services.
+
 ## GitHub Pages handoff
 
 The workflow at `.github/workflows/pages.yml` deploys static files from the
@@ -75,4 +98,6 @@ Andreas performs publication and external configuration:
 2. Push `main` to GitHub.
 3. In repository settings, select GitHub Actions as the Pages source.
 4. Configure the `kimen.systems` DNS records GitHub requests.
-5. Verify the custom domain and HTTPS in Pages settings.
+5. Configure the private form endpoint and optional PostHog variables described
+   above.
+6. Verify the custom domain and HTTPS in Pages settings.

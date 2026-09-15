@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kimen, move secrets out of your project</title>
     <meta name="description" content="Store database URLs and API keys outside your project, then pass them to your application with kimen run." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/" />
     <meta property="og:title" content="Kimen" />
     <meta property="og:description" content="Store secrets outside your project. Pass them to the application only when it starts." />
@@ -12,11 +14,13 @@
     <meta property="og:url" content="https://kimen.systems/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./site.css" />
+    <script src="./site-config.js" defer></script>
+    <script src="./site.js" defer></script>
   </head>
-  <body class="home-page">
+  <body class="home-page" data-page="core">
     <header class="topbar dark-topbar">
       <a class="brand" href="./"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#runtimes">Runtimes</a><a href="./access/">Operations</a><a href="./docs/#start">Install ↗</a></nav>
+      <nav aria-label="Primary"><a href="#how">How it works</a><a href="#runtimes">Runtimes</a><a href="./access/" data-event="operations_clicked">Operations</a><a href="./docs/#start" data-event="install_clicked">Install ↗</a></nav>
     </header>
 
     <main>
@@ -24,7 +28,7 @@
         <div class="hero-copy">
           <h1>Move secrets out of your project.</h1>
           <p class="lede">Store database URLs, API keys and private files in Kimen instead of <code>.env</code>. Start your application with <code>kimen run</code>. The app gets the values it needs; developers, tools and agents do not need them sitting beside the code.</p>
-          <div class="hero-actions"><a class="button" href="./docs/#start">Install Kimen</a><a href="#how">See how it works ↓</a></div>
+          <div class="hero-actions"><a class="button" href="./docs/#start" data-event="install_clicked">Install Kimen</a><a href="#how" data-event="core_explanation_clicked">See how it works ↓</a></div>
         </div>
 
         <figure class="runtime-map">
@@ -121,13 +125,13 @@
       </section>
 
       <section class="authority-callout">
-        <div><h2>Give access to operations, not credentials.</h2><p>A developer, CI job or agent usually needs to deploy, inspect or restart something. They do not need to hold the credential to your infrastructure. Kimen Operations extends the local binding model to operations such as <code>deploy_staging(revision)</code>.</p></div>
-        <a class="button light" href="./access/">See how it works →</a>
+        <div><h2>Run one routine operation without handing out production access.</h2><p>Your team may already have the script or workflow. Kimen Operations can let a developer, CI job or agent call <code>restart_worker(queue)</code> without receiving the credential behind it.</p></div>
+        <a class="button light" href="./access/" data-event="operations_clicked">See Kimen Operations →</a>
       </section>
 
       <section class="closing">
         <h2>Start with one secret.</h2><p>Move it out of the workspace. Keep the application unchanged. Let Kimen provide it only to the runtime that needs it.</p>
-        <div class="hero-actions"><a class="button" href="./docs/#start">Install Kimen</a><a href="https://github.com/flakstad/kimen">View source ↗</a></div>
+        <div class="hero-actions"><a class="button" href="./docs/#start" data-event="install_clicked">Install Kimen</a><a href="https://github.com/flakstad/kimen" data-event="source_clicked">View source ↗</a></div>
       </section>
     </main>
 

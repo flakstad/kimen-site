@@ -26,9 +26,9 @@ For a developer, CI job, workflow or agent, Kimen can instead perform an
 operation:
 
 ```text
-deploy staging for this commit
+restart this known worker
     -> local binding
-    -> fixed provider operation
+    -> fixed implementation
     -> status and receipt, not a credential
 ```
 

@@ -93,13 +93,28 @@ for text in required:
 access_page = Path("access/index.html").read_text(encoding="utf-8")
 access_required = [
     "Kimen Operations",
-    "deploy_staging(revision)",
-    "Keep the deployment script. Remove the credential from it.",
-    "Change access once, not on every laptop.",
+    'restart_worker("payments")',
+    "The work already exists. Access is the problem.",
+    "The project names it. The environment makes it real.",
+    "Why this is more than a named script",
+    "Keep the automation you already have.",
+    "Change the binding once for the whole team.",
 ]
 for text in access_required:
     if text not in access_page:
         raise SystemExit(f"access page is missing required product text: {text}")
+
+if 'data-private-form' not in access_page or 'type="submit"' not in access_page:
+    raise SystemExit("access page is missing the private submission form")
+
+for required_file in (
+    "robots.txt",
+    "sitemap.xml",
+    "site-config.js",
+    "site.js",
+):
+    if not Path(required_file).is_file():
+        raise SystemExit(f"site is missing required file: {required_file}")
 
 em_dash = chr(0x2014)
 em_dash_entities = ("&" + "mdash;", "&#" + "8212;")

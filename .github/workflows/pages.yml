@@ -27,6 +27,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Configure private form and analytics
+        env:
+          KIMEN_FORM_ENDPOINT: ${{ secrets.KIMEN_FORM_ENDPOINT }}
+          KIMEN_POSTHOG_KEY: ${{ vars.KIMEN_POSTHOG_KEY }}
+          KIMEN_POSTHOG_HOST: ${{ vars.KIMEN_POSTHOG_HOST }}
+        run: node scripts/configure-site.mjs
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
