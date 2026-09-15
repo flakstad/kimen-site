@@ -93,47 +93,59 @@
 
       <section class="action-model" id="definition">
         <header>
-          <h2>An Action is not a script with a nicer name.</h2>
-          <p>A script is code the caller runs. A Kimen Action is a request Kimen decides whether and how to carry out.</p>
+          <h2>Keep the deployment script. Remove the credential from it.</h2>
+          <p>The script in the repository can still build, test and choose what to deploy. Its sensitive step becomes a request to Kimen.</p>
         </header>
 
-        <div class="model-part">
-          <h3>The project defines its public shape</h3>
-          <p>The repository declares the operation and the input it accepts:</p>
-          <pre><code>action deploy_staging(revision: git_sha)</code></pre>
-          <p>This is an interface. It contains no token, deployment target or executable script, so it can travel with the project.</p>
+        <figure class="deploy-path" aria-labelledby="deploy-path-caption">
+          <div class="deploy-step project-step">
+            <h3>In the project</h3>
+            <strong><code>scripts/deploy_staging</code></strong>
+            <p>Build the application. Run tests. Calculate the artifact digest. Then request:</p>
+            <pre><code>deploy_staging(
+  revision="abc123",
+  artifact="sha256:84c…"
+)</code></pre>
+            <small>Developers, CI and agents may edit this script. It never receives the deployment credential.</small>
+          </div>
+
+          <div class="deploy-connector"><span>request one operation</span></div>
+
+          <div class="deploy-step kimen-step">
+            <h3>In Kimen</h3>
+            <p>Check who is calling. Validate the revision and artifact. Apply the team's staging policy. Resolve the approved binding.</p>
+            <pre><code>target      staging
+adapter     deployment_workflow@3
+credential deploy_token</code></pre>
+            <small>The caller cannot change the target, adapter or credential.</small>
+          </div>
+
+          <div class="deploy-connector"><span>perform the approved deployment</span></div>
+
+          <div class="deploy-step runner-step">
+            <h3>In trusted execution</h3>
+            <p>A verified adapter or runner retrieves the credential, invokes the deployment system and returns a limited result.</p>
+            <div class="credential-locations"><span>Kimen vault</span><span>1Password</span><span>Google Secret Manager</span><span>workload identity</span></div>
+            <small>The credential exists here. It is never sent back to the repository process.</small>
+          </div>
+
+          <div class="deploy-result"><strong>Staging deployment started</strong><code>revision abc123 · deployment 8472</code></div>
+          <figcaption id="deploy-path-caption">The repository controls the workflow around deployment. Kimen controls the credential-bearing step.</figcaption>
+        </figure>
+
+        <div class="action-explanation">
+          <h3>Why this is not just a named script</h3>
+          <p>If Kimen injects <code>DEPLOY_TOKEN</code> into a repository script, anyone who can edit the script can print or transmit the token. A Kimen Action gives the editable script no credential. It hands a validated request to a trusted adapter outside the project.</p>
+          <p>The adapter may itself be implemented as a script, but it must be installed and pinned by Kimen or an administrator. The caller cannot replace it.</p>
         </div>
 
-        <div class="model-part">
-          <h3>The environment defines what it actually does</h3>
-          <p>A protected binding supplies everything the caller is not allowed to choose:</p>
-          <pre><code>deploy_staging
-  target      staging
-  adapter     deployment_workflow
-  credential  vault.deploy_token
-  revision    commit_on_main</code></pre>
-          <p>For local use, Kimen stores this binding in its encrypted vault. The default vault is <code>~/.config/kimen/vault.kv</code>, or the vault selected with <code>--vault</code>. It is changed through password-authorized Kimen administration, not by editing a file in the project.</p>
-          <p>The credential may live in the same vault. If it lives in another secret store, the binding holds a reference instead. The adapter is built into Kimen or installed as a verified, pinned package. Kimen never loads the privileged implementation from the project.</p>
+        <div class="action-explanation">
+          <h3>What Kimen Teams sends to developers</h3>
+          <p>The Action name travels with the project through Git. Kimen Teams syncs the approved adapter version, access rules and environment policy. Credentials stay in the vault, secret manager or runner that performs the operation.</p>
+          <p>An administrator can update or revoke the Action once. Local Kimen verifies the new signed version before accepting another call. No deployment credential needs to be copied to developer machines.</p>
         </div>
 
-        <div class="model-part">
-          <h3>Kimen handles every call</h3>
-          <p>Kimen identifies the caller, checks access and validates <code>revision</code>. It resolves the protected binding, asks for approval when required, lets the trusted adapter use the credential, filters the result and records what happened.</p>
-          <p>The caller cannot substitute another command, target or credential.</p>
-          <p><strong>The caller decides when. Kimen decides whether and exactly how.</strong></p>
-        </div>
-
-        <div class="model-part">
-          <h3>Teams sync definitions, not credentials</h3>
-          <p>The project declaration reaches developers through Git. A team owner updates the protected definition and access rules in Kimen Teams. When local Kimen syncs, it downloads a signed snapshot and the verified adapter version. Each environment keeps its credential reference in its own vault.</p>
-          <p>No secret value is sent through Git or Kimen Teams.</p>
-          <p>A changed Action definition or adapter does not silently inherit old approval. Local Kimen verifies the version before it performs the operation.</p>
-        </div>
-
-        <div class="script-boundary">
-          <strong>If the caller can edit the implementation and Kimen injects a token into it, it is still just a credential-bearing script.</strong>
-          <p>A protected Action requires a trusted adapter outside the caller's control, constrained inputs, a fixed target and a bounded result.</p>
-        </div>
+        <aside class="deployed-code-note"><strong>One separate boundary remains.</strong> Kimen protects the deployment credential. Code deployed to an environment may still access that environment's runtime secrets. Staging should use limited staging credentials. Production can require a reviewed revision, verified artifact and approval.</aside>
       </section>
 
       <section class="same-problem">

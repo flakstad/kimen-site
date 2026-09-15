@@ -192,6 +192,28 @@ environment. A trusted executable pinned by path and digest could be one
 adapter implementation, but a caller-writable shell script is not the security
 model. Built-in or signed provider adapters provide a clearer final boundary.
 
+### Repository scripts can still orchestrate the work
+
+An editable repository script may safely perform the non-sensitive work and
+then invoke an Action:
+
+```text
+scripts/deploy_staging
+  build application
+  run tests
+  calculate artifact digest
+  invoke deploy_staging(revision, artifact)
+```
+
+The script controls when to request the operation and which allowed values to
+submit. It never receives the deployment credential. Kimen validates the
+request and passes only the approved data into a trusted adapter or runner.
+
+This is different from asking Kimen to inject a token and execute the same
+repository script. That would let caller-controlled code disclose the token.
+The useful split is editable orchestration in the repository and protected
+execution behind the Action boundary.
+
 ## Updates and team distribution
 
 The portable contract and the protected binding have separate lifecycles.

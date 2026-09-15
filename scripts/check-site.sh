@@ -88,8 +88,8 @@ for text in required:
 access_page = Path("access/index.html").read_text(encoding="utf-8")
 access_required = [
     "deploy_staging(revision)",
-    "An Action is not a script with a nicer name.",
-    "Teams sync definitions, not credentials",
+    "Keep the deployment script. Remove the credential from it.",
+    "What Kimen Teams sends to developers",
 ]
 for text in access_required:
     if text not in access_page:

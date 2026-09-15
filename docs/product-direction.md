@@ -360,6 +360,13 @@ implementation and Kimen injects a credential into it, the caller can disclose
 that credential. A protected Action therefore uses an adapter outside the
 caller's control, with constrained inputs, a fixed target and bounded output.
 
+Repository scripts still have a useful role. They may build, test, calculate an
+artifact digest and invoke `deploy_staging(revision, artifact)`. They remain
+caller-editable because they never receive the deployment credential. Kimen
+validates the request and crosses into a trusted adapter or runner for the
+credential-bearing step. Actions separate orchestration from protected
+execution. They do not attempt to replace deployment workflows.
+
 For one developer, the protected binding lives in the local vault. The project
 declaration reaches other developers through Git. A team owner can update the
 protected definition and access rules in Kimen Teams. Local Kimen then fetches
