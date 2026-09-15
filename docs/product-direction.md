@@ -552,14 +552,19 @@ Actions are not primarily an agent product. Coding agents are one especially
 urgent caller alongside developers, CI and deterministic workflows. The public
 path lives at `/access/`; `/agents/` is only a compatibility redirect.
 
+Use the original Kimen article's narrative discipline: begin with an ordinary
+workflow and the common workaround, let the practical costs become visible,
+and only then introduce Kimen. Do not begin by teaching the solution model.
+
 Lead with the concrete problem:
 
-> Your team should not need infrastructure credentials to deploy software.
+> Shh. Don't hand out the deploy token.
 
-Immediately give the answer:
+The opening story is literal rather than categorical:
 
-> Kimen gives developers, CI jobs and agents
-> `deploy-staging(revision)` instead of `DEPLOY_TOKEN`.
+> Developer A needs to deploy staging. So do Developer B, Developer C, CI and
+> the coding agent. The usual answer is to give each of them `DEPLOY_TOKEN`.
+> That works, but turns one credential into five secrets the team must protect.
 
 Use one main illustration on the page. Begin with five separate holders:
 
@@ -582,14 +587,19 @@ Keep the rest of the page single-column and left-aligned. Avoid repeated card
 grids, table-like comparisons and section headers whose columns do not align
 with the content below them.
 
-The public page has one story in four parts:
+The public page has one story:
 
-1. The team should not need infrastructure credentials to deploy software.
-2. Five callers currently receive five copies of one deployment credential;
-   Kimen gives all five one named operation instead.
-3. This makes access easier to grant, revoke, change and audit.
-4. Local Kimen remains free; a team product coordinates the operation across
-   people, CI, workflows and agents.
+1. One routine staging deployment creates five copies of one secret.
+2. Each copy must be installed, kept out of source control, protected, rotated
+   and revoked; the credential also permits more than the intended job.
+3. The callers do not need the token. They need
+   `deploy-staging(revision)`.
+4. Kimen validates and performs that fixed deployment and returns its outcome.
+5. Access can then be granted, revoked, changed and audited around the actual
+   job rather than around copies of a key.
+6. The same mismatch appears around log inspection, restarts and backups.
+7. Local Kimen remains free; a team product coordinates these operations
+   across people, CI, workflows and agents.
 
 All deeper architecture, session semantics, threat-model explanation, provider
 design and implementation constraints remain in product documentation. They
