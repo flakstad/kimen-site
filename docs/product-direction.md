@@ -560,23 +560,23 @@ Lead with the concrete problem:
 
 > Shh. Don't hand out the deploy token.
 
-The opening story is literal rather than categorical:
+The opening story describes the scaling problem rather than an arbitrary number
+of named people:
 
-> Developer A needs to deploy staging. So do Developer B, Developer C, CI and
-> the coding agent. The usual answer is to give each of them `DEPLOY_TOKEN`.
-> That works, but turns one credential into five secrets the team must protect.
+> Developers, CI jobs, workflows and agents all need to deploy. Each becomes
+> another place where the same `DEPLOY_TOKEN` must be stored and protected.
 
-Use one main illustration on the page. Begin with five separate holders:
+Use one main illustration on the page. Begin with the caller groups which grow
+with the organization:
 
 ```text
-developer A -> DEPLOY_TOKEN
-developer B -> DEPLOY_TOKEN
-developer C -> DEPLOY_TOKEN
-CI          -> DEPLOY_TOKEN
-agent       -> DEPLOY_TOKEN
+developers -> one DEPLOY_TOKEN copy each
+CI jobs    -> more copies
+workflows  -> more copies
+agents     -> more copies
 ```
 
-Then show the same callers sharing `deploy-staging(revision)` while Kimen keeps
+Then show the same groups sharing `deploy-staging(revision)` while Kimen keeps
 the one credential and provider setup behind the operation. This is the
 strongest concrete expression of both the immediate problem and the
 cross-caller product hypothesis. The visual must show that access becomes
@@ -589,7 +589,8 @@ with the content below them.
 
 The public page has one story:
 
-1. One routine staging deployment creates five copies of one secret.
+1. Every new caller of one routine staging deployment becomes another holder
+   of the deployment credential.
 2. Each copy must be installed, kept out of source control, protected, rotated
    and revoked; the credential also permits more than the intended job.
 3. The callers do not need the token. They need

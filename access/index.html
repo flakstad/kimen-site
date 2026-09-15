@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen — don't hand out the deploy token</title>
+    <title>Kimen — stop copying deployment credentials</title>
     <meta name="description" content="Let developers, CI and agents deploy software without giving each of them a reusable infrastructure credential." />
     <link rel="canonical" href="https://kimen.systems/access/" />
-    <meta property="og:title" content="Don't hand out the deploy token." />
+    <meta property="og:title" content="Your deployment credential ends up everywhere work happens." />
     <meta property="og:description" content="Give developers, CI and agents the deployment they need—not a reusable credential to the deployment system." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/access/" />
@@ -22,29 +22,28 @@
 
     <main>
       <section class="access-hero">
-        <h1>Shh. Don’t hand out the deploy token.</h1>
-        <p>Developer A needs to deploy staging. So do Developer B, Developer C, CI and your coding agent.</p>
-        <p>The usual answer is to give each of them <code>DEPLOY_TOKEN</code>. It works. It also turns one credential into five secrets you now have to protect.</p>
+        <h1>Your deployment credential ends up everywhere work happens.</h1>
+        <p>Developers, CI jobs, workflows and agents all need to deploy. Each becomes another place where the same credential must be stored and protected.</p>
+        <p>The usual answer is to give every caller <code>DEPLOY_TOKEN</code>. It works—until access is spread across an organization and nobody has a simple way to see, change or revoke it.</p>
         <a class="text-link" href="#problem">There is a smaller way ↓</a>
       </section>
 
       <section class="problem-story" id="problem">
         <header>
-          <h2>One routine deployment. Five copies of the key.</h2>
-          <p>The token lands on developer laptops, in CI settings and inside an agent’s environment.</p>
+          <h2>Every new caller becomes another credential holder.</h2>
+          <p>The token spreads across developer laptops, CI settings, workflow connections and agent environments.</p>
         </header>
 
         <figure class="credential-spread" aria-labelledby="spread-caption">
           <div class="secret-source"><code>DEPLOY_TOKEN=••••••••</code></div>
           <div class="spread-line" aria-hidden="true"></div>
           <div class="secret-holders">
-            <div><strong>Developer A</strong><code>••••••••</code></div>
-            <div><strong>Developer B</strong><code>••••••••</code></div>
-            <div><strong>Developer C</strong><code>••••••••</code></div>
-            <div><strong>CI</strong><code>••••••••</code></div>
-            <div><strong>Agent</strong><code>••••••••</code></div>
+            <div><strong>Developers</strong><code>one copy each</code></div>
+            <div><strong>CI jobs</strong><code>more copies</code></div>
+            <div><strong>Workflows</strong><code>more copies</code></div>
+            <div><strong>Agents</strong><code>more copies</code></div>
           </div>
-          <figcaption id="spread-caption">Five places where the credential can be read, copied or leaked.</figcaption>
+          <figcaption id="spread-caption">Ten, twenty or one hundred developers—and every new automation surface—expand the set of places where the credential can be read, copied or leaked.</figcaption>
         </figure>
 
         <div class="problem-copy">
@@ -62,12 +61,11 @@
 
         <div class="operation-call"><code>deploy-staging(revision)</code></div>
 
-        <div class="callers-line" aria-label="Developer A, Developer B, Developer C, CI and Agent can call deploy-staging">
-          <span>Developer A</span>
-          <span>Developer B</span>
-          <span>Developer C</span>
-          <span>CI</span>
-          <span>Agent</span>
+        <div class="callers-line" aria-label="Developers, CI jobs, workflows and agents can call deploy-staging">
+          <span>Developers</span>
+          <span>CI jobs</span>
+          <span>Workflows</span>
+          <span>Agents</span>
         </div>
 
         <p class="solution-copy">Kimen keeps the credential, deployment target and provider setup. The callers can request a staging deployment and receive its result. They cannot reveal the token or turn it into another provider operation.</p>
@@ -110,7 +108,7 @@
       </section>
 
       <section class="teams" id="teams">
-        <h2>Ten developers should not need ten personal deploy keys.</h2>
+        <h2>Adding another caller should not mean issuing another deploy key.</h2>
         <p>Kimen Core remains local, useful and open source. Kimen Teams coordinates which developers, CI jobs, workflows and agents may invoke each operation, in which environment and for how long.</p>
         <p class="team-capabilities">Shared access rules. Approvals. Revocation. Identity. Audit.</p>
         <p>Credentials and execution can remain in the environment you already trust. The team layer coordinates access; it does not need to become another hosted vault.</p>
