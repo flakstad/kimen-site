@@ -112,7 +112,8 @@
   adapter     deployment_workflow
   credential  vault.deploy_token
   revision    commit_on_main</code></pre>
-          <p>The binding lives outside the writable project. The credential remains in the local vault or an existing secret store.</p>
+          <p>For local use, Kimen stores this binding in its encrypted vault. The default vault is <code>~/.config/kimen/vault.kv</code>, or the vault selected with <code>--vault</code>. It is changed through password-authorized Kimen administration, not by editing a file in the project.</p>
+          <p>The credential may live in the same vault. If it lives in another secret store, the binding holds a reference instead. The adapter is built into Kimen or installed as a verified, pinned package. Kimen never loads the privileged implementation from the project.</p>
         </div>
 
         <div class="model-part">
@@ -124,7 +125,8 @@
 
         <div class="model-part">
           <h3>Teams sync definitions, not credentials</h3>
-          <p>The project declaration, trusted adapter and access rules are versioned. Kimen Teams sends signed definitions and access rules to developer machines and runners. Each environment keeps its own credential binding.</p>
+          <p>The project declaration reaches developers through Git. A team owner updates the protected definition and access rules in Kimen Teams. When local Kimen syncs, it downloads a signed snapshot and the verified adapter version. Each environment keeps its credential reference in its own vault.</p>
+          <p>No secret value is sent through Git or Kimen Teams.</p>
           <p>A changed Action definition or adapter does not silently inherit old approval. Local Kimen verifies the version before it performs the operation.</p>
         </div>
 

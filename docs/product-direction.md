@@ -329,7 +329,7 @@ action deploy_staging(revision: git_sha)
 
 It declares the operation name and accepted input, but no target, provider,
 credential or executable implementation. The environment owner binds that
-contract outside the writable repository:
+contract inside Kimen's authenticated local state:
 
 ```text
 deploy_staging
@@ -338,6 +338,16 @@ deploy_staging
   credential  vault.deploy_token
   revision    commit_on_main
 ```
+
+The concrete local design should store this binding in the encrypted Kimen
+vault, by default `~/.config/kimen/vault.kv` or the location selected with
+`--vault`. It is modified through password-authorized Kimen administration,
+not through an editable file in the project. The credential may be stored in
+the same vault or represented by a reference to an external secret store.
+
+The adapter is built into Kimen or installed outside the project as a verified
+package pinned by version and digest. Kimen never resolves the privileged
+implementation from repository-controlled code.
 
 On invocation Kimen identifies the caller, resolves the protected binding,
 validates inputs and policy, obtains approval if required, lets the trusted
@@ -350,10 +360,13 @@ implementation and Kimen injects a credential into it, the caller can disclose
 that credential. A protected Action therefore uses an adapter outside the
 caller's control, with constrained inputs, a fixed target and bounded output.
 
-For one developer, the protected binding may be local. A team product can
-distribute signed Action contracts, adapter versions and access policy while
-each environment keeps its credential binding. Contracts and adapters are
-versioned, and changed versions do not silently inherit prior approval.
+For one developer, the protected binding lives in the local vault. The project
+declaration reaches other developers through Git. A team owner can update the
+protected definition and access rules in Kimen Teams. Local Kimen then fetches
+a signed snapshot and the verified adapter version during sync, while each
+environment keeps its credential reference in its own vault. No secret value
+passes through Git or Kimen Teams. Contracts and adapters are versioned, and
+changed versions do not silently inherit prior approval.
 
 Public examples use `snake_case`, such as `deploy_staging(revision)`, because
 it reads as a callable operation rather than a shell command. Exact file and

@@ -116,8 +116,8 @@ reference or executable implementation. A caller which can edit the repository
 may request a contract change, but cannot thereby change what authority an
 already approved Action uses.
 
-The environment owner creates a protected binding outside the writable
-project:
+The environment owner creates a protected binding in Kimen's authenticated
+local state:
 
 ```text
 deploy_staging
@@ -129,9 +129,18 @@ deploy_staging
 ```
 
 The binding fixes the parts the caller must not control: the trusted adapter,
-target, credential, input constraints and result shape. For one developer this
-may be local Kimen configuration. For a team it may combine an organization
-definition with a local environment and credential binding.
+target, credential, input constraints and result shape. For local use it should
+be stored in the encrypted Kimen vault, by default
+`~/.config/kimen/vault.kv` or the location selected with `--vault`. It is
+modified through password-authorized Kimen administration, not by editing a
+project file. The credential can live in the same vault or the binding can
+refer to an external secret store.
+
+The adapter is built into Kimen or installed as a verified package outside the
+project and pinned by version and digest. It is never resolved from
+repository-controlled code. For a team, the effective binding may combine a
+signed organization definition with the local environment and credential
+reference held in the vault.
 
 The public examples use `snake_case` for Action identifiers, such as
 `deploy_staging(revision)`. This makes the name read like a callable operation
@@ -191,11 +200,15 @@ The portable contract and the protected binding have separate lifecycles.
   review. This creates a new contract version.
 - An environment owner changes targets, adapters, credentials and constraints
   through the protected administration path.
-- A team control plane may publish signed contract approvals, adapter versions
-  and access policy to local Kimen installations and runners.
+- The project declaration reaches developers through the normal Git checkout.
+- A team owner updates protected definitions and access rules in the Kimen
+  Teams control plane.
+- During sync, local Kimen fetches a signed policy snapshot and the approved,
+  verified adapter version. It caches this material outside the project.
 - Secret values do not need to pass through the team control plane. Each
-  environment binds the approved Action to its local vault, existing secret
-  manager or workload identity.
+  environment stores its credential reference in its local vault. That
+  reference may resolve to the Kimen vault, an existing secret manager or a
+  workload identity.
 - Local Kimen verifies signatures and versions before an invocation. A changed
   contract or adapter does not silently inherit approval granted to an older
   version.
