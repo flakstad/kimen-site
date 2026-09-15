@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-site_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+site_root="${1:-$repository_root}"
 
 cd "$site_root"
 
@@ -43,7 +44,7 @@ class PageParser(HTMLParser):
 
 pages = {}
 for path in sorted(Path(".").rglob("*.html")):
-    if ".git" in path.parts:
+    if ".git" in path.parts or "_site" in path.parts:
         continue
     parser = PageParser()
     parser.feed(path.read_text(encoding="utf-8"))
@@ -121,11 +122,36 @@ em_dash = chr(0x2014)
 em_dash_entities = ("&" + "mdash;", "&#" + "8212;")
 for pattern in ("*.html", "*.md"):
     for path in sorted(Path(".").rglob(pattern)):
-        if ".git" in path.parts:
+        if ".git" in path.parts or "_site" in path.parts:
             continue
         contents = path.read_text(encoding="utf-8")
         if em_dash in contents or any(entity in contents for entity in em_dash_entities):
             raise SystemExit(f"em dash is not allowed: {path}")
+
+indexed_pages = {
+    "index.html": "https://kimen.systems/",
+    "access/index.html": "https://kimen.systems/access/",
+    "docs/index.html": "https://kimen.systems/docs/",
+    "guides/index.html": "https://kimen.systems/guides/",
+    "guides/keep-development-secrets-out-of-git/index.html":
+        "https://kimen.systems/guides/keep-development-secrets-out-of-git/",
+    "guides/env-files-are-not-secret-management/index.html":
+        "https://kimen.systems/guides/env-files-are-not-secret-management/",
+    "guides/runtime-configuration-without-env-files/index.html":
+        "https://kimen.systems/guides/runtime-configuration-without-env-files/",
+    "privacy/index.html": "https://kimen.systems/privacy/",
+}
+for filename, canonical in indexed_pages.items():
+    contents = Path(filename).read_text(encoding="utf-8")
+    if '<meta name="robots" content="index,follow"' not in contents:
+        raise SystemExit(f"indexed page is missing robots directive: {filename}")
+    if f'<link rel="canonical" href="{canonical}"' not in contents:
+        raise SystemExit(f"indexed page has wrong canonical URL: {filename}")
+
+sitemap = Path("sitemap.xml").read_text(encoding="utf-8")
+for canonical in indexed_pages.values():
+    if canonical not in sitemap:
+        raise SystemExit(f"sitemap is missing indexed page: {canonical}")
 
 print(f"checked {len(pages)} HTML pages")
 PY

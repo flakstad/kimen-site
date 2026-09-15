@@ -10,6 +10,8 @@ separate from the CLI/runtime repository.
 - A direct developer story based on keeping plaintext values out of the
   workspace and projecting them only when a runtime starts
 - A separate `/access/` product path for Kimen Operations and team governance
+- Search-oriented Core guides at `/guides/`
+- A privacy explanation at `/privacy/`
 - Production pages remain static and use a small plain-JavaScript layer for a
   private response form and optional privacy-conscious analytics
 - Three deliberately different design studies live at `/studies/`
@@ -37,6 +39,9 @@ Search demand, competitor category boundaries, acquisition channels,
 instrumentation and validation gates are recorded in
 [`docs/market-demand-and-validation.md`](docs/market-demand-and-validation.md).
 
+The exact external publication, private form, PostHog and Search Console steps
+are recorded in [`docs/launch-handoff.md`](docs/launch-handoff.md).
+
 The primary domain is `kimen.systems`; `CNAME` prepares the GitHub Pages custom
 domain mapping.
 
@@ -51,6 +56,8 @@ Then open:
 - <http://localhost:8080/>
 - <http://localhost:8080/docs/>
 - <http://localhost:8080/access/>
+- <http://localhost:8080/guides/>
+- <http://localhost:8080/privacy/>
 - <http://localhost:8080/404.html>
 - <http://localhost:8080/studies/>, three alternative composition studies
 - <http://localhost:8080/studies/synthesis/>, complete product-story study
@@ -61,10 +68,18 @@ Run the local site check:
 
 ```bash
 ./scripts/check-site.sh
+node scripts/build-site.mjs
+./scripts/check-site.sh _site
 ```
 
 The check validates internal links, referenced local files, document titles and
 HTML parsing.
+
+After publication, verify the live pages and deployed configuration:
+
+```bash
+node scripts/check-live-site.mjs https://kimen.systems/
+```
 
 ## Measurement and form configuration
 
@@ -89,8 +104,9 @@ steps for Andreas. The repository does not create or mutate those services.
 
 ## GitHub Pages handoff
 
-The workflow at `.github/workflows/pages.yml` deploys static files from the
-repository root after a push to `main`.
+The workflow at `.github/workflows/pages.yml` creates a public `_site` artifact
+after a push to `main`. Only production pages and assets are copied. Internal
+reports, design studies and retired variants are not published.
 
 Andreas performs publication and external configuration:
 
@@ -101,3 +117,5 @@ Andreas performs publication and external configuration:
 5. Configure the private form endpoint and optional PostHog variables described
    above.
 6. Verify the custom domain and HTTPS in Pages settings.
+7. Follow the measurement and indexing checks in
+   [`docs/launch-handoff.md`](docs/launch-handoff.md).

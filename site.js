@@ -20,11 +20,18 @@
     try {
       const existing = window.sessionStorage.getItem(key);
       if (existing) return existing;
-      const created = window.crypto.randomUUID();
+      let created;
+      if (typeof window.crypto.randomUUID === "function") {
+        created = window.crypto.randomUUID();
+      } else {
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        created = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+      }
       window.sessionStorage.setItem(key, created);
       return created;
     } catch (_error) {
-      return "anonymous";
+      return `ephemeral-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
   }
 
@@ -83,7 +90,15 @@
   capture("site_page_viewed");
 
   for (const link of document.querySelectorAll("[data-event]")) {
-    link.addEventListener("click", () => capture(link.dataset.event));
+    link.addEventListener("click", () => {
+      let destinationPath = "";
+      try {
+        destinationPath = new URL(link.href, window.location.href).pathname;
+      } catch (_error) {
+        destinationPath = "";
+      }
+      capture(link.dataset.event, {destination_path: destinationPath});
+    });
   }
 
   const form = document.querySelector("[data-private-form]");

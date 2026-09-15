@@ -27,17 +27,25 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Build public site
+        run: node scripts/build-site.mjs
+
       - name: Configure private form and analytics
         env:
           KIMEN_FORM_ENDPOINT: ${{ secrets.KIMEN_FORM_ENDPOINT }}
           KIMEN_POSTHOG_KEY: ${{ vars.KIMEN_POSTHOG_KEY }}
           KIMEN_POSTHOG_HOST: ${{ vars.KIMEN_POSTHOG_HOST }}
+          KIMEN_SITE_OUTPUT_DIR: _site
+          KIMEN_REQUIRE_EXTERNAL_CONFIG: "1"
         run: node scripts/configure-site.mjs
+
+      - name: Validate public artifact
+        run: ./scripts/check-site.sh _site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
