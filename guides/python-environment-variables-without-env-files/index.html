@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Python environment variables without .env secrets, Kimen</title>
+    <meta name="description" content="Keep Python environment variables as your application interface while moving API keys and database URLs out of project-local .env files." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/python-environment-variables-without-env-files/" />
+    <meta property="og:title" content="Python environment variables without storing secrets in .env" />
+    <meta property="og:description" content="Keep os.environ and your existing settings code. Move plaintext development secrets out of the Python project." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/python-environment-variables-without-env-files/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Python environment variables without storing secrets in .env","description":"How to keep Python environment variables as the application interface while moving development secrets out of project-local .env files.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/python-environment-variables-without-env-files/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_python_environment_variables">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Python environment variables without storing secrets in <code>.env</code></h1>
+        <p>Keep using <code>os.environ</code>, Django settings or Pydantic Settings. Move database URLs and API keys out of the project and supply them when Python starts.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>What Python projects usually do</h2>
+          <p>A common development setup puts values in a project-local <code>.env</code> file and loads them with <a href="https://github.com/theskumar/python-dotenv">python-dotenv</a>:</p>
+          <pre><code># .env
+DATABASE_URL=postgresql://localhost/myapp
+PAYMENTS_API_KEY=sk_test_...</code></pre>
+          <pre><code>from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+database_url = os.environ["DATABASE_URL"]</code></pre>
+          <p>This is ordinary Python practice. FastAPI documents the same pattern through <a href="https://fastapi.tiangolo.com/advanced/settings/">Pydantic Settings</a>, and Django recommends loading sensitive settings from environment variables or private files in its <a href="https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/">deployment checklist</a>.</p>
+        </section>
+        <section>
+          <h2>The problem is where the values live.</h2>
+          <p>Adding <code>.env</code> to <code>.gitignore</code> helps prevent a commit. It does not encrypt the file or move it out of the project workspace.</p>
+          <p>Every developer still needs a plaintext copy. Editors, scripts, plugins and coding agents which can read the workspace may also be able to read it. When a value changes, the team has to find and replace each copy.</p>
+          <p>The Python code is not the problem. <code>os.environ</code> is a useful runtime interface. The project-local plaintext file is the part Kimen replaces.</p>
+        </section>
+        <section>
+          <h2>Keep the Python code. Change how it starts.</h2>
+          <p>Store the values in the local encrypted Kimen vault:</p>
+          <pre><code>kimen vault init
+kimen secret set python_dev.database_url
+kimen secret set python_dev.payments_api_key</code></pre>
+          <p>Commit a profile containing names and vault references, not values:</p>
+          <pre><code># .kimen/profiles/dev.kmap
+env DATABASE_URL=python_dev.database_url
+env PAYMENTS_API_KEY=python_dev.payments_api_key</code></pre>
+          <p>Start Python through Kimen:</p>
+          <pre><code>kimen run --profile dev -- python app.py</code></pre>
+          <p>Kimen opens the vault, resolves the profile and gives the child process ordinary environment variables. The application can continue to call <code>os.environ["DATABASE_URL"]</code>.</p>
+        </section>
+        <section>
+          <h2>You can migrate without removing python-dotenv first.</h2>
+          <p>By default, <code>load_dotenv()</code> does not replace an environment variable which already exists. That makes an incremental migration possible:</p>
+          <pre><code>kimen run --profile dev -- python app.py</code></pre>
+          <p>Kimen supplies the migrated names before Python starts. <code>python-dotenv</code> can continue loading any remaining local development values until they have also moved.</p>
+          <p>Once the project no longer needs <code>.env</code>, remove the call to <code>load_dotenv()</code> if it serves no other purpose. Framework settings code does not otherwise need to change.</p>
+        </section>
+        <section>
+          <h2>The same rule applies to FastAPI, Django and notebooks.</h2>
+          <h3>FastAPI and Pydantic Settings</h3>
+          <p>If a settings model reads environment variables, start the server through Kimen:</p>
+          <pre><code>kimen run --profile dev -- fastapi dev main.py</code></pre>
+          <h3>Django</h3>
+          <p>Keep secrets out of <code>settings.py</code> and start Django with the same profile:</p>
+          <pre><code>kimen run --profile dev -- python manage.py runserver</code></pre>
+          <h3>IPython and Jupyter</h3>
+          <p>Start the interactive process through Kimen instead of loading a project-local file after it starts:</p>
+          <pre><code>kimen run --profile dev -- ipython
+kimen run --profile dev -- jupyter lab</code></pre>
+          <p>The notebook kernel receives the selected variables for its lifetime. Code executed in that kernel can read them, so only project values into notebooks and extensions you trust.</p>
+        </section>
+        <section>
+          <h2>What this protects, and what it does not</h2>
+          <ul>
+            <li>No secret value needs to be stored in the Python project.</li>
+            <li>The committed profile documents required names without containing credentials.</li>
+            <li>The secret is not exported into every later command in the parent shell.</li>
+            <li>The Python process receives the value and can read or copy it.</li>
+            <li>A long-running server, REPL or notebook holds the selected environment for its lifetime.</li>
+          </ul>
+          <aside class="guide-note"><strong>Use the simpler mechanism when it is enough.</strong><p>A private, correctly ignored <code>.env</code> file may be sufficient for a small local project with disposable development credentials. Kimen becomes useful when you want encrypted local storage, explicit project requirements, several profiles or fewer plaintext copies.</p></aside>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Move one Python secret out of <code>.env</code>.</h2>
+        <p>Keep your application interface unchanged. Let Kimen supply the value when the Python process starts.</p>
+        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

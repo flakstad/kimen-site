@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Node.js environment variables without .env secrets, Kimen</title>
+    <meta name="description" content="Keep process.env as the Node.js application interface while moving API keys and database URLs out of project-local .env files." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/nodejs-environment-variables-without-env-files/" />
+    <meta property="og:title" content="Node.js environment variables without storing secrets in .env" />
+    <meta property="og:description" content="Keep process.env and your existing Node.js configuration code. Move plaintext development secrets out of the project." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/nodejs-environment-variables-without-env-files/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Node.js environment variables without storing secrets in .env","description":"How to keep process.env as the Node.js application interface while moving development secrets out of project-local .env files.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/nodejs-environment-variables-without-env-files/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_nodejs_environment_variables">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Node.js environment variables without storing secrets in <code>.env</code></h1>
+        <p>Keep using <code>process.env</code>. Move database URLs and API keys out of the project and supply them when the Node.js process starts.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>What Node.js projects usually do</h2>
+          <p>Node.js applications normally read runtime configuration from <a href="https://nodejs.org/api/environment_variables.html"><code>process.env</code></a>:</p>
+          <pre><code>const databaseUrl = process.env.DATABASE_URL
+const apiKey = process.env.PAYMENTS_API_KEY</code></pre>
+          <p>During development, the values often live in <code>.env</code>. Modern Node.js can load the file directly:</p>
+          <pre><code>node --env-file=.env app.js</code></pre>
+          <p>Many existing projects use <a href="https://github.com/motdotla/dotenv">dotenv</a> instead:</p>
+          <pre><code>import "dotenv/config"
+
+const databaseUrl = process.env.DATABASE_URL</code></pre>
+          <p>Both approaches end with the same interface. The application reads environment variables. The difference is who loads them and where the plaintext values are stored.</p>
+        </section>
+        <section>
+          <h2>A hidden file is still a project file.</h2>
+          <p><code>.gitignore</code> helps prevent <code>.env</code> from being committed. The file remains unencrypted inside the workspace, where editors, scripts, plugins and coding agents may be able to read it.</p>
+          <p>Each developer also needs a copy. Someone has to communicate changes, remove old credentials and know which local files still contain them.</p>
+          <p>Kimen does not replace <code>process.env</code>. It replaces the project-local secret storage and the step which loads it.</p>
+        </section>
+        <section>
+          <h2>Start the same Node.js application through Kimen.</h2>
+          <p>Store the values in the local encrypted vault:</p>
+          <pre><code>kimen vault init
+kimen secret set node_dev.database_url
+kimen secret set node_dev.payments_api_key</code></pre>
+          <p>Commit a profile containing the names and local references:</p>
+          <pre><code># .kimen/profiles/dev.kmap
+env DATABASE_URL=node_dev.database_url
+env PAYMENTS_API_KEY=node_dev.payments_api_key</code></pre>
+          <p>Then use the normal application command:</p>
+          <pre><code>kimen run --profile dev -- node app.js</code></pre>
+          <p>The application still receives <code>process.env.DATABASE_URL</code>. It does not need a Kimen package or a different configuration API.</p>
+        </section>
+        <section>
+          <h2>Existing dotenv projects can migrate gradually.</h2>
+          <p>You do not have to remove dotenv before trying Kimen. Start the existing command through Kimen and move one name at a time into the profile:</p>
+          <pre><code>kimen run --profile dev -- npm run dev</code></pre>
+          <p>The selected values already exist in the process environment when Node.js starts. Keep non-sensitive convenience settings in <code>.env</code> if that is useful, or move the whole runtime shape into Kimen profiles.</p>
+          <p>When dotenv no longer supplies anything, remove it from the startup path. The rest of the application can keep using <code>process.env</code>.</p>
+        </section>
+        <section>
+          <h2>Server variables and browser variables are not the same.</h2>
+          <p>Frameworks add another boundary. Next.js loads <code>.env*</code> files and inlines names prefixed with <code>NEXT_PUBLIC_</code> into browser JavaScript. Vite exposes names prefixed with <code>VITE_</code> through <code>import.meta.env</code>.</p>
+          <p>Those prefixes mean public, not protected. Kimen cannot keep a value secret after a build tool deliberately includes it in code sent to the browser. The <a href="https://nextjs.org/docs/pages/guides/environment-variables">Next.js documentation</a> and <a href="https://vite.dev/guide/env-and-mode">Vite documentation</a> both describe this build-time behavior.</p>
+          <pre><code># server-side secret
+DATABASE_URL
+
+# public browser value
+NEXT_PUBLIC_API_ORIGIN
+VITE_API_ORIGIN</code></pre>
+          <p>Use Kimen for server processes, trusted build tools and private deployment credentials. Never put a secret behind a public framework prefix.</p>
+        </section>
+        <section>
+          <h2>What this protects, and what it does not</h2>
+          <ul>
+            <li>No secret value needs to be stored in the Node.js project.</li>
+            <li>The committed profile can document the variables the application expects.</li>
+            <li>The parent shell does not need a permanent export.</li>
+            <li>The Node.js child process receives the selected values and can copy them.</li>
+            <li>Client-side bundling still makes public variables public.</li>
+          </ul>
+          <aside class="guide-note"><strong>Node's built-in loader may already be enough.</strong><p>If a private, ignored <code>.env</code> file with disposable local values matches your risk and workflow, <code>node --env-file</code> is simple and dependency-free. Kimen is useful when you want encrypted local storage, explicit profiles or fewer plaintext copies.</p></aside>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Move one Node.js secret out of <code>.env</code>.</h2>
+        <p>Keep <code>process.env</code>. Let Kimen supply the value when the Node.js process starts.</p>
+        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

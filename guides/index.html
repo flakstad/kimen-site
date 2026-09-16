@@ -31,9 +31,21 @@
         <p>Practical guides for local development secrets, environment variables and applications which need configuration without carrying plaintext values beside the code.</p>
       </header>
       <section class="guide-index">
-        <h2>Start with the problem you have.</h2>
-        <p>Kimen keeps the contract with the project and the values in a local encrypted vault. These guides explain why that boundary matters and how to use it.</p>
+        <h2>Keep the application interface you already use.</h2>
+        <p>Python can keep using <code>os.environ</code>. Node.js can keep using <code>process.env</code>. A Clojure application can keep reading the JVM environment. Kimen changes where local values live and when they become available.</p>
         <div class="guide-list">
+          <article>
+            <h2><a href="./python-environment-variables-without-env-files/" data-event="kimen_guide_opened">Python environment variables without storing secrets in <code>.env</code></a></h2>
+            <p>How Python projects commonly use <code>python-dotenv</code>, <code>os.environ</code> and framework settings, followed by a gradual move from plaintext files to Kimen.</p>
+          </article>
+          <article>
+            <h2><a href="./nodejs-environment-variables-without-env-files/" data-event="kimen_guide_opened">Node.js environment variables without storing secrets in <code>.env</code></a></h2>
+            <p>Keep <code>process.env</code>, whether the project currently uses Node's built-in envfile support or dotenv.</p>
+          </article>
+          <article>
+            <h2><a href="./clojure-repl-secrets-with-kimen/" data-event="kimen_guide_opened">Using Kimen with a Clojure REPL</a></h2>
+            <p>A real setup from Kari, including the committed profile, nREPL startup and one-off realtime scenario processes.</p>
+          </article>
           <article>
             <h2><a href="./keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">How to keep local development secrets out of your repository</a></h2>
             <p>A practical model for code which needs database URLs, API keys or private files, without storing those values in Git or the project workspace.</p>

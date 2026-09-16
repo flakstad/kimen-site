@@ -152,6 +152,12 @@ indexed_pages = {
         "https://kimen.systems/guides/env-files-are-not-secret-management/",
     "guides/runtime-configuration-without-env-files/index.html":
         "https://kimen.systems/guides/runtime-configuration-without-env-files/",
+    "guides/python-environment-variables-without-env-files/index.html":
+        "https://kimen.systems/guides/python-environment-variables-without-env-files/",
+    "guides/nodejs-environment-variables-without-env-files/index.html":
+        "https://kimen.systems/guides/nodejs-environment-variables-without-env-files/",
+    "guides/clojure-repl-secrets-with-kimen/index.html":
+        "https://kimen.systems/guides/clojure-repl-secrets-with-kimen/",
     "privacy/index.html": "https://kimen.systems/privacy/",
 }
 for filename, canonical in indexed_pages.items():
