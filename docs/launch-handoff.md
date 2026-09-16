@@ -61,34 +61,47 @@ email contents. Received replies are therefore the conversion source of truth.
 
 ### PostHog
 
-1. Create a dedicated Kimen project in PostHog's European region. Do not reuse
-   another product's project because that contaminates funnels and acquisition
-   data.
-2. Store the project token as the repository variable `KIMEN_POSTHOG_KEY`.
-3. The repository already defaults `KIMEN_POSTHOG_HOST` to
+Configured on 16 September 2026:
+
+- the shared PostHog project is `Radar` in the European region;
+- Radar's project token is stored as the repository variable
+  `KIMEN_POSTHOG_KEY`;
+- Radar has a pinned `Kimen` dashboard tagged `kimen` and `marketing-site`;
+- the dashboard contains separate site-visit, Core-intent, Operations-intent
+  and guide-intent insights which use only `kimen_` events.
+
+At publication:
+
+1. The repository variable supplies Radar's project token to the Pages build.
+2. The repository already defaults `KIMEN_POSTHOG_HOST` to
    `https://eu.i.posthog.com`. Set the variable only if the project uses a
    different ingestion host.
-4. Publish and confirm events in PostHog's live events view.
-5. Check that no email address, subject or body appears as an event property.
+3. Publish and confirm events in PostHog's live events view.
+4. Check that no email address, subject or body appears as an event property.
 
 Expected events:
 
-- `site_page_viewed`
-- `install_clicked`
-- `source_clicked`
-- `guides_clicked`
-- `guide_opened`
-- `guide_install_clicked`
-- `operations_clicked`
-- `operations_explanation_clicked`
-- `operations_contact_clicked`
+- `kimen_site_page_viewed`
+- `kimen_install_clicked`
+- `kimen_source_clicked`
+- `kimen_guides_clicked`
+- `kimen_guide_opened`
+- `kimen_guide_install_clicked`
+- `kimen_operations_clicked`
+- `kimen_operations_explanation_clicked`
+- `kimen_operations_contact_clicked`
 
-Create these initial funnels:
+Every event also includes `product: "kimen"`. Keep both the event namespace
+and the product property. Radar is a shared project, while Kimen analysis lives
+on a separate dashboard whose insights use only `kimen_` events.
 
-1. Core page view to `install_clicked`.
-2. Core page view to `operations_clicked`.
-3. Guide page view to `guide_install_clicked`.
-4. Operations page view to `operations_contact_clicked`.
+After the first real events have established the event-property schema, add
+these funnels to the existing Kimen dashboard:
+
+1. Core page view to `kimen_install_clicked`.
+2. Core page view to `kimen_operations_clicked`.
+3. Guide page view to `kimen_guide_install_clicked`.
+4. Operations page view to `kimen_operations_contact_clicked`.
 
 Break down page views and funnels by `utm_source`, `utm_medium`, `utm_campaign`
 and `referrer`. The site stores only a session-scoped anonymous identifier.

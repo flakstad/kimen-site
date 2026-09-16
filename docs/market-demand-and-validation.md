@@ -250,23 +250,28 @@ Operations response path was not connected and there was no `robots.txt` or
 
 The repository now includes a prefilled email response path, privacy-conscious
 event capture, source attribution, `robots.txt` and `sitemap.xml`. Event capture
-remains inactive until Andreas configures a dedicated analytics project. No
-external service was created or changed as part of the site implementation.
+remains inactive until the site is published with Radar's configured PostHog
+token. Radar is a shared analytics project. Kimen stays separate through a
+`kimen_` event namespace, the property `product: "kimen"` and its own
+dashboard.
 
 Before sending meaningful traffic, complete the remaining external setup:
 
-- configure a dedicated PostHog project key;
 - verify that the public contact address receives the prefilled Operations email;
 - Google Search Console after publication.
+
+Radar's project key is already configured as `KIMEN_POSTHOG_KEY`, and a pinned
+Kimen dashboard already contains separate Core, Operations, guide and site
+activity insights.
 
 Recommended events:
 
 ```text
-site_page_viewed
-source_clicked
-install_clicked
-operations_clicked
-operations_contact_clicked
+kimen_site_page_viewed
+kimen_source_clicked
+kimen_install_clicked
+kimen_operations_clicked
+kimen_operations_contact_clicked
 ```
 
 Do not record email contents in analytics. The CTA event measures the opening of

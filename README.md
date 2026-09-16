@@ -94,8 +94,9 @@ configuration from:
 - optional repository variable `KIMEN_POSTHOG_HOST`, which defaults to the EU
   PostHog endpoint.
 
-Creating the analytics project is an external configuration step for Andreas.
-The repository does not create or mutate that service.
+Kimen uses the shared PostHog project `Radar`. Every Kimen event has a
+`kimen_` prefix and the property `product: "kimen"`. Kimen also has its own
+dashboard in Radar, so the shared project does not mix product interpretation.
 
 ## GitHub Pages handoff
 

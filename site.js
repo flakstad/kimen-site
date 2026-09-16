@@ -59,6 +59,7 @@
 
   function capture(event, properties = {}) {
     if (!analyticsEnabled) return;
+    if (typeof event !== "string" || !event.startsWith("kimen_")) return;
     const payload = {
       api_key: posthogKey,
       event,
@@ -87,7 +88,7 @@
     }).catch(() => {});
   }
 
-  capture("site_page_viewed");
+  capture("kimen_site_page_viewed");
 
   for (const link of document.querySelectorAll("[data-event]")) {
     link.addEventListener("click", () => {

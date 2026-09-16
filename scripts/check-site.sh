@@ -107,8 +107,19 @@ for text in access_required:
 
 if 'mailto:hello@kimen.systems' not in access_page:
     raise SystemExit("access page is missing the Operations email CTA")
-if 'operations_contact_clicked' not in access_page:
+if 'kimen_operations_contact_clicked' not in access_page:
     raise SystemExit("access page is missing contact intent measurement")
+
+site_javascript = Path("site.js").read_text(encoding="utf-8")
+if 'capture("kimen_site_page_viewed")' not in site_javascript:
+    raise SystemExit("site analytics is missing the namespaced page-view event")
+if '!event.startsWith("kimen_")' not in site_javascript:
+    raise SystemExit("site analytics does not enforce the Kimen event namespace")
+for path, parser in pages.items():
+    contents = path.read_text(encoding="utf-8")
+    for event in re.findall(r'data-event="([^"]+)"', contents):
+        if not event.startswith("kimen_"):
+            raise SystemExit(f"analytics event is missing Kimen namespace: {path} -> {event}")
 
 for required_file in (
     "home.css",
