@@ -3,20 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Using Kimen with a Clojure REPL, Kimen</title>
-    <meta name="description" content="A real Clojure development setup where Kimen supplies environment variables to an nREPL and scenario runner without storing secret values in the project." />
+    <title>Clojure configuration and REPL secrets with Kimen</title>
+    <meta name="description" content="How Clojure projects use Aero, Environ, cprop, environment variables and private files, followed by a real Kimen-powered REPL setup." />
     <meta name="robots" content="index,follow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/guides/clojure-repl-secrets-with-kimen/" />
-    <meta property="og:title" content="Using Kimen with a Clojure REPL" />
-    <meta property="og:description" content="How a real Clojure project supplies runtime secrets to nREPL and scenario processes without keeping values beside the code." />
+    <meta property="og:title" content="Clojure configuration and REPL secrets with Kimen" />
+    <meta property="og:description" content="Start with the configuration sources Clojure projects actually use, then move the secret values outside the project." />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://kimen.systems/guides/clojure-repl-secrets-with-kimen/" />
     <meta name="theme-color" content="#182019" />
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Using Kimen with a Clojure REPL","description":"A real Clojure development setup where Kimen supplies environment variables to an nREPL and scenario runner without storing secret values in the project.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/clojure-repl-secrets-with-kimen/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Clojure configuration and REPL secrets with Kimen","description":"How Clojure projects use Aero, Environ, cprop, environment variables and private files, followed by a real Kimen-powered REPL setup.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/clojure-repl-secrets-with-kimen/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -28,22 +28,60 @@
     </header>
     <main id="main">
       <header class="guide-hero">
-        <h1>Using Kimen with a Clojure REPL</h1>
-        <p>A real development setup for starting nREPL and integration scenarios with the configuration they need, without keeping secret values in the Clojure project.</p>
+        <h1>Clojure configuration and REPL secrets with Kimen</h1>
+        <p>Keep using Aero, Environ, cprop or direct environment access. Move the secret values out of the project and supply them when the JVM starts.</p>
         <p class="guide-meta">Kimen guide, updated September 2026</p>
       </header>
       <article class="guide-body">
         <section>
-          <h2>The REPL is the application runtime.</h2>
-          <p>A Clojure REPL often loads the complete application. It may open a database, call external APIs or start the same integrations used by the running service. That makes runtime configuration necessary during ordinary development.</p>
-          <p>A common setup reads environment variables directly or through a library such as <a href="https://github.com/juxt/aero">Aero</a> or <a href="https://github.com/weavejester/environ">Environ</a>. The values then come from shell exports, an ignored local file or a developer-specific Leiningen profile.</p>
+          <h2>Clojure projects assemble configuration in several ways.</h2>
+          <p>Some applications read the JVM environment directly:</p>
           <pre><code>(def database-url
   (System/getenv "DATABASE_URL"))</code></pre>
-          <p>Kimen keeps that runtime interface. It changes where the values live and how the REPL receives them.</p>
+          <p>Others turn several sources into a Clojure map:</p>
+          <ul>
+            <li><a href="https://github.com/juxt/aero">Aero</a> reads explicit EDN configuration and supports <code>#env</code>, <code>#profile</code>, <code>#include</code> and other tagged values.</li>
+            <li><a href="https://github.com/weavejester/environ">Environ</a> normalizes Leiningen or Boot settings, environment variables and Java system properties into one map.</li>
+            <li><a href="https://github.com/tolitius/cprop">cprop</a> merges classpath EDN, filesystem configuration, system properties and matching environment variables.</li>
+            <li><a href="https://github.com/grammarly/omniconf">Omniconf</a> declares a configuration blueprint and can populate it from environment variables, command-line arguments, Java properties, EDN files or AWS SSM.</li>
+          </ul>
+          <p>There are more variations, including custom EDN readers and Integrant or Component systems which receive an already assembled map. Kimen does not need to choose the application's configuration library.</p>
+          <p>In many deployed systems, the final source is still the process environment or a Java system property even when the rest of the application sees only a Clojure map. Other systems read a private file or fetch values from a remote secret manager.</p>
+        </section>
+        <section>
+          <h2>The value still has to come from somewhere.</h2>
+          <p>A configuration library can parse, merge and validate values. It does not remove the need for a source of authority:</p>
+          <ul>
+            <li>An environment variable must be exported by a shell, process manager, container runtime or launch tool.</li>
+            <li>A private EDN file must exist on the developer's machine or runtime host.</li>
+            <li>A Java system property must be supplied when the JVM starts.</li>
+            <li>An application which calls Vault, AWS SSM or another secret manager still needs an identity or credential which authorizes that call.</li>
+          </ul>
+          <p>Aero is unusually direct about this boundary. It supports <code>#env</code>, but recommends using environment variables sparingly and suggests a private included file for passwords because process environments can leak.</p>
+          <p>The Kimen question is not which Clojure library should win. It is where the local secret should live before Aero, Environ, cprop or the application reads it.</p>
+        </section>
+        <section>
+          <h2>Kimen can supply the source your application already expects.</h2>
+          <p>For environment-based configuration, keep the existing Clojure code and declare the runtime names in a Kimen profile:</p>
+          <pre><code># .kimen/profiles/dev.kmap
+env DATABASE_URL=clojure_dev.database_url
+env PAYMENTS_API_KEY=clojure_dev.payments_api_key</code></pre>
+          <pre><code>kimen run --profile dev -- clojure -M:dev</code></pre>
+          <p>Aero can continue reading the environment:</p>
+          <pre><code>{:database-url #env DATABASE_URL
+ :payments-key #env PAYMENTS_API_KEY}</code></pre>
+          <p>If the application already expects a private EDN file, Kimen can materialize one for the lifetime of the child process and expose only its path:</p>
+          <pre><code># .kimen/profiles/dev.kmap
+file secrets.edn=clojure_dev.secrets_edn
+envpath APP_SECRETS_FILE=secrets.edn</code></pre>
+          <pre><code>{:secrets #include #env APP_SECRETS_FILE}</code></pre>
+          <p>The Clojure process can read the resulting values in either model. Kimen removes the need for a permanent plaintext copy inside the project. It does not hide secrets from the application which legitimately consumes them.</p>
+          <aside class="guide-note"><strong>A workload identity may already be better.</strong><p>If production can fetch a secret directly with a narrow cloud or secret-manager identity, adding Kimen to that path may offer little. Kimen is most directly useful for local development and other runtimes where developers would otherwise keep the values in shell exports or private project files.</p></aside>
         </section>
         <section>
           <h2>This is how Kari starts its development REPL.</h2>
-          <p>Kari is a Clojure application with several external services and realtime integration scenarios. Its committed Kimen profile names the environment it expects:</p>
+          <p>A Clojure REPL often loads the complete application. It may open a database, call external APIs or start the same integrations used by the running service. Kari is such an application, with several external services and realtime integration scenarios.</p>
+          <p>Its committed Kimen profile names the environment it expects:</p>
           <pre><code># .kimen/profiles/kari-dev.kmap
 env PORT=kari.dev.port
 env OPENAI_API_KEY=kari.dev.openai_api_key
@@ -86,17 +124,6 @@ local vault contains
 runtime receives
   only the profile selected for this process</code></pre>
           <p>A new checkout can see what Kari expects. It cannot recover the values from Git. A developer can bind the same names to their own local vault.</p>
-        </section>
-        <section>
-          <h2>How this compares with Aero and Environ</h2>
-          <p>Aero is well suited to structured EDN configuration, profiles and composition. Its documentation explicitly supports environment variables and private included files. Environ combines environment variables, Java properties and developer-specific project files.</p>
-          <p>Kimen does not need to replace either library:</p>
-          <ul>
-            <li>Use Aero for the structure and interpretation of application configuration.</li>
-            <li>Use Environ when its normalized configuration map is already the application interface.</li>
-            <li>Use Kimen to keep selected source values encrypted outside the project and project them before the JVM starts.</li>
-          </ul>
-          <p>If a private file under the developer's home directory already gives the project the right boundary, Aero's native include model may be enough.</p>
         </section>
         <section>
           <h2>A long-running REPL keeps its environment.</h2>
