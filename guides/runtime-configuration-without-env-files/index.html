@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime configuration without committing .env files","description":"How to provide environment variables and private files at runtime without storing plaintext values in the project.","datePublished":"2026-09-15","dateModified":"2026-09-15","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/runtime-configuration-without-env-files/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime configuration without committing .env files","description":"How to choose between environment variables, temporary files, stdin and persistent runtime output with Kimen.","datePublished":"2026-09-15","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/runtime-configuration-without-env-files/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -34,47 +34,52 @@
       </header>
       <article class="guide-body">
         <section>
-          <h2>The application only needs the value while it runs.</h2>
-          <p>A database URL is useful to a process which is opening a database connection. It does not need to sit in a project file while somebody edits documentation, reviews code or runs a formatter.</p>
-          <p>Runtime configuration separates two concerns. The project declares what the program expects. The environment decides which concrete value should satisfy that requirement for this invocation.</p>
-          <pre><code>project
-  expects DATABASE_URL
-
-local environment
-  binds DATABASE_URL to dev.database_url
-
-runtime
-  receives the resolved value</code></pre>
+          <h2>Start with the interface the receiving program expects.</h2>
+          <p>Kimen can project a vault value as an environment variable, a temporary file, command stdin or persistent rendered output. Choose the narrowest form the receiving software already understands.</p>
+          <p>The projection changes delivery, not trust. Whichever process receives the value can read and copy it.</p>
         </section>
         <section>
-          <h2>Start with a normal application.</h2>
-          <p>Your code can continue to read an ordinary environment variable:</p>
-          <pre><code>DATABASE_URL</code></pre>
-          <p>Create a Kimen vault and store the value. Kimen prompts for it so the credential does not need to appear in shell history:</p>
-          <pre><code>kimen vault init
-kimen secret set dev.database_url</code></pre>
-          <p>Then add a committed profile which contains the variable name and reference:</p>
+          <h2>Use environment variables for ordinary application config.</h2>
+          <p>Declare the names expected by the application:</p>
           <pre><code># .kimen/profiles/dev.kmap
-env DATABASE_URL=dev.database_url</code></pre>
-        </section>
-        <section>
-          <h2>Project the value into one trusted process.</h2>
+env DATABASE_URL=dev.database_url
+env PORT=const:8080</code></pre>
           <pre><code>kimen run --profile dev -- ./app</code></pre>
-          <p>Kimen opens the vault, resolves the profile and starts <code>./app</code> with <code>DATABASE_URL</code> in its environment. The application does not need to know that Kimen was involved.</p>
-          <p>This is different from exporting a secret into the parent shell. The value is supplied to the child process for that invocation instead of becoming ambient configuration for every later command in the terminal.</p>
+          <p>Kimen starts <code>./app</code> with both names in its environment. <code>DATABASE_URL</code> comes from the vault and <code>PORT</code> is a safe project-owned constant. The parent shell does not receive either export.</p>
         </section>
         <section>
-          <h2>Use the projection the receiving software expects.</h2>
-          <p>Environment variables are common, but some programs require a file or standard input. Kimen can resolve the same local vault into several runtime forms:</p>
-          <pre><code># environment variables for a child process
-kimen run --profile dev -- ./app
+          <h2>Use a temporary file when the program expects a path.</h2>
+          <p><code>file</code> materializes a value inside Kimen's private temporary directory. <code>envpath</code> gives the child process the resulting path:</p>
+          <pre><code># .kimen/profiles/provider.kmap
+file credentials.json=provider.credentials_json
+envpath PROVIDER_CREDENTIALS=credentials.json</code></pre>
+          <pre><code>kimen run --profile provider -- ./worker</code></pre>
+          <p>The worker reads <code>PROVIDER_CREDENTIALS</code> and opens the file. Kimen removes the temporary directory after the child process exits.</p>
+        </section>
+        <section>
+          <h2>Use stdin when the command consumes one private payload.</h2>
+          <pre><code># .kimen/profiles/request.kmap
+stdin request.body</code></pre>
+          <pre><code>kimen run --profile request -- \
+  curl --data-binary @- https://example.internal/import</code></pre>
+          <p>The selected value becomes the child's standard input. It is not added to the command arguments or parent environment.</p>
+        </section>
+        <section>
+          <h2>Persistent output has a different lifecycle.</h2>
+          <p>Some process managers and deployment systems require a file which outlives the Kimen command. Render it explicitly:</p>
+          <pre><code>kimen envfile --out ./runtime/worker.env \
+  --env DATABASE_URL=worker.database_url
 
-# private runtime files
-kimen render --dir ./runtime --profile dev
-
-# an envfile for a process manager
-kimen envfile --out .env.runtime --profile worker</code></pre>
-          <p>Rendered files and envfiles contain plaintext by necessity. Put them in a private runtime directory, restrict permissions and remove them when the receiving software no longer needs them.</p>
+kimen render --dir ./runtime/provider \
+  --file credentials.json=provider.credentials_json</code></pre>
+          <p>These files contain plaintext by necessity. Restrict their directory, keep it outside Git and remove or replace the files when the receiving service no longer needs them. Kimen does not automatically clean persistent output created by <code>envfile</code> or <code>render</code>.</p>
+        </section>
+        <section>
+          <h2>Inspect the contract before running the program.</h2>
+          <pre><code>kimen map lint --profile dev --strict
+kimen plan --profile dev
+kimen doctor --profile dev</code></pre>
+          <p><code>map lint</code> checks the map structure. <code>plan</code> shows what will be projected without revealing the values. <code>doctor</code> also opens the vault and verifies that every referenced key exists.</p>
         </section>
         <section>
           <h2>Use short sessions for several invocations.</h2>

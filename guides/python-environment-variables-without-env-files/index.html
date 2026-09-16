@@ -55,7 +55,13 @@ database_url = os.environ["DATABASE_URL"]</code></pre>
         </section>
         <section>
           <h2>Keep the Python code. Change how it starts.</h2>
-          <p>Store the values in the local encrypted Kimen vault:</p>
+          <p>This example assumes Python 3 and Kimen are installed. Create a minimal application which verifies the variable without printing its value:</p>
+          <pre><code># app.py
+import os
+
+database_url = os.environ["DATABASE_URL"]
+print("DATABASE_URL is available")</code></pre>
+          <p>Initialize the local encrypted vault once, if you do not already have one, then store the values:</p>
           <pre><code>kimen vault init
 kimen secret set python_dev.database_url
 kimen secret set python_dev.payments_api_key</code></pre>
@@ -63,15 +69,18 @@ kimen secret set python_dev.payments_api_key</code></pre>
           <pre><code># .kimen/profiles/dev.kmap
 env DATABASE_URL=python_dev.database_url
 env PAYMENTS_API_KEY=python_dev.payments_api_key</code></pre>
-          <p>Start Python through Kimen:</p>
-          <pre><code>kimen run --profile dev -- python app.py</code></pre>
+          <p>Validate the profile, then start Python through Kimen:</p>
+          <pre><code>kimen doctor --profile dev
+kimen run --profile dev -- python app.py</code></pre>
+          <p>The second command should print:</p>
+          <pre><code>DATABASE_URL is available</code></pre>
           <p>Kimen opens the vault, resolves the profile and gives the child process ordinary environment variables. The application can continue to call <code>os.environ["DATABASE_URL"]</code>.</p>
         </section>
         <section>
           <h2>You can migrate without removing python-dotenv first.</h2>
-          <p>By default, <code>load_dotenv()</code> does not replace an environment variable which already exists. That makes an incremental migration possible:</p>
+          <p>By default, <code>load_dotenv()</code> uses <code>override=False</code> and does not replace an environment variable which already exists. That makes an incremental migration possible:</p>
           <pre><code>kimen run --profile dev -- python app.py</code></pre>
-          <p>Kimen supplies the migrated names before Python starts. <code>python-dotenv</code> can continue loading any remaining local development values until they have also moved.</p>
+          <p>Kimen supplies the migrated names before Python starts. <code>python-dotenv</code> can continue loading any remaining local development values until they have also moved. Check projects which explicitly set <code>override=True</code>, because that reverses the precedence.</p>
           <p>Once the project no longer needs <code>.env</code>, remove the call to <code>load_dotenv()</code> if it serves no other purpose. Framework settings code does not otherwise need to change.</p>
         </section>
         <section>

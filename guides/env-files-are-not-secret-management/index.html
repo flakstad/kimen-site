@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Why .env files are not a secrets management strategy","description":"Why project-local .env files and .gitignore do not provide protected secret storage or controlled runtime delivery.","datePublished":"2026-09-15","dateModified":"2026-09-15","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/env-files-are-not-secret-management/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Why .env files are not a secrets management strategy","description":"Why project-local .env files and .gitignore do not provide protected secret storage or controlled runtime delivery.","datePublished":"2026-09-15","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/env-files-are-not-secret-management/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -51,16 +51,15 @@
           <p>This can be acceptable for non-sensitive local defaults. It is a poor lifecycle for reusable credentials.</p>
         </section>
         <section>
-          <h2>Keep environment variables. Replace plaintext storage.</h2>
+          <h2>The runtime interface is not the storage strategy.</h2>
           <p>The problem is not the environment-variable interface. Many applications correctly read values such as <code>DATABASE_URL</code> and <code>STRIPE_API_KEY</code> from their runtime environment.</p>
-          <p>The avoidable part is storing those values in a plaintext file beside the application. Kimen keeps the names and mappings with the project while storing the values in a local encrypted vault.</p>
-          <pre><code># committed project map
-env DATABASE_URL=dev.database_url
-env STRIPE_API_KEY=dev.stripe_api_key
-
-# application startup
-kimen run --profile dev -- ./app</code></pre>
-          <p>The child process sees ordinary environment variables. A repository reader sees only the names and vault references.</p>
+          <p>The avoidable part is treating a plaintext project file as the place where reusable credentials live. A runtime can receive environment variables from a password manager, a cloud secret store, a process manager, a local encrypted vault or another trusted launcher.</p>
+          <p>Kimen is one local option. It keeps names and vault references with the project, stores values in an encrypted vault and supplies them to a trusted child process. The concrete migration is covered in <a href="../keep-development-secrets-out-of-git/">the Git migration guide</a>.</p>
+        </section>
+        <section>
+          <h2>Encrypted local storage does not solve team distribution.</h2>
+          <p>Kimen Core protects the local copy and moves it outside the project. It does not currently provision a shared credential to every developer, rotate it across machines or revoke it centrally.</p>
+          <p>If a team already uses 1Password, Vault or a cloud secret manager for distribution and access control, keep using it. The remaining Kimen value is the project contract and the controlled projection into the application runtime.</p>
         </section>
         <section>
           <h2>When a <code>.env</code> file is still reasonable</h2>
@@ -76,9 +75,9 @@ kimen run --profile dev -- ./app</code></pre>
         </section>
       </article>
       <section class="guide-closing">
-        <h2>Your application can keep using environment variables.</h2>
-        <p>Move the secret values out of the project and let Kimen supply them when the application starts.</p>
-        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Try Kimen on one project</a>
+        <h2>Ready to remove one plaintext project secret?</h2>
+        <p>Follow the migration from an existing local file to a committed requirement and an encrypted local value.</p>
+        <a class="button" href="../keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">Migrate one project</a>
       </section>
     </main>
     <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>

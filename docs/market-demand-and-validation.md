@@ -247,6 +247,34 @@ receiving process. They must also never imply that Kimen can make
 `NEXT_PUBLIC_*` or `VITE_*` values secret after a framework includes them in
 browser code.
 
+### Guide implementation verification
+
+The first guide wave was verified against the local Kimen CLI on 2026-09-16.
+The checks used an isolated test vault and non-sensitive fixture values.
+
+Verified behavior:
+
+- Python and Node.js received a projected environment variable and confirmed
+  availability without printing its value.
+- Kimen materialized a private EDN file, exposed its path through `envpath`,
+  and Aero 1.1.6 loaded it through `#include #env APP_SECRETS_FILE`.
+- environment variables, constants, temporary files, stdin, envfiles and
+  rendered files worked with the syntax shown in the runtime guide.
+- `map lint`, `plan` and `doctor` worked as described.
+- persistent envfile and rendered-file output used mode `0600` in the test.
+
+The guide set deliberately distinguishes three editorial jobs:
+
+1. `.env` analysis explains the problem and when the simple mechanism is
+   sufficient.
+2. The Git guide is a concrete migration with repository checks and a safe
+   verification step.
+3. The runtime guide documents projection choice and lifecycle.
+
+Kimen Core must not be described as team credential distribution. It protects
+the local copy and controls local runtime projection. Teams still need a
+trusted provisioning or secret-management channel for shared values.
+
 Estimated monthly United States organic traffic for selected whole domains:
 
 | Domain | Estimated organic visits | Ranking keywords |

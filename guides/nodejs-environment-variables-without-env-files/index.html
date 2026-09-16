@@ -38,7 +38,7 @@
           <p>Node.js applications normally read runtime configuration from <a href="https://nodejs.org/api/environment_variables.html"><code>process.env</code></a>:</p>
           <pre><code>const databaseUrl = process.env.DATABASE_URL
 const apiKey = process.env.PAYMENTS_API_KEY</code></pre>
-          <p>During development, the values often live in <code>.env</code>. Modern Node.js can load the file directly:</p>
+          <p>During development, the values often live in <code>.env</code>. Node.js added its native <code>--env-file</code> option in version 20.6.0:</p>
           <pre><code>node --env-file=.env app.js</code></pre>
           <p>Many existing projects use <a href="https://github.com/motdotla/dotenv">dotenv</a> instead:</p>
           <pre><code>import "dotenv/config"
@@ -54,7 +54,14 @@ const databaseUrl = process.env.DATABASE_URL</code></pre>
         </section>
         <section>
           <h2>Start the same Node.js application through Kimen.</h2>
-          <p>Store the values in the local encrypted vault:</p>
+          <p>This example assumes Node.js and Kimen are installed. Create a minimal application which verifies the variable without printing its value:</p>
+          <pre><code>// app.mjs
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is missing")
+}
+
+console.log("DATABASE_URL is available")</code></pre>
+          <p>Initialize the local encrypted vault once, if you do not already have one, then store the values:</p>
           <pre><code>kimen vault init
 kimen secret set node_dev.database_url
 kimen secret set node_dev.payments_api_key</code></pre>
@@ -62,15 +69,19 @@ kimen secret set node_dev.payments_api_key</code></pre>
           <pre><code># .kimen/profiles/dev.kmap
 env DATABASE_URL=node_dev.database_url
 env PAYMENTS_API_KEY=node_dev.payments_api_key</code></pre>
-          <p>Then use the normal application command:</p>
-          <pre><code>kimen run --profile dev -- node app.js</code></pre>
+          <p>Validate the profile, then use the normal application command:</p>
+          <pre><code>kimen doctor --profile dev
+kimen run --profile dev -- node app.mjs</code></pre>
+          <p>The second command should print:</p>
+          <pre><code>DATABASE_URL is available</code></pre>
           <p>The application still receives <code>process.env.DATABASE_URL</code>. It does not need a Kimen package or a different configuration API.</p>
         </section>
         <section>
           <h2>Existing dotenv projects can migrate gradually.</h2>
           <p>You do not have to remove dotenv before trying Kimen. Start the existing command through Kimen and move one name at a time into the profile:</p>
           <pre><code>kimen run --profile dev -- npm run dev</code></pre>
-          <p>The selected values already exist in the process environment when Node.js starts. Keep non-sensitive convenience settings in <code>.env</code> if that is useful, or move the whole runtime shape into Kimen profiles.</p>
+          <p>The selected values already exist in the process environment when Node.js starts. dotenv preserves existing variables by default, so Kimen's values win in the normal configuration. Check projects which enable dotenv's <code>override</code> option or use custom framework loading.</p>
+          <p>Keep non-sensitive convenience settings in <code>.env</code> if that is useful, or move the whole runtime shape into Kimen profiles.</p>
           <p>When dotenv no longer supplies anything, remove it from the startup path. The rest of the application can keep using <code>process.env</code>.</p>
         </section>
         <section>

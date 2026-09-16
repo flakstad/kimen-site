@@ -31,7 +31,7 @@
         <p>Practical guides for local development secrets, environment variables and applications which need configuration without carrying plaintext values beside the code.</p>
       </header>
       <section class="guide-index">
-        <h2>Keep the application interface you already use.</h2>
+        <h2>Choose your environment.</h2>
         <p>Python can keep using <code>os.environ</code>. Node.js can keep using <code>process.env</code>. A Clojure application can keep reading the JVM environment. Kimen changes where local values live and when they become available.</p>
         <div class="guide-list">
           <article>
@@ -46,17 +46,21 @@
             <h2><a href="./clojure-repl-secrets-with-kimen/" data-event="kimen_guide_opened">Clojure configuration and REPL secrets with Kimen</a></h2>
             <p>Start with Aero, Environ, cprop and the sources Clojure projects actually use, then see the real Kari nREPL and scenario setup.</p>
           </article>
-          <article>
-            <h2><a href="./keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">How to keep local development secrets out of your repository</a></h2>
-            <p>A practical model for code which needs database URLs, API keys or private files, without storing those values in Git or the project workspace.</p>
-          </article>
+        </div>
+        <h2 class="guide-group-title">Understand and adopt the model.</h2>
+        <p class="guide-group-copy">Start with the limitation of plaintext envfiles, follow a safe migration from Git, then choose the runtime projection your application expects.</p>
+        <div class="guide-list">
           <article>
             <h2><a href="./env-files-are-not-secret-management/" data-event="kimen_guide_opened">Why <code>.env</code> files are not a secrets management strategy</a></h2>
-            <p><code>.gitignore</code> prevents an accidental commit. It does not encrypt the file, distribute updates or keep other local tools from reading it.</p>
+            <p>What <code>.gitignore</code> protects, what the plaintext file still exposes and when an envfile remains a reasonable choice.</p>
+          </article>
+          <article>
+            <h2><a href="./keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">How to keep local development secrets out of your repository</a></h2>
+            <p>A step-by-step migration which checks Git history, moves one value, validates the profile and removes the plaintext copy only after the application works.</p>
           </article>
           <article>
             <h2><a href="./runtime-configuration-without-env-files/" data-event="kimen_guide_opened">Runtime configuration without committing <code>.env</code> files</a></h2>
-            <p>Keep environment variables as the application interface while moving secret storage and resolution out of the repository.</p>
+            <p>Choose between environment variables, temporary files, stdin and persistent runtime output, with the lifecycle of each made explicit.</p>
           </article>
         </div>
       </section>
