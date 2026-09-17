@@ -90,39 +90,6 @@ kimen run --profile dev -- clojure -M:dev</code></pre>
           <aside class="guide-note"><strong>A workload identity may already be better.</strong><p>If production can fetch a secret directly with a narrow cloud or secret-manager identity, adding Kimen to that path may offer little. Kimen is most directly useful for local development and other runtimes where developers would otherwise keep the values in shell exports or private project files.</p></aside>
         </section>
         <section>
-          <h2>This is how Kari starts its development REPL.</h2>
-          <p>A Clojure REPL often loads the complete application. It may open a database, call external APIs or start the same integrations used by the running service. Kari is such an application, with several external services and realtime integration scenarios.</p>
-          <p>Its committed Kimen profile names the environment it expects:</p>
-          <pre><code># .kimen/profiles/kari-dev.kmap
-env PORT=kari.dev.port
-env OPENAI_API_KEY=kari.dev.openai_api_key
-env AZURE_OPENAI_ENDPOINT=kari.dev.azure_openai_endpoint
-env AZURE_OPENAI_API_KEY=kari.dev.azure_openai_api_key
-env CSRF_SECRET=kari.dev.csrf_secret</code></pre>
-          <p>The right side contains vault references, not the values. The same profile contains non-secret constants where the project should own the value:</p>
-          <pre><code>env AI_CHAT_PRIMARY_PROVIDER=const:azure
-env AI_CHAT_FALLBACK_PROVIDER=const:openai
-env GEMINI_VERTEX_LOCATION=const:europe-west4</code></pre>
-          <p>The development script starts nREPL as a child of Kimen. Its essential command is:</p>
-          <pre><code>kimen run --profile kari-dev -- \
-  clojure -M:dev:jvm-base \
-  -m nrepl.cmdline \
-  --bind 127.0.0.1 \
-  --port 7888</code></pre>
-          <p>Once the REPL is ready, the application reads normal environment variables. It has no Kimen dependency.</p>
-        </section>
-        <section>
-          <h2>The same profile starts one-off scenarios.</h2>
-          <p>Kari also has a Clojure scenario runner which talks to external realtime services. The runner needs much of the same configuration as the REPL, but it is a separate process:</p>
-          <pre><code>kimen run --profile kari-dev -- \
-  clojure -M:dev:jvm-base \
-  -m kari.realtime-scenarios \
-  dev/scenarios/realtime/production_minimal.edn</code></pre>
-          <p>The scenario definition stays in the repository. The selected provider keys and runtime values come from the local vault when the process starts.</p>
-          <p>This avoids duplicating a large development environment in shell exports, a checked-out envfile and a separate REPL configuration. Both processes use the same declared profile.</p>
-          <p>The committed profile also documents what Kari expects. A new checkout can see the names and vault references, but cannot recover the values from Git.</p>
-        </section>
-        <section>
           <h2>A long-running REPL keeps its environment.</h2>
           <p>Kimen supplies the selected values to the JVM when it starts. The REPL and code evaluated inside it can read those values for the lifetime of that process.</p>
           <p>That is correct for a trusted application REPL. It is not isolation from code evaluated in the REPL, editor middleware attached to it or libraries loaded into the JVM.</p>
