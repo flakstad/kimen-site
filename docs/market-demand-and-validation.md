@@ -312,13 +312,19 @@ The original article, *Shhh, Don't Put Secrets in the Repo*, is the right
 editorial model. It starts with a recognizable developer practice, explains
 why `.gitignore` is incomplete, then introduces a different runtime model.
 
-Useful future content areas include:
+The initial content areas include:
 
 - keeping local-development secrets outside a repository;
 - runtime configuration without committed environment files;
 - what `.env.example` describes and who owns the values;
 - coding agents and plaintext values in a writable workspace;
 - honest comparisons with 1Password CLI and other existing choices.
+
+The first guide set now covers all of these entry points, plus the complete
+Kimen lifecycle: vault maintenance, passphrase prompts, short sessions,
+profile validation, every projection mode and the boundary between a coding
+agent and a trusted receiving process. The maintained coverage inventory is in
+[`guide-coverage.md`](guide-coverage.md).
 
 Search traffic is a patient adoption channel for Core, not evidence of an
 immediate large market.

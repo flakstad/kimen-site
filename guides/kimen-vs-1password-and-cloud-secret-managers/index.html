@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kimen vs 1Password and cloud secret managers</title>
+    <meta name="description" content="Choose between Kimen, 1Password CLI, a cloud secret manager and a simple local file based on who owns the secrets and where the workload runs." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/kimen-vs-1password-and-cloud-secret-managers/" />
+    <meta property="og:title" content="Kimen vs 1Password and cloud secret managers" />
+    <meta property="og:description" content="These tools can all keep values out of Git. They differ in ownership, runtime and operational weight." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/kimen-vs-1password-and-cloud-secret-managers/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Kimen vs 1Password and cloud secret managers","description":"A direct comparison of local Kimen vaults, 1Password CLI, cloud secret managers and simple local files.","datePublished":"2026-09-17","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/kimen-vs-1password-and-cloud-secret-managers/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_kimen_comparison">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Use the secret system which fits the owner and the runtime.</h1>
+        <p>Kimen, 1Password and cloud secret managers can all keep credentials out of Git. They solve different ownership and delivery problems.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>The command syntax is not the important difference.</h2>
+          <p>Kimen can start a child process with selected environment variables. So can 1Password CLI. A cloud secret manager can return the same value through an API or CLI.</p>
+          <p>The useful question is who should own the value and authorize access:</p>
+          <pre><code>individual developer and local machine
+  Kimen may fit
+
+team account and shared company vault
+  1Password may fit
+
+deployed cloud workload with IAM identity
+  cloud secret manager may fit</code></pre>
+        </section>
+        <section>
+          <h2>Choose Kimen for a small local, open system.</h2>
+          <p>Kimen stores an encrypted vault on the machine and keeps project requirements in committed <code>.kmap</code> profiles. It needs no account, hosted control plane or network connection. The source is open and the tool remains useful offline.</p>
+          <p>This is a good fit when:</p>
+          <ul>
+            <li>one developer owns the local values;</li>
+            <li>the project should declare its runtime names and projection modes;</li>
+            <li>the same value may need to become an environment variable, private file, path or stdin;</li>
+            <li>you prefer a small local CLI over another service account.</li>
+          </ul>
+          <p>The tradeoff is equally direct. Kimen does not currently synchronize secrets between developers, centrally revoke team access or provide an organization audit trail. Each local vault must be backed up and maintained by its owner.</p>
+        </section>
+        <section>
+          <h2>Choose 1Password when the team already owns the vault together.</h2>
+          <p>1Password CLI supports secret references, <code>op run</code> for subprocess environments and <code>op inject</code> for configuration files. Accounts, shared vaults and service accounts provide the team layer which local Kimen deliberately lacks.</p>
+          <p>If a company already uses 1Password and the main problem is distributing, rotating and revoking shared credentials, using <a href="https://developer.1password.com/docs/cli/secrets-scripts">1Password CLI directly</a> is usually simpler than copying the values into Kimen.</p>
+          <p>Kimen remains distinct when an individual wants no account, offline use and a project-specific projection contract. Kimen can also resolve an <code>exec:</code> source through <code>op read</code>, but that combination only earns its complexity when the Kimen profile or projection modes add real value.</p>
+        </section>
+        <section>
+          <h2>Choose a cloud secret manager for cloud workloads.</h2>
+          <p>Google Secret Manager, AWS Secrets Manager and similar services connect secret access to cloud IAM, workload identities, versions and centralized audit. That is often the right production model.</p>
+          <p>For example, Google documents access through Application Default Credentials, Google Cloud CLI credentials or a workload identity with the Secret Manager Secret Accessor role. The application asks the service for a specific secret version.</p>
+          <p>If a deployed workload already has a narrow identity, adding a local Kimen vault to that path can make the system worse. Use the native identity and secret manager.</p>
+          <p>Local development is less automatic. The developer still needs Google Cloud authentication and IAM access to the secret. Kimen is an alternative when local ownership, offline access or cloud independence matters more than central administration.</p>
+        </section>
+        <section>
+          <h2>A plain local file can still be enough.</h2>
+          <p>A correctly ignored private file is simple and may be reasonable for disposable local credentials in a small project. It has no extra tool, account or unlock step.</p>
+          <p>Choose Kimen when encrypted storage, explicit profiles, several environments, short unlock sessions or multiple delivery modes justify the additional command. Do not add a secret manager merely to make a low-risk local value look sophisticated.</p>
+        </section>
+        <section>
+          <h2>How the daily experience differs</h2>
+          <h3>Kimen</h3>
+          <pre><code>kimen session start --ttl 30m
+kimen run --profile dev -- ./app
+kimen session lock</code></pre>
+          <p>Without an active session, Kimen asks for the vault passphrase on every invocation.</p>
+          <h3>1Password CLI</h3>
+          <pre><code>op run --env-file=.env.references -- ./app</code></pre>
+          <p>Authentication and authorization come from the developer's 1Password account or a service account.</p>
+          <h3>Google Secret Manager</h3>
+          <pre><code>gcloud secrets versions access 7 --secret=app-api-key</code></pre>
+          <p>Authentication and authorization come from Google Cloud credentials and IAM. Production applications commonly call the API through their workload identity rather than placing this command in a startup script.</p>
+        </section>
+        <section>
+          <h2>A short decision rule</h2>
+          <ul>
+            <li>Use Kimen for local, open, account-free runtime configuration.</li>
+            <li>Use 1Password for team-owned credentials when 1Password is already the shared system of record.</li>
+            <li>Use a cloud secret manager for deployed workloads with native IAM identities.</li>
+            <li>Use a simple private file when its risk and maintenance cost are genuinely acceptable.</li>
+          </ul>
+          <p>These choices can coexist. The local development source does not have to be the production source, as long as the application receives the same runtime interface.</p>
+        </section>
+        <section>
+          <h2>Primary documentation</h2>
+          <ul>
+            <li><a href="https://developer.1password.com/docs/cli/secrets-scripts">1Password, load secrets into scripts</a></li>
+            <li><a href="https://docs.cloud.google.com/secret-manager/docs/access-secret-version">Google Cloud, access a secret version</a></li>
+            <li><a href="https://docs.cloud.google.com/secret-manager/docs/create-secret-quickstart">Google Cloud, Secret Manager authentication and quickstart</a></li>
+          </ul>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Choose the boundary before choosing the command.</h2>
+        <p>Kimen is intentionally local. That is its advantage for some projects and its limitation for centrally managed teams.</p>
+        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime configuration without committing .env files","description":"How to choose between environment variables, temporary files, stdin and persistent runtime output with Kimen.","datePublished":"2026-09-15","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/runtime-configuration-without-env-files/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime configuration without committing .env files","description":"How to choose between environment variables, temporary files, stdin and persistent runtime output with Kimen.","datePublished":"2026-09-15","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/runtime-configuration-without-env-files/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -90,6 +90,7 @@ kimen session lock</code></pre>
           <p>An active session widens the local boundary. A process running as the same operating-system user may be able to use the session. Prefer a short lifetime and keep the vault locked while untrusted same-user tools have unrestricted access.</p>
           <aside class="guide-note"><strong>Runtime delivery is not isolation.</strong><p>The receiving process gets the selected values and can copy them. Use <code>kimen run</code> for trusted software. Kimen Operations explores a different model for callers which need one bounded result rather than the credential itself.</p></aside>
           <p>For the storage problem behind this model, read <a href="../env-files-are-not-secret-management/">why <code>.env</code> files are not a complete secrets strategy</a>.</p>
+          <p>For the product choice, compare <a href="../kimen-vs-1password-and-cloud-secret-managers/">Kimen with 1Password and cloud secret managers</a>. Kimen's reason to exist is local, open-source and account-free operation with project-declared projection, not that other secret systems cannot start a process.</p>
         </section>
       </article>
       <section class="guide-closing">

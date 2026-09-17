@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Node.js environment variables without storing secrets in .env","description":"How to keep process.env as the Node.js application interface while moving development secrets out of project-local .env files.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/nodejs-environment-variables-without-env-files/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Node.js environment variables without storing secrets in .env","description":"How to keep process.env as the Node.js application interface while moving development secrets out of project-local .env files.","datePublished":"2026-09-16","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/nodejs-environment-variables-without-env-files/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -75,6 +75,7 @@ kimen run --profile dev -- node app.mjs</code></pre>
           <p>The second command should print:</p>
           <pre><code>DATABASE_URL is available</code></pre>
           <p>The application still receives <code>process.env.DATABASE_URL</code>. It does not need a Kimen package or a different configuration API.</p>
+          <p>With no active session, both <code>doctor</code> and <code>run</code> ask for the vault passphrase. If you expect several invocations, start a short session with <code>kimen session start --ttl 30m</code> and finish with <code>kimen session lock</code>.</p>
         </section>
         <section>
           <h2>Existing dotenv projects can migrate gradually.</h2>
@@ -105,7 +106,7 @@ VITE_API_ORIGIN</code></pre>
             <li>The Node.js child process receives the selected values and can copy them.</li>
             <li>Client-side bundling still makes public variables public.</li>
           </ul>
-          <aside class="guide-note"><strong>Node's built-in loader may already be enough.</strong><p>If a private, ignored <code>.env</code> file with disposable local values matches your risk and workflow, <code>node --env-file</code> is simple and dependency-free. Kimen is useful when you want encrypted local storage, explicit profiles or fewer plaintext copies.</p></aside>
+          <aside class="guide-note"><strong>Node's built-in loader may already be enough.</strong><p>If a private file with disposable local values matches your risk, <code>node --env-file</code> is simple. A team already using 1Password may prefer <code>op run</code>, and a cloud workload should usually use its native identity. Kimen is distinct when local, open-source and account-free storage plus project-declared profiles matter. <a href="../kimen-vs-1password-and-cloud-secret-managers/">Compare the choices directly.</a></p></aside>
         </section>
       </article>
       <section class="guide-closing">

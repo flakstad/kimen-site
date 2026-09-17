@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kimen profiles, environment variables, files and stdin</title>
+    <meta name="description" content="Use every Kimen projection mode with practical examples: environment variables, temporary files, file paths, stdin, rendered directories, envfiles and systemd runtime files." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/kimen-profiles-and-runtime-projection/" />
+    <meta property="og:title" content="Kimen profiles and runtime projection" />
+    <meta property="og:description" content="One profile can deliver selected values through environment variables, files, paths or standard input." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/kimen-profiles-and-runtime-projection/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Kimen profiles, environment variables, files and stdin","description":"A complete practical guide to Kimen profiles, value sources, validation and runtime projection modes.","datePublished":"2026-09-17","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/kimen-profiles-and-runtime-projection/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_kimen_profiles_projection">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>One profile. Four ways to supply a runtime.</h1>
+        <p>Give each program the interface it already expects: environment variables, private files, paths to those files or standard input.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>A profile describes the runtime without containing its secrets.</h2>
+          <p>Create <code>.kimen/profiles/dev.kmap</code> in the project:</p>
+          <pre><code>env DATABASE_URL=app.dev.database_url
+env APP_ENV=const:development
+
+file tls/client.pem=app.dev.client_certificate
+envpath CLIENT_CERT_FILE=tls/client.pem
+
+stdin app.dev.request_body</code></pre>
+          <p>Each line has a projection on the left and a value source on the right. The profile is safe to commit when it contains only names, references and non-sensitive constants.</p>
+          <p>Use a named profile for normal project work. Use <code>--map path/to/file.kmap</code> when the map lives elsewhere or is selected by another tool.</p>
+          <p>Kimen looks up a named profile in this order:</p>
+          <pre><code>$KIMEN_PROFILE_DIR/dev.kmap
+.kimen/profiles/dev.kmap
+$XDG_CONFIG_HOME/kimen/profiles/dev.kmap
+~/.config/kimen/profiles/dev.kmap</code></pre>
+          <p>The project-local location makes requirements portable. A configured user location can provide a private or machine-wide alternative without changing the project.</p>
+        </section>
+        <section>
+          <h2>Choose the source of each value.</h2>
+          <p>A bare name is a vault key. <code>secret:</code> makes the same choice explicit:</p>
+          <pre><code>env DATABASE_URL=app.dev.database_url
+env PAYMENTS_API_KEY=secret:app.dev.payments_api_key</code></pre>
+          <p><code>const:</code> keeps a non-sensitive value in the project:</p>
+          <pre><code>env APP_ENV=const:development</code></pre>
+          <p><code>exec:</code> reads a value from the standard output of another command:</p>
+          <pre><code>env API_TOKEN=exec:op read op://Development/MyApp/token</code></pre>
+          <p>This can bridge to an existing password manager or credential helper. The external command, its authentication and its output become part of the boundary. Kimen invokes the parsed command directly, not through a shell, and uses its output as the value.</p>
+          <p>Current projection commands still open the selected Kimen vault even when every value comes from <code>exec:</code>. The external source does not make the Kimen unlock step optional.</p>
+          <aside class="guide-note"><strong>Use the source which already owns the authority.</strong><p>If <code>op run</code> or a cloud workload identity already supplies everything the process needs, adding Kimen may not help. An <code>exec:</code> source is useful when the project profile and Kimen projection modes add a contract you otherwise lack.</p></aside>
+        </section>
+        <section>
+          <h2>Inspect the contract before opening the vault.</h2>
+          <pre><code>kimen map lint --profile dev --strict
+kimen plan --profile dev</code></pre>
+          <p><code>map lint</code> checks syntax. Strict mode also turns warnings into failure. <code>plan</code> prints the projection shape without resolving values.</p>
+          <p>Then verify that the vault opens and every referenced vault key exists:</p>
+          <pre><code>kimen doctor --profile dev --strict</code></pre>
+          <p><code>doctor</code> asks for the vault passphrase unless a valid session or another unlock method is active. It checks references, but does not print their values.</p>
+        </section>
+        <section>
+          <h2>Environment variables go directly to the child process.</h2>
+          <pre><code># .kimen/profiles/web.kmap
+env DATABASE_URL=web.dev.database_url
+env PORT=const:3000</code></pre>
+          <pre><code>kimen run --profile web -- ./web-server</code></pre>
+          <p>Kimen inherits the current environment, replaces the declared names and starts the command as a child process. The parent shell does not retain the projected values.</p>
+          <p>Without an active session, this invocation prompts for the vault passphrase. For repeated development runs:</p>
+          <pre><code>kimen session start --ttl 30m
+kimen run --profile web -- ./web-server
+kimen session lock</code></pre>
+        </section>
+        <section>
+          <h2>Private files can exist only for one process.</h2>
+          <p>Some libraries require a certificate, service-account document or private configuration file:</p>
+          <pre><code># .kimen/profiles/worker.kmap
+file credentials/service-account.json=worker.dev.service_account_json
+envpath GOOGLE_APPLICATION_CREDENTIALS=credentials/service-account.json</code></pre>
+          <pre><code>kimen run --profile worker -- ./worker</code></pre>
+          <p>Kimen creates a private temporary directory, writes the file with mode <code>0600</code>, sets <code>KIMEN_FILES_DIR</code> and gives <code>GOOGLE_APPLICATION_CREDENTIALS</code> the full temporary path. It removes the temporary directory when the child exits.</p>
+          <p><code>envpath</code> does not create a file by itself. It points an environment variable at a relative path created by a matching <code>file</code> entry.</p>
+          <p>Choose an explicit directory when the receiving process needs a stable location:</p>
+          <pre><code>kimen run --profile worker \
+  --files-dir "$HOME/.cache/my-worker/runtime" \
+  -- ./worker</code></pre>
+          <p>An explicit files directory is not removed automatically. The caller owns its lifecycle.</p>
+        </section>
+        <section>
+          <h2>Standard input is useful for one private payload.</h2>
+          <pre><code># .kimen/profiles/request.kmap
+stdin request.signed_payload</code></pre>
+          <pre><code>kimen run --profile request -- ./submit-request</code></pre>
+          <p>The child reads the selected bytes from standard input. A run may contain only one <code>stdin</code> mapping. This is useful when the program already accepts a token or document on stdin and does not need it in its environment or filesystem.</p>
+        </section>
+        <section>
+          <h2>Small one-off runs do not require a profile.</h2>
+          <pre><code>kimen run \
+  --env API_KEY=secret:tools.api_key \
+  --file config/private.json=tools.private_config \
+  --envpath PRIVATE_CONFIG=config/private.json \
+  -- ./tool</code></pre>
+          <p>Inline projections use the same rules as profile lines. A committed profile is better when the project should document and reuse the contract.</p>
+        </section>
+        <section>
+          <h2>Render persistent artifacts only when another system requires them.</h2>
+          <p>Render all <code>file</code> entries into a protected directory:</p>
+          <pre><code>kimen render --dir "$HOME/.cache/my-app/runtime" \
+  --profile worker</code></pre>
+          <p>Generate an envfile containing only <code>env</code> entries:</p>
+          <pre><code>kimen envfile --out "$HOME/.cache/my-app/web.env" \
+  --profile web</code></pre>
+          <p>Both outputs contain plaintext. A rendered directory gets mode <code>0700</code>, and rendered files and envfiles get mode <code>0600</code>. The envfile's parent directory must already exist. The files remain until you remove or replace them.</p>
+          <p>For a systemd service, render under <code>/run/kimen/&lt;service&gt;</code> and print the environment hint:</p>
+          <pre><code>kimen render --systemd-service my-worker \
+  --profile worker \
+  --print-systemd-hints</code></pre>
+          <p>Use <code>--runtime-dir /custom/run</code> to replace the default <code>/run</code> base. Run the command as an identity which can write the chosen runtime directory and open the selected vault.</p>
+        </section>
+        <section>
+          <h2>The receiving interface determines the remaining exposure.</h2>
+          <ul>
+            <li>Environment variables remain available to the child process for its lifetime.</li>
+            <li>Temporary files remain readable to the child and any other process allowed to access their directory.</li>
+            <li>Standard input avoids a named artifact, but the child can still retain the bytes.</li>
+            <li>Rendered directories and envfiles are persistent plaintext artifacts.</li>
+            <li><code>exec:</code> moves storage elsewhere, but the helper still needs its own authentication.</li>
+          </ul>
+          <p>Kimen controls storage, selection and delivery. It does not make the receiving process unable to read what it was given.</p>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Match Kimen to the interface the program already has.</h2>
+        <p>Keep the requirement in the profile, select the narrowest useful projection and make persistent output an explicit choice.</p>
+        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

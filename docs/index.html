@@ -102,6 +102,12 @@ kimen --version</code></pre>
 kimen doctor --profile dev --strict
 kimen plan --profile dev
 kimen run --profile dev -- ./your-app</code></pre>
+        <p>
+          <code>doctor</code> and <code>run</code> open the vault and ask for its
+          passphrase unless a valid session or another unlock method is active.
+          <code>map lint</code> and <code>plan</code> inspect the contract without
+          opening the vault.
+        </p>
         <p class="body-copy">
           The application continues to read an ordinary
           <code>STRIPE_API_KEY</code> environment variable. The plaintext value

@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Python environment variables without storing secrets in .env","description":"How to keep Python environment variables as the application interface while moving development secrets out of project-local .env files.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/python-environment-variables-without-env-files/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Python environment variables without storing secrets in .env","description":"How to keep Python environment variables as the application interface while moving development secrets out of project-local .env files.","datePublished":"2026-09-16","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/python-environment-variables-without-env-files/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -75,6 +75,7 @@ kimen run --profile dev -- python app.py</code></pre>
           <p>The second command should print:</p>
           <pre><code>DATABASE_URL is available</code></pre>
           <p>Kimen opens the vault, resolves the profile and gives the child process ordinary environment variables. The application can continue to call <code>os.environ["DATABASE_URL"]</code>.</p>
+          <p>With no active session, both <code>doctor</code> and <code>run</code> ask for the vault passphrase. If you expect several invocations, start a short session with <code>kimen session start --ttl 30m</code> and finish with <code>kimen session lock</code>.</p>
         </section>
         <section>
           <h2>You can migrate without removing python-dotenv first.</h2>
@@ -106,7 +107,7 @@ kimen run --profile dev -- jupyter lab</code></pre>
             <li>The Python process receives the value and can read or copy it.</li>
             <li>A long-running server, REPL or notebook holds the selected environment for its lifetime.</li>
           </ul>
-          <aside class="guide-note"><strong>Use the simpler mechanism when it is enough.</strong><p>A private, correctly ignored <code>.env</code> file may be sufficient for a small local project with disposable development credentials. Kimen becomes useful when you want encrypted local storage, explicit project requirements, several profiles or fewer plaintext copies.</p></aside>
+          <aside class="guide-note"><strong>Use the simpler mechanism when it is enough.</strong><p>A private file may be sufficient for disposable local values. A team already using 1Password may prefer <code>op run</code>, and a cloud workload should usually use its native identity. Kimen is distinct when you want encrypted local storage, open-source and account-free operation, and project-declared profiles. <a href="../kimen-vs-1password-and-cloud-secret-managers/">Compare the choices directly.</a></p></aside>
         </section>
       </article>
       <section class="guide-closing">

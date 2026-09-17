@@ -146,7 +146,7 @@
             <div><dt>Render required files</dt><dd><code>kimen render --dir ./runtime --profile staging</code></dd></div>
             <div><dt>Prepare an envfile</dt><dd><code>kimen envfile --out .env.runtime --profile worker</code></dd></div>
           </dl>
-          <p>Several runs ahead? Open the vault for a short session with <code>kimen session start --ttl 15m</code>, then close it with <code>kimen session lock</code>.</p>
+          <p>By default, every command which opens the vault asks for its passphrase. Several runs ahead? Open a short session with <code>kimen session start --ttl 15m</code>, then close it with <code>kimen session lock</code>.</p>
           <aside class="core-boundary" id="boundary"><strong>The receiving process gets the value.</strong> Use projection for software you trust with the selected secrets. <code>kimen run</code> is not a sandbox for arbitrary code.</aside>
         </section>
       </article>
@@ -159,7 +159,7 @@
 
       <section class="core-closing">
         <h2>Start with one secret.</h2>
-        <p>Move it out of the workspace. Keep the application unchanged. Let Kimen provide it only to the runtime which needs it.</p>
+        <p>Move it out of the workspace. Keep the application unchanged. Kimen is local, open source, usable offline and requires no account.</p>
         <div class="hero-actions"><a class="button" href="./docs/#start" data-event="kimen_install_clicked">Install Kimen</a><a href="https://github.com/flakstad/kimen" data-event="kimen_source_clicked">View source ↗</a></div>
       </section>
     </main>
