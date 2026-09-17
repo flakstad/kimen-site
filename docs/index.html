@@ -31,7 +31,7 @@
             <a href="https://github.com/flakstad/kimen">source</a>
           </nav>
         </div>
-        <p class="tagline">documentation</p>
+        <p class="tagline">documentation and command reference</p>
       </header>
 
       <hr class="rule" />
@@ -39,19 +39,17 @@
       <section>
         <h1>Use Kimen.</h1>
         <p class="lede">
-          Keep plaintext secrets outside the repository, declare what the
-          application needs and project values into a trusted runtime only when
-          you ask.
+          Install Kimen, complete the first local workflow and look up the
+          commands and configuration forms the product supports.
         </p>
         <ul class="doc-toc">
           <li><a href="#install">install</a></li>
           <li><a href="#start">five-minute setup</a></li>
           <li><a href="#security">security boundary</a></li>
-          <li><a href="#vault">vault</a></li>
-          <li><a href="#profiles">profiles</a></li>
-          <li><a href="#projections">projections</a></li>
-          <li><a href="#sessions">sessions</a></li>
+          <li><a href="./vaults-secrets-and-sessions/">vaults, secrets and sessions</a></li>
+          <li><a href="./profiles-and-runtime-projection/">profiles and projection</a></li>
           <li><a href="#reference">command reference</a></li>
+          <li><a href="../guides/">problem guides and tutorials</a></li>
         </ul>
       </section>
 
@@ -181,6 +179,11 @@ kimen secret mv &lt;from&gt; &lt;to&gt;</code></pre>
           output, logs or agent context. Use it only when that exposure is
           intentional.
         </p>
+        <p class="body-copy">
+          Read the complete <a href="./vaults-secrets-and-sessions/">vault,
+          secret and session documentation</a> for multiple vaults, session
+          files, rekeying and non-interactive unlock.
+        </p>
       </section>
 
       <hr class="rule" />
@@ -212,6 +215,11 @@ $XDG_CONFIG_HOME/kimen/profiles/&lt;name&gt;.kmap
           <code>--map &lt;path&gt;</code> for an explicit file.
           <code>kimen doctor</code> validates the map, opens the vault and checks
           that every referenced secret exists.
+        </p>
+        <p class="body-copy">
+          Read the complete <a href="./profiles-and-runtime-projection/">profile
+          and runtime projection documentation</a> for lookup order, inline
+          projections and every supported value source.
         </p>
       </section>
 

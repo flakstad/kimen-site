@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Practical Kimen guides</title>
-    <meta name="description" content="Practical guides to Kimen vaults, sessions, profiles, runtime projection, coding agents and common programming environments." />
+    <title>Guides for local secrets and runtime configuration, Kimen</title>
+    <meta name="description" content="Understand the problems around local secrets, move values out of Git and use Kimen with coding agents, Node.js, Python and Clojure." />
     <meta name="robots" content="index,follow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/guides/" />
-    <meta property="og:title" content="Practical Kimen guides" />
-    <meta property="og:description" content="Use the complete Kimen workflow, from a local vault and short sessions to runtime files and coding agents." />
+    <meta property="og:title" content="Guides for local secrets and runtime configuration" />
+    <meta property="og:description" content="Problem guides and practical tutorials for keeping local secrets out of projects and delivering them at runtime." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/guides/" />
     <meta name="theme-color" content="#182019" />
@@ -23,35 +23,39 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="topbar dark-topbar">
       <a class="brand" href="../"><span aria-hidden="true"></span>kimen</a>
-      <nav aria-label="Primary"><a href="../">Kimen Core</a><a href="../access/">Operations</a><a href="../docs/#start">Install ↗</a></nav>
+      <nav aria-label="Primary"><a href="../">Kimen Core</a><a href="../docs/">Documentation</a><a href="../access/">Operations</a></nav>
     </header>
     <main id="main">
       <header class="guide-hero">
-        <h1>Use Kimen in real development work.</h1>
-        <p>Practical guides to the complete local workflow: vaults, short sessions, project profiles, runtime delivery, coding agents and the application environments you already use.</p>
+        <h1>Keep local secrets out of places they do not belong.</h1>
+        <p>Understand the problem, move existing values safely and use Kimen with the programming environment your application already has.</p>
       </header>
       <section class="guide-index">
-        <h2>Start with the Kimen workflow.</h2>
-        <p>Understand the local boundary, choose how the runtime receives each value and decide whether Kimen is the right secret system for the job.</p>
+        <h2>Start with the problem.</h2>
+        <p>These guides begin with situations developers already encounter. They explain the tradeoffs before asking you to adopt Kimen.</p>
         <div class="guide-list">
+          <article>
+            <h2><a href="./env-files-are-not-secret-management/" data-event="kimen_guide_opened">Why <code>.env</code> files are not a secrets management strategy</a></h2>
+            <p>What <code>.gitignore</code> protects, what the plaintext file still exposes and when a private file remains a reasonable choice.</p>
+          </article>
+          <article>
+            <h2><a href="./keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">How to keep local development secrets out of your repository</a></h2>
+            <p>Check Git history, move one value, validate the profile and remove the plaintext copy only after the application works.</p>
+          </article>
           <article>
             <h2><a href="./coding-agents-and-local-secrets/" data-event="kimen_guide_opened">Keep local secrets out of coding agent workspaces</a></h2>
             <p>Let an agent understand the project's runtime contract without overstating what Kimen protects when the agent can also run commands.</p>
           </article>
           <article>
-            <h2><a href="./kimen-vaults-secrets-and-sessions/" data-event="kimen_guide_opened">Kimen vaults, secrets and sessions</a></h2>
-            <p>Create and maintain the local vault, understand the default passphrase prompt and use a short session for repeated work.</p>
-          </article>
-          <article>
-            <h2><a href="./kimen-profiles-and-runtime-projection/" data-event="kimen_guide_opened">Profiles, environment variables, files and stdin</a></h2>
-            <p>Use every projection mode, validate profiles, resolve values from different sources and render persistent output only when required.</p>
-          </article>
-          <article>
             <h2><a href="./kimen-vs-1password-and-cloud-secret-managers/" data-event="kimen_guide_opened">Kimen vs 1Password and cloud secret managers</a></h2>
             <p>A direct decision guide based on who owns the values, where the workload runs and whether local, open and account-free operation matters.</p>
           </article>
+          <article>
+            <h2><a href="./runtime-configuration-without-env-files/" data-event="kimen_guide_opened">Choose how a runtime should receive private configuration</a></h2>
+            <p>Decide between environment variables, temporary files, stdin and persistent output based on the interface and lifecycle the program actually needs.</p>
+          </article>
         </div>
-        <h2 class="guide-group-title">Use your programming environment.</h2>
+        <h2 class="guide-group-title">Use Kimen in your stack.</h2>
         <p class="guide-group-copy">Keep the configuration API your application already uses. Kimen changes where local values live and how the process starts.</p>
         <div class="guide-list">
           <article>
@@ -67,22 +71,11 @@
             <p>Use Aero, Environ, cprop or a custom system without changing the application's configuration library.</p>
           </article>
         </div>
-        <h2 class="guide-group-title">Move away from plaintext project secrets.</h2>
-        <p class="guide-group-copy">These guides explain the storage problem, a safe migration and the lifecycle of generated runtime artifacts.</p>
-        <div class="guide-list">
-          <article>
-            <h2><a href="./env-files-are-not-secret-management/" data-event="kimen_guide_opened">Why <code>.env</code> files are not a secrets management strategy</a></h2>
-            <p>What <code>.gitignore</code> protects, what the plaintext file still exposes and when a private file remains a reasonable choice.</p>
-          </article>
-          <article>
-            <h2><a href="./keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">How to keep local development secrets out of your repository</a></h2>
-            <p>Check Git history, move one value, validate the profile and remove the plaintext copy only after the application works.</p>
-          </article>
-          <article>
-            <h2><a href="./runtime-configuration-without-env-files/" data-event="kimen_guide_opened">Runtime configuration without committed secret files</a></h2>
-            <p>Choose between environment variables, temporary files, stdin and persistent runtime output, with the lifecycle of each made explicit.</p>
-          </article>
-        </div>
+        <aside class="guide-docs-link">
+          <h2>Looking for Kimen syntax and commands?</h2>
+          <p>The documentation covers installation, vaults, sessions, profiles, runtime projection and the complete command reference.</p>
+          <a href="../docs/" data-event="kimen_docs_opened">Open the documentation</a>
+        </aside>
       </section>
       <section class="guide-closing">
         <h2>Move one local secret out of the project.</h2>
@@ -90,6 +83,6 @@
         <a class="button" href="../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
       </section>
     </main>
-    <footer class="dark-footer"><a class="brand" href="../"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="../docs/">Manual</a><a href="../access/">Operations</a><a href="../privacy/">Privacy</a></nav></footer>
+    <footer class="dark-footer"><a class="brand" href="../"><span aria-hidden="true"></span>kimen</a><p>The small piece that makes a project real in its environment.</p><nav><a href="../docs/">Documentation</a><a href="../access/">Operations</a><a href="../privacy/">Privacy</a></nav></footer>
   </body>
 </html>

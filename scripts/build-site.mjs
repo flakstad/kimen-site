@@ -23,6 +23,8 @@ const publicFiles = [
   "access/index.html",
   "agents/index.html",
   "docs/index.html",
+  "docs/profiles-and-runtime-projection/index.html",
+  "docs/vaults-secrets-and-sessions/index.html",
   "favicon.svg",
   "home.css",
   "index.html",

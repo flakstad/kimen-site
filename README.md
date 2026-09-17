@@ -6,11 +6,12 @@ separate from the CLI/runtime repository.
 ## Scope
 
 - Product homepage
-- One-page manual at `/docs/`
+- Product documentation at `/docs/`, with focused references for vaults,
+  sessions, profiles and runtime projection
 - A direct developer story based on keeping plaintext values out of the
   workspace and projecting them only when a runtime starts
 - A separate `/access/` product path for Kimen Operations and team governance
-- Search-oriented Core guides at `/guides/`
+- Problem-oriented and stack-specific Core guides at `/guides/`
 - A privacy explanation at `/privacy/`
 - Production pages remain static and use a small plain-JavaScript layer for
   optional privacy-conscious analytics

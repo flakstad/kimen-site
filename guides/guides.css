@@ -97,6 +97,31 @@
   font: 15px/1.65 var(--serif);
 }
 
+.guide-docs-link {
+  margin-top: 76px;
+  padding: 38px 0 42px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-docs-link h2 {
+  max-width: 700px;
+  font-size: clamp(29px, 3.2vw, 42px);
+}
+
+.guide-docs-link p {
+  max-width: 680px;
+  margin: 18px 0 20px;
+  color: var(--muted);
+  font: 16px/1.65 var(--serif);
+}
+
+.guide-docs-link > a {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .guide-body section,
 .privacy-body section {
   padding: 51px 0 55px;

@@ -1,21 +1,34 @@
-# Kimen guide coverage
+# Kimen public content coverage
 
 Updated 2026-09-17.
 
-This inventory prevents the public guide library from collapsing back into a
-collection of `.env` articles. It maps the current Kimen CLI and the important
-product decisions to concrete public examples.
+This inventory keeps editorial guides separate from product documentation and
+prevents the public guide library from collapsing back into a collection of
+`.env` articles. It maps the current Kimen CLI and the important product
+decisions to concrete public examples.
 
-## Public guide roles
+## Guides
+
+Guides begin with a reader problem, decision or programming environment. They
+should teach something useful beyond the Kimen command sequence.
 
 | Guide | Primary job |
 | --- | --- |
 | `coding-agents-and-local-secrets` | Workspace access, human unlock, sessions, trusted child processes and the boundary to planned Operations |
-| `kimen-vaults-secrets-and-sessions` | Vault and secret lifecycle, multiple vaults, rekeying, sessions and non-interactive unlock |
-| `kimen-profiles-and-runtime-projection` | Profiles, sources, validation and every runtime projection mode |
 | `kimen-vs-1password-and-cloud-secret-managers` | Product choice and honest alternatives |
 | Python, Node.js and Clojure guides | Practice in real programming environments |
 | Git, envfile and runtime configuration guides | Problem education and migration |
+
+## Documentation
+
+Documentation begins with Kimen itself. It is the place for complete syntax,
+command coverage, supported modes and operational caveats.
+
+| Page | Primary job |
+| --- | --- |
+| `/docs/` | Installation, five-minute setup, security boundary and command reference |
+| `/docs/vaults-secrets-and-sessions/` | Vault and secret lifecycle, multiple vaults, rekeying, sessions and non-interactive unlock |
+| `/docs/profiles-and-runtime-projection/` | Profiles, sources, validation and every runtime projection mode |
 
 ## CLI coverage
 
@@ -66,5 +79,7 @@ product decisions to concrete public examples.
 ## Maintenance rule
 
 When the public CLI gains a command, flag, source type or projection mode,
-update this inventory and add one concrete public example before calling the
-guide set complete.
+update this inventory and the relevant documentation. Add or change a guide
+only when the feature creates a useful reader problem, decision or practical
+workflow. Feature completeness belongs to documentation, not to the guide
+library.

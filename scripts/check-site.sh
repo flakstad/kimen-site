@@ -148,10 +148,10 @@ indexed_pages = {
     "guides/index.html": "https://kimen.systems/guides/",
     "guides/coding-agents-and-local-secrets/index.html":
         "https://kimen.systems/guides/coding-agents-and-local-secrets/",
-    "guides/kimen-vaults-secrets-and-sessions/index.html":
-        "https://kimen.systems/guides/kimen-vaults-secrets-and-sessions/",
-    "guides/kimen-profiles-and-runtime-projection/index.html":
-        "https://kimen.systems/guides/kimen-profiles-and-runtime-projection/",
+    "docs/vaults-secrets-and-sessions/index.html":
+        "https://kimen.systems/docs/vaults-secrets-and-sessions/",
+    "docs/profiles-and-runtime-projection/index.html":
+        "https://kimen.systems/docs/profiles-and-runtime-projection/",
     "guides/kimen-vs-1password-and-cloud-secret-managers/index.html":
         "https://kimen.systems/guides/kimen-vs-1password-and-cloud-secret-managers/",
     "guides/keep-development-secrets-out-of-git/index.html":
