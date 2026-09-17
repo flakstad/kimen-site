@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kimen vaults, secrets and sessions</title>
+    <meta name="description" content="A practical guide to creating Kimen vaults, storing and renaming secrets, using short sessions and changing a vault passphrase safely." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/kimen-vaults-secrets-and-sessions/" />
+    <meta property="og:title" content="Kimen vaults, secrets and sessions" />
+    <meta property="og:description" content="Use the local encrypted vault directly, then avoid repeated passphrase prompts with a short Kimen session." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/kimen-vaults-secrets-and-sessions/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Kimen vaults, secrets and sessions","description":"A practical guide to Kimen's local vault, secret lifecycle, alternate vaults, passphrase changes and time-limited sessions.","datePublished":"2026-09-17","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/kimen-vaults-secrets-and-sessions/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_kimen_vaults_sessions">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Keep the vault locked. Open a short session when you need it.</h1>
+        <p>Kimen asks for the vault passphrase on each invocation by default. Learn the complete local lifecycle, including secret changes, multiple vaults, passphrase rotation and time-limited sessions.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>Create the local encrypted vault.</h2>
+          <p>Kimen stores its default vault at <code>~/.config/kimen/vault.kv</code>. Initialize it once:</p>
+          <pre><code>kimen vault init</code></pre>
+          <p>You choose a passphrase interactively. Kimen needs that passphrase to decrypt the vault for later commands.</p>
+          <p>Inspect the selected path or vault metadata without printing secret values:</p>
+          <pre><code>kimen vault path
+kimen vault info</code></pre>
+          <p><code>vault info</code> opens the vault and therefore asks for the passphrase unless a session or another unlock method is active.</p>
+        </section>
+        <section>
+          <h2>Store and maintain secret values.</h2>
+          <p>Use the hidden interactive prompt for ordinary entry:</p>
+          <pre><code>kimen secret set app.dev.database_url
+kimen secret set app.dev.api_key</code></pre>
+          <p>Setting an existing name replaces its value. List names without printing values:</p>
+          <pre><code>kimen secret list</code></pre>
+          <p>Rename a key when the project contract changes, or remove one which is no longer referenced:</p>
+          <pre><code>kimen secret mv app.dev.api_key app.dev.payments_api_key
+kimen secret rm app.dev.old_key</code></pre>
+          <p>Automation can pass a value on standard input:</p>
+          <pre><code>printf '%s' "$VALUE" | kimen secret set app.dev.api_key --stdin</code></pre>
+          <p>The shell variable already contains the plaintext value, so this is only appropriate when the surrounding automation protects it.</p>
+          <aside class="guide-note"><strong>Printing is deliberately awkward.</strong><p><code>kimen secret get app.dev.api_key --unsafe-stdout</code> prints the actual value. Terminal history, logs and redirected output can then copy it. Prefer projection into the process which needs the value.</p></aside>
+        </section>
+        <section>
+          <h2>Expect a passphrase prompt for every invocation.</h2>
+          <p>Without an active session, each command which opens the vault asks for its passphrase:</p>
+          <pre><code>kimen doctor --profile dev
+# Passphrase:
+
+kimen run --profile dev -- ./app
+# Passphrase:</code></pre>
+          <p>This is the secure default. The decrypted material exists only while that Kimen invocation is resolving or projecting values.</p>
+        </section>
+        <section>
+          <h2>Use a session for a bounded work period.</h2>
+          <p>If you will run the application repeatedly, open a short session once:</p>
+          <pre><code>kimen session start --ttl 30m
+# Passphrase:
+
+kimen session status
+kimen run --profile dev -- ./app
+kimen run --profile dev -- ./test-integration
+kimen session lock</code></pre>
+          <p>The TTL accepts seconds or a suffix such as <code>30m</code>, <code>8h</code> or <code>7d</code>. An expired session is removed the next time Kimen reads it.</p>
+          <p><code>kimen session stop</code> also ends the session. <code>lock</code> states the intent more clearly and is preferable in documentation and scripts.</p>
+          <p>A session is bound to the vault used when it starts. It does not unlock a different vault selected later.</p>
+          <aside class="guide-note"><strong>A session widens the local boundary.</strong><p>Kimen currently stores unlock material in an owner-readable session file. Processes running as the same operating-system user may be able to use or read it. Use short TTLs, lock when finished and do not present a session as isolation from a same-user coding agent.</p></aside>
+        </section>
+        <section>
+          <h2>Separate personal and work vaults when useful.</h2>
+          <p>Select a vault for one command:</p>
+          <pre><code>kimen vault init --vault ~/.config/kimen/work.kv
+kimen secret list --vault ~/.config/kimen/work.kv</code></pre>
+          <p>Or select it for the current shell:</p>
+          <pre><code>export KIMEN_VAULT="$HOME/.config/kimen/work.kv"
+kimen vault path</code></pre>
+          <p>A command-line <code>--vault</code> selection is explicit. <code>KIMEN_VAULT</code> is convenient when every command in a shell should use the same vault.</p>
+          <p>You can also set <code>KIMEN_SESSION</code> to choose a non-default session file. Keep it outside the project and protect it with the same care as the default session.</p>
+        </section>
+        <section>
+          <h2>Change the vault passphrase with a backup.</h2>
+          <p>Run a preflight first. Kimen opens the existing vault and validates the new passphrase without changing the file:</p>
+          <pre><code>kimen vault rekey --dry-run</code></pre>
+          <p>Then rekey and place the encrypted backup in a chosen directory:</p>
+          <pre><code>kimen vault rekey --backup-dir "$HOME/.config/kimen/backups"</code></pre>
+          <p>Without <code>--backup-dir</code>, Kimen writes the backup beside the vault. <code>--no-backup</code> disables the backup, but that removes the easiest recovery path and should be a deliberate choice. A successful rekey removes the active session because its old passphrase is no longer valid.</p>
+        </section>
+        <section>
+          <h2>Non-interactive unlock is an integration choice.</h2>
+          <p><code>--passphrase-cmd</code> lets Kimen obtain the vault passphrase from another program:</p>
+          <pre><code>kimen session start --ttl 15m \
+  --passphrase-cmd "$HOME/bin/read-kimen-passphrase"</code></pre>
+          <p>The command must print only the passphrase to standard output. The helper becomes part of the security boundary. A wrapper which contains the passphrase in plaintext is not an improvement.</p>
+          <p>The same unlock flag can supply the old passphrase during rekeying. The new passphrase can come from the interactive prompt, <code>KIMEN_NEW_PASSPHRASE</code>, <code>--new-passphrase-env NAME</code> or <code>--new-passphrase-stdin</code>.</p>
+          <p><code>KIMEN_PASSPHRASE</code> and passphrase input on standard input are also supported for automation, but environment variables and pipeline construction can expose values in places an interactive prompt does not. Prefer a narrowly authorized credential helper when automation is necessary.</p>
+        </section>
+        <section>
+          <h2>Why use this instead of 1Password?</h2>
+          <p>Kimen's vault is local, open source, account-free and usable offline. That is useful for an individual developer who wants runtime projection without adopting a hosted team vault.</p>
+          <p>1Password is usually stronger when credentials must be centrally shared, recovered, revoked and administered across a team. Kimen does not currently provide organization sync or central access management. Choose based on who must own the values, not only on command syntax.</p>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Use prompts by default. Use short sessions deliberately.</h2>
+        <p>The vault remains local. A session trades repeated prompts for a wider temporary local boundary.</p>
+        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

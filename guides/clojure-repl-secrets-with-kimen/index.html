@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clojure configuration and REPL secrets with Kimen</title>
-    <meta name="description" content="How Clojure projects use Aero, Environ, cprop, environment variables and private files, followed by a real Kimen-powered REPL setup." />
+    <meta name="description" content="Use Aero, Environ, cprop, environment variables and private runtime files with Kimen during Clojure development." />
     <meta name="robots" content="index,follow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/guides/clojure-repl-secrets-with-kimen/" />
@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Clojure configuration and REPL secrets with Kimen","description":"How Clojure projects use Aero, Environ, cprop, environment variables and private files, followed by a real Kimen-powered REPL setup.","datePublished":"2026-09-16","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/clojure-repl-secrets-with-kimen/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Clojure configuration and REPL secrets with Kimen","description":"How Clojure projects use Aero, Environ, cprop, environment variables and private runtime files with Kimen.","datePublished":"2026-09-16","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/clojure-repl-secrets-with-kimen/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -81,13 +81,14 @@ envpath APP_SECRETS_FILE=secrets.edn</code></pre>
           <p>Validate the profile and start the REPL:</p>
           <pre><code>kimen doctor --profile dev
 kimen run --profile dev -- clojure -M:dev</code></pre>
+          <p>Without a session, each command which opens the vault asks for its passphrase. For repeated REPL starts and development commands, use <code>kimen session start --ttl 30m</code>, then end the work period with <code>kimen session lock</code>.</p>
           <p>Inside the REPL, verify only the key names:</p>
           <pre><code>(require '[aero.core :as aero])
 (keys (:secrets (aero/read-config "config.edn")))
 ;; (:database-url :payments-key)</code></pre>
           <p>This file projection and nested <code>#include #env</code> form have been tested with Aero 1.1.6. Kimen removes the temporary file when the child process exits.</p>
           <p>The Clojure process can read the resulting values. Kimen removes the need for a permanent plaintext copy inside the project. It does not hide secrets from the application which legitimately consumes them.</p>
-          <aside class="guide-note"><strong>A workload identity may already be better.</strong><p>If production can fetch a secret directly with a narrow cloud or secret-manager identity, adding Kimen to that path may offer little. Kimen is most directly useful for local development and other runtimes where developers would otherwise keep the values in shell exports or private project files.</p></aside>
+          <aside class="guide-note"><strong>The existing owner may already be better.</strong><p>If production can fetch a secret with a narrow workload identity, or a team already manages development credentials in 1Password, adding Kimen may offer little. Kimen is most distinct for local, open-source, account-free runtime configuration with project-declared profiles. <a href="../kimen-vs-1password-and-cloud-secret-managers/">Compare the choices directly.</a></p></aside>
         </section>
         <section>
           <h2>A long-running REPL keeps its environment.</h2>

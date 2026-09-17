@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Guides to local secrets and runtime configuration, Kimen</title>
-    <meta name="description" content="Practical guides to keeping local development secrets out of Git, replacing project-local .env files and supplying configuration at runtime." />
+    <title>Practical Kimen guides</title>
+    <meta name="description" content="Practical guides to Kimen vaults, sessions, profiles, runtime projection, coding agents and common programming environments." />
     <meta name="robots" content="index,follow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://kimen.systems/guides/" />
-    <meta property="og:title" content="Practical guides to local secrets and runtime configuration" />
-    <meta property="og:description" content="Keep secret values out of the repository while giving applications the runtime configuration they need." />
+    <meta property="og:title" content="Practical Kimen guides" />
+    <meta property="og:description" content="Use the complete Kimen workflow, from a local vault and short sessions to runtime files and coding agents." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kimen.systems/guides/" />
     <meta name="theme-color" content="#182019" />
@@ -27,39 +27,59 @@
     </header>
     <main id="main">
       <header class="guide-hero">
-        <h1>Keep secrets out of the project. Give them to the runtime.</h1>
-        <p>Practical guides for local development secrets, environment variables and applications which need configuration without carrying plaintext values beside the code.</p>
+        <h1>Use Kimen in real development work.</h1>
+        <p>Practical guides to the complete local workflow: vaults, short sessions, project profiles, runtime delivery, coding agents and the application environments you already use.</p>
       </header>
       <section class="guide-index">
-        <h2>Choose your environment.</h2>
-        <p>Python can keep using <code>os.environ</code>. Node.js can keep using <code>process.env</code>. A Clojure application can keep reading the JVM environment. Kimen changes where local values live and when they become available.</p>
+        <h2>Start with the Kimen workflow.</h2>
+        <p>Understand the local boundary, choose how the runtime receives each value and decide whether Kimen is the right secret system for the job.</p>
         <div class="guide-list">
           <article>
-            <h2><a href="./python-environment-variables-without-env-files/" data-event="kimen_guide_opened">Python environment variables without storing secrets in <code>.env</code></a></h2>
-            <p>How Python projects commonly use <code>python-dotenv</code>, <code>os.environ</code> and framework settings, followed by a gradual move from plaintext files to Kimen.</p>
+            <h2><a href="./coding-agents-and-local-secrets/" data-event="kimen_guide_opened">Keep local secrets out of coding agent workspaces</a></h2>
+            <p>Let an agent understand the project's runtime contract without overstating what Kimen protects when the agent can also run commands.</p>
           </article>
           <article>
-            <h2><a href="./nodejs-environment-variables-without-env-files/" data-event="kimen_guide_opened">Node.js environment variables without storing secrets in <code>.env</code></a></h2>
-            <p>Keep <code>process.env</code>, whether the project currently uses Node's built-in envfile support or dotenv.</p>
+            <h2><a href="./kimen-vaults-secrets-and-sessions/" data-event="kimen_guide_opened">Kimen vaults, secrets and sessions</a></h2>
+            <p>Create and maintain the local vault, understand the default passphrase prompt and use a short session for repeated work.</p>
+          </article>
+          <article>
+            <h2><a href="./kimen-profiles-and-runtime-projection/" data-event="kimen_guide_opened">Profiles, environment variables, files and stdin</a></h2>
+            <p>Use every projection mode, validate profiles, resolve values from different sources and render persistent output only when required.</p>
+          </article>
+          <article>
+            <h2><a href="./kimen-vs-1password-and-cloud-secret-managers/" data-event="kimen_guide_opened">Kimen vs 1Password and cloud secret managers</a></h2>
+            <p>A direct decision guide based on who owns the values, where the workload runs and whether local, open and account-free operation matters.</p>
+          </article>
+        </div>
+        <h2 class="guide-group-title">Use your programming environment.</h2>
+        <p class="guide-group-copy">Keep the configuration API your application already uses. Kimen changes where local values live and how the process starts.</p>
+        <div class="guide-list">
+          <article>
+            <h2><a href="./python-environment-variables-without-env-files/" data-event="kimen_guide_opened">Python environment variables with Kimen</a></h2>
+            <p>Use <code>os.environ</code>, Django settings or Pydantic Settings while Kimen supplies the local runtime.</p>
+          </article>
+          <article>
+            <h2><a href="./nodejs-environment-variables-without-env-files/" data-event="kimen_guide_opened">Node.js environment variables with Kimen</a></h2>
+            <p>Keep <code>process.env</code> and start Node.js, framework tools and tests through a declared profile.</p>
           </article>
           <article>
             <h2><a href="./clojure-repl-secrets-with-kimen/" data-event="kimen_guide_opened">Clojure configuration and REPL secrets with Kimen</a></h2>
-            <p>Start with Aero, Environ, cprop and the sources Clojure projects actually use, then see the real Kari nREPL and scenario setup.</p>
+            <p>Use Aero, Environ, cprop or a custom system without changing the application's configuration library.</p>
           </article>
         </div>
-        <h2 class="guide-group-title">Understand and adopt the model.</h2>
-        <p class="guide-group-copy">Start with the limitation of plaintext envfiles, follow a safe migration from Git, then choose the runtime projection your application expects.</p>
+        <h2 class="guide-group-title">Move away from plaintext project secrets.</h2>
+        <p class="guide-group-copy">These guides explain the storage problem, a safe migration and the lifecycle of generated runtime artifacts.</p>
         <div class="guide-list">
           <article>
             <h2><a href="./env-files-are-not-secret-management/" data-event="kimen_guide_opened">Why <code>.env</code> files are not a secrets management strategy</a></h2>
-            <p>What <code>.gitignore</code> protects, what the plaintext file still exposes and when an envfile remains a reasonable choice.</p>
+            <p>What <code>.gitignore</code> protects, what the plaintext file still exposes and when a private file remains a reasonable choice.</p>
           </article>
           <article>
             <h2><a href="./keep-development-secrets-out-of-git/" data-event="kimen_guide_opened">How to keep local development secrets out of your repository</a></h2>
-            <p>A step-by-step migration which checks Git history, moves one value, validates the profile and removes the plaintext copy only after the application works.</p>
+            <p>Check Git history, move one value, validate the profile and remove the plaintext copy only after the application works.</p>
           </article>
           <article>
-            <h2><a href="./runtime-configuration-without-env-files/" data-event="kimen_guide_opened">Runtime configuration without committing <code>.env</code> files</a></h2>
+            <h2><a href="./runtime-configuration-without-env-files/" data-event="kimen_guide_opened">Runtime configuration without committed secret files</a></h2>
             <p>Choose between environment variables, temporary files, stdin and persistent runtime output, with the lifecycle of each made explicit.</p>
           </article>
         </div>

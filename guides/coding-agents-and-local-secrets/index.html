@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Keep local secrets out of coding agent workspaces, Kimen</title>
+    <meta name="description" content="Let coding agents understand and change a project without keeping API keys, database URLs and other secret values in the workspace." />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://kimen.systems/guides/coding-agents-and-local-secrets/" />
+    <meta property="og:title" content="Keep local secrets out of coding agent workspaces" />
+    <meta property="og:description" content="Keep the configuration names with the code and the values in a local encrypted vault." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://kimen.systems/guides/coding-agents-and-local-secrets/" />
+    <meta name="theme-color" content="#182019" />
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../site.css" />
+    <link rel="stylesheet" href="../guides.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Keep local secrets out of coding agent workspaces","description":"How to keep local secret values outside a coding agent's project workspace while preserving the runtime contract the agent needs to understand.","datePublished":"2026-09-17","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/coding-agents-and-local-secrets/"}</script>
+    <script src="../../site-config.js" defer></script>
+    <script src="../../site.js" defer></script>
+  </head>
+  <body class="guide-page" data-page="guide_coding_agents_local_secrets">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar dark-topbar">
+      <a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a>
+      <nav aria-label="Primary"><a href="../">Guides</a><a href="../../docs/#start">Install</a><a href="../../access/">Operations</a></nav>
+    </header>
+    <main id="main">
+      <header class="guide-hero">
+        <h1>Coding agents can read more than code.</h1>
+        <p>Let an agent understand and change the project without leaving database credentials and API keys in the workspace it reads.</p>
+        <p class="guide-meta">Kimen guide, updated September 2026</p>
+      </header>
+      <article class="guide-body">
+        <section>
+          <h2>A readable workspace is part of the agent's input.</h2>
+          <p>Local coding agents inspect files and invoke development tools. Their exact boundaries differ, but the useful modes can read a project and the more autonomous modes can run commands. OpenAI documents workspace access, sandbox modes and full-access modes for Codex. Anthropic documents file reading, shell permissions and a mode which bypasses permission prompts for Claude Code.</p>
+          <p>If a project contains a plaintext credential, a tool which can read the project may be able to read that credential too. Git ignoring the file only keeps it out of a normal commit.</p>
+          <pre><code>project/
+  src/
+  tests/
+  .env              # code and secret values share one readable workspace</code></pre>
+          <p>This does not mean every agent sends every file to a model or uses it for training. It means the value is inside the agent's accessible tool boundary and can enter command output, logs or model context.</p>
+        </section>
+        <section>
+          <h2>Let the project expose names, not values.</h2>
+          <p>Move the values into the encrypted Kimen vault outside the project:</p>
+          <pre><code>kimen vault init
+kimen secret set app.dev.database_url
+kimen secret set app.dev.payments_api_key</code></pre>
+          <p>Commit a profile which describes the runtime contract:</p>
+          <pre><code># .kimen/profiles/dev.kmap
+env DATABASE_URL=app.dev.database_url
+env PAYMENTS_API_KEY=app.dev.payments_api_key
+env APP_ENV=const:development</code></pre>
+          <p>The agent can now see that the application expects <code>DATABASE_URL</code>, <code>PAYMENTS_API_KEY</code> and <code>APP_ENV</code>. It can change configuration code, write tests and inspect the projection plan without seeing a value:</p>
+          <pre><code>kimen map lint --profile dev --strict
+kimen plan --profile dev</code></pre>
+          <p><code>kimen plan</code> prints names, sources and projection modes. It does not open the vault.</p>
+        </section>
+        <section>
+          <h2>Unlock the vault only when a trusted process needs it.</h2>
+          <p>Start the application or a trusted integration test through Kimen:</p>
+          <pre><code>kimen run --profile dev -- ./start-development-server</code></pre>
+          <p>With no active session, Kimen asks you for the vault passphrase on every invocation. The passphrase opens the local vault for that command, and only the selected values are projected. It is not added to the project.</p>
+          <p>For several trusted runs in one work period, open a short session:</p>
+          <pre><code>kimen session start --ttl 15m
+kimen session status
+
+# run the application or trusted tests several times
+kimen run --profile dev -- ./start-development-server
+
+kimen session lock</code></pre>
+          <p>The session avoids repeated passphrase prompts until it expires or is locked.</p>
+          <aside class="guide-note"><strong>A current Kimen session is convenience, not agent isolation.</strong><p>The current session stores unlock material in an owner-readable local file. A same-user process may be able to use or read it. Do not leave a session open and claim that a full-access, same-user agent is separated from the vault.</p></aside>
+        </section>
+        <section>
+          <h2><code>kimen run</code> gives the child process the values.</h2>
+          <p>Kimen removes the permanent plaintext copy from the project. It does not hide a value from the process which legitimately receives it.</p>
+          <p>If an agent can change the receiving program or choose an arbitrary command, that program can print, save or send its environment. Treat this as trusted runtime projection:</p>
+          <pre><code>good boundary
+  agent reads project contract
+  human unlocks selected values
+  trusted application receives them
+
+not a boundary
+  agent chooses arbitrary code
+  arbitrary code receives production credentials</code></pre>
+          <p>Use low-privilege development credentials, keep secret-dependent commands explicit and use the agent's sandbox or a separate identity when you need a stronger operating-system boundary.</p>
+          <p><a href="../../access/">Kimen Operations</a> describes the planned extension for cases where a caller should receive one named operation, such as <code>inspect_logs(service, since)</code>, without receiving the credential at all. That is not a property of today's <code>kimen run</code>.</p>
+        </section>
+        <section>
+          <h2>Kimen complements agent permissions. It does not replace them.</h2>
+          <p>Agent permissions decide which files, commands and networks the agent can use. Kimen decides where selected local values are stored and how they reach a runtime.</p>
+          <ul>
+            <li>Keep the Kimen vault and session path outside the writable project.</li>
+            <li>Do not export secret values in the parent shell before starting the agent.</li>
+            <li>Let the agent inspect committed profiles and use <code>kimen plan</code>.</li>
+            <li>Require a human passphrase for secret-dependent runs, or use a deliberately short session only within a boundary you accept.</li>
+            <li>Assume a process started through <code>kimen run</code> can read everything projected to it.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Why Kimen instead of a password manager?</h2>
+          <p>1Password CLI can also inject secrets into subprocesses and configuration files. It is often the better choice when a team already stores and shares credentials in 1Password and wants central account administration.</p>
+          <p>Kimen is useful when you want a small open-source tool, an encrypted local vault, no account or service dependency, offline operation and project-owned profiles which describe exactly what each runtime expects.</p>
+          <p>A cloud secret manager is usually the better production choice when the workload already has a narrow cloud identity. Kimen is most distinct in local development and portable project configuration. Read the full <a href="../kimen-vs-1password-and-cloud-secret-managers/">Kimen, 1Password and cloud secret manager comparison</a>.</p>
+        </section>
+        <section>
+          <h2>Sources and current tool behavior</h2>
+          <p>The agent examples are grounded in the vendors' current documentation:</p>
+          <ul>
+            <li><a href="https://openai.com/index/running-codex-safely/">OpenAI, Running Codex safely</a></li>
+            <li><a href="https://openai.com/index/introducing-upgrades-to-codex/">OpenAI, Codex sandbox and approval modes</a></li>
+            <li><a href="https://docs.anthropic.com/en/docs/claude-code/cli-usage">Anthropic, Claude Code CLI permissions and flags</a></li>
+          </ul>
+          <p>Agent products change quickly. Check the current permission and sandbox documentation for the tool and mode you actually run.</p>
+        </section>
+      </article>
+      <section class="guide-closing">
+        <h2>Give the agent the shape of the runtime, not a plaintext copy of it.</h2>
+        <p>Move one local value into Kimen, commit its profile reference and keep the security boundary explicit.</p>
+        <a class="button" href="../../docs/#start" data-event="kimen_guide_install_clicked">Install Kimen</a>
+      </section>
+    </main>
+    <footer class="dark-footer"><a class="brand" href="../../"><span aria-hidden="true"></span>kimen</a><p>Local secrets and runtime configuration.</p><nav><a href="../">Guides</a><a href="../../docs/">Manual</a><a href="../../privacy/">Privacy</a></nav></footer>
+  </body>
+</html>

@@ -16,7 +16,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../site.css" />
     <link rel="stylesheet" href="../guides.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How to keep local development secrets out of Git","description":"A practical migration for moving database URLs, API keys and local development secrets out of Git and the project workspace.","datePublished":"2026-09-15","dateModified":"2026-09-16","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/keep-development-secrets-out-of-git/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How to keep local development secrets out of Git","description":"A practical migration for moving database URLs, API keys and local development secrets out of Git and the project workspace.","datePublished":"2026-09-15","dateModified":"2026-09-17","author":{"@type":"Person","name":"Andreas Flakstad"},"publisher":{"@type":"Organization","name":"Kimen"},"mainEntityOfPage":"https://kimen.systems/guides/keep-development-secrets-out-of-git/"}</script>
     <script src="../../site-config.js" defer></script>
     <script src="../../site.js" defer></script>
   </head>
@@ -65,6 +65,7 @@ env DATABASE_URL=dev.database_url</code></pre>
   sh -c 'test -n "$DATABASE_URL" &amp;&amp; echo "DATABASE_URL is available"'</code></pre>
           <p>Finally, start the real application through Kimen and exercise the code path which uses the credential:</p>
           <pre><code>kimen run --profile dev -- ./app</code></pre>
+          <p>With no active session, Kimen asks for the vault passphrase for each <code>doctor</code> or <code>run</code> invocation. During a short migration session, use <code>kimen session start --ttl 15m</code> and close it with <code>kimen session lock</code>.</p>
           <p>Only after the application works should you delete the plaintext project copy. Keep the filename ignored if local tools may recreate it.</p>
           <aside class="guide-note"><strong>The receiving program can read the value.</strong><p>Runtime projection reduces where the secret is stored. It does not make an untrusted child process safe. Only project values into software you trust with them.</p></aside>
         </section>
