@@ -2,7 +2,7 @@
 
 Status: current evidence and validation plan
 
-Date: 2026-09-15
+Date: 2026-09-16
 
 This document records the market distinction, search evidence, traffic model
 and validation gates for Kimen Core, Kimen Operations and a possible Kimen
@@ -176,6 +176,104 @@ Selected emerging global English queries:
 The Operations phrases developed during product exploration, including
 `secure script execution`, `developer production access` and
 `project-declared operations`, had no meaningful reported search demand.
+
+## Ecosystem guide research
+
+Follow-up research on 2026-09-16 tested how developers actually describe local
+configuration in specific programming environments. It used exact-match United
+States Google Ads volume, organic result inspection and primary documentation
+for each runtime or framework.
+
+Selected monthly estimates:
+
+| Query | Monthly searches | Editorial implication |
+| --- | ---: | --- |
+| `python dotenv` | 2,900 | Lead with the existing `.env` and `python-dotenv` workflow |
+| `dotenv python` | 880 | Same intent with reversed wording |
+| `python environment variables` | 720 | Explain `os.environ`, then the storage boundary |
+| `docker compose env file` | 720 | High demand, but several Compose mechanisms are easily confused |
+| `docker compose environment variables` | 720 | Requires precise distinction between substitution and container environment |
+| `docker compose secrets` | 390 | Compare with the native file-mounted secret mechanism |
+| `vite environment variables` | 480 | Explain that `VITE_*` is deliberately public client data |
+| `godotenv` | 260 | Good Go-specific migration path |
+| `next js environment variables` | 260 | Separate server secrets from `NEXT_PUBLIC_*` build output |
+| `dotnet user secrets` | 170 | Compare honestly with the development-only native mechanism |
+| `direnv` | 1,900 | Strong cross-language comparison, not a secret store |
+
+Constructed phrases such as `secrets management for Python` and most
+language-specific `secrets management` combinations had no reported volume.
+Developers search for the mechanism they already use, not for a Kimen-shaped
+category.
+
+Official documentation dominates most head terms. Kimen guides should not copy
+basic API references. Each guide must instead answer:
+
+1. What developers in this ecosystem commonly do today.
+2. Where the value physically lives.
+3. How it reaches the runtime.
+4. What the existing mechanism protects and what it does not.
+5. The smallest Kimen migration which preserves the application's normal API.
+6. When the ecosystem-native mechanism is already sufficient.
+
+The reusable product story is that application code stays ordinary:
+
+```text
+Node.js     process.env.DATABASE_URL
+Python      os.environ["DATABASE_URL"]
+Go          os.LookupEnv("DATABASE_URL")
+Rust        std::env::var("DATABASE_URL")
+Java        System.getenv("DATABASE_URL")
+Clojure     (System/getenv "DATABASE_URL")
+```
+
+Kimen changes secret storage and process startup, not every ecosystem's
+configuration interface.
+
+The first implementation wave is:
+
+1. Python with `python-dotenv`, `os.environ` and framework settings.
+2. Node.js with native `--env-file`, dotenv and `process.env`.
+3. A Clojure REPL guide based on Kari's actual profile, nREPL startup and
+   realtime scenario runner.
+
+Next candidates are Vite, direnv, Go and Rust. A Docker Compose guide must wait
+until the exact Kimen integration has been tested for both foreground and
+detached lifecycles. Generic TypeScript and Java guides should not be written:
+the runtime or framework determines TypeScript behavior, while the broad Java
+query is dominated by `JAVA_HOME` and `PATH` setup.
+
+The guides must never imply that runtime projection hides a value from the
+receiving process. They must also never imply that Kimen can make
+`NEXT_PUBLIC_*` or `VITE_*` values secret after a framework includes them in
+browser code.
+
+### Guide implementation verification
+
+The first guide wave was verified against the local Kimen CLI on 2026-09-16.
+The checks used an isolated test vault and non-sensitive fixture values.
+
+Verified behavior:
+
+- Python and Node.js received a projected environment variable and confirmed
+  availability without printing its value.
+- Kimen materialized a private EDN file, exposed its path through `envpath`,
+  and Aero 1.1.6 loaded it through `#include #env APP_SECRETS_FILE`.
+- environment variables, constants, temporary files, stdin, envfiles and
+  rendered files worked with the syntax shown in the runtime guide.
+- `map lint`, `plan` and `doctor` worked as described.
+- persistent envfile and rendered-file output used mode `0600` in the test.
+
+The guide set deliberately distinguishes three editorial jobs:
+
+1. `.env` analysis explains the problem and when the simple mechanism is
+   sufficient.
+2. The Git guide is a concrete migration with repository checks and a safe
+   verification step.
+3. The runtime guide documents projection choice and lifecycle.
+
+Kimen Core must not be described as team credential distribution. It protects
+the local copy and controls local runtime projection. Teams still need a
+trusted provisioning or secret-management channel for shared values.
 
 Estimated monthly United States organic traffic for selected whole domains:
 

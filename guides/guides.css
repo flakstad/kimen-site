@@ -59,6 +59,14 @@
   margin: 24px 0 52px;
 }
 
+.guide-index .guide-group-title {
+  margin-top: 76px;
+}
+
+.guide-index .guide-group-copy {
+  margin-bottom: 38px;
+}
+
 .guide-list {
   margin: 0;
   border-top: 1px solid var(--ink);
@@ -220,5 +228,9 @@
   .privacy-body {
     padding-top: 60px;
     padding-bottom: 70px;
+  }
+
+  .guide-index .guide-group-title {
+    margin-top: 58px;
   }
 }
