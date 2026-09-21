@@ -174,6 +174,10 @@ for filename, canonical in indexed_pages.items():
         raise SystemExit(f"indexed page is missing robots directive: {filename}")
     if f'<link rel="canonical" href="{canonical}"' not in contents:
         raise SystemExit(f"indexed page has wrong canonical URL: {filename}")
+    if "Flakstad Software AS" not in contents or "Org. no. 935 382 017" not in contents:
+        raise SystemExit(f"indexed page is missing the operator identity: {filename}")
+    if 'href="mailto:hello@kimen.systems"' not in contents:
+        raise SystemExit(f"indexed page is missing the operator contact email: {filename}")
 
 sitemap = Path("sitemap.xml").read_text(encoding="utf-8")
 for canonical in indexed_pages.values():
